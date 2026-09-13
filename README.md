@@ -16,5 +16,5 @@ A szimulációhoz a hővezetési egyenlet megoldását közelítjük majd diszkr
 - Github
 
 ## Használható tanulási anyag
-https://www.wiley.com/en-us/shop/general-introductory-mechanical-engineering/fundamentals-of-heat-and-mass-transfer-8th-edition-p-9781119353881
-https://www.visualslope.com/Library/FDM-for-heat-transfering.pdf
+- https://www.wiley.com/en-us/shop/general-introductory-mechanical-engineering/fundamentals-of-heat-and-mass-transfer-8th-edition-p-9781119353881
+- https://www.visualslope.com/Library/FDM-for-heat-transfering.pdf
