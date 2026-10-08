@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class GridPoint : MonoBehaviour
 {
@@ -13,7 +14,9 @@ public class GridPoint : MonoBehaviour
             representation = Instantiate(prefab, transform);
             representation.transform.localPosition = Vector3.zero;
             representation.transform.rotation = Quaternion.identity;
-            representation.SetActive(true);
+            representation.AddComponent<GridPoint>();
+            representation.GetComponent<MeshRenderer>().SetMaterials(new System.Collections.Generic.List<Material>());
+            representation.gameObject.SetActive(true);
         }
     }
 
