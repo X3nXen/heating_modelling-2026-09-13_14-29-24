@@ -5,6 +5,8 @@ public class GridPoint : MonoBehaviour
 {
     private GameObject representation;
     private Vector3 position;
+    private float diffusivity = 0.000019f;
+    [SerializeField]
     private float currentHeat;
 
     public void Init(GameObject prefab)
@@ -20,8 +22,19 @@ public class GridPoint : MonoBehaviour
         }
     }
 
+    public void RecalculateHeat(float left, float right, float up, float down, float front, float behind, float sectionSize)
+    {
+        float heatChange = diffusivity * (1 / Mathf.Pow(sectionSize, 2)) * (left + right + front + behind + up + down - 6 * currentHeat);
+        currentHeat = currentHeat + heatChange;
+    }
+
     public void SetHeat(float currentHeat)
     {
         this.currentHeat = currentHeat;
+    }
+
+    public float GetCurrentHeat()
+    {
+        return currentHeat;
     }
 }
