@@ -12,7 +12,7 @@ public class GridPointCollide : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other != null)
+        if (other.gameObject.tag == "Building")
         {
             this.gameObject.GetComponent<MeshRenderer>().SetMaterials(new System.Collections.Generic.List<Material>() { pointMaterial });
         }

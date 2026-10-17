@@ -6,6 +6,9 @@ public class SimulationManager : MonoBehaviour
 {
     private float startTime;
     [SerializeField]
+    private float timeStep = 1;
+    private float nextUpdate = 1;
+    [SerializeField]
     private Grid grid;
     [SerializeField]
     private Text timeDisplay;
@@ -20,9 +23,14 @@ public class SimulationManager : MonoBehaviour
     {
         if (!isStarted)
             return;
+
         var ts = TimeSpan.FromSeconds(Time.time - startTime);
         timeDisplay.text = string.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
-        grid.RecalculatePoints();
+        if(Time.time >= nextUpdate)
+        {
+            nextUpdate = (float)Math.Floor(Time.time) + timeStep;
+            grid.RecalculatePoints();
+        }
     }
 
     public void SetOutsideHeat(float outsideHeat)

@@ -4,8 +4,10 @@
 TagManager:
   serializedVersion: 3
   tags:
+  - Building
   - Wall
-  - Gridpoint
+  - GridPoint
+  - RadiatingObject
   layers:
   - Default
   - TransparentFX

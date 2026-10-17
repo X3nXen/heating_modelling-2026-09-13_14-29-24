@@ -6,10 +6,13 @@ public class Grid : MonoBehaviour
 {
     [SerializeField]
     private int verticalLength = 20;
+    private int verticalPointCount;
     [SerializeField]
     private int horizontalLength = 20;
+    private int horizontalPointCount;
     [SerializeField]
-    private int depthLength = 10;
+    private int depth = 10;
+    private int depthPointCount;
     [SerializeField]
     private float sectionSize = 1f;
     [SerializeField]
@@ -19,19 +22,19 @@ public class Grid : MonoBehaviour
 
     public void RecalculatePoints()
     {
-        for(int i = 0; i < verticalLength; i++)
+        for(int verticalIndex = 0; verticalIndex < verticalPointCount; verticalIndex++)
         {
-            for(int j = 0; j < horizontalLength; j++)
+            for(int horizontalIndex = 0; horizontalIndex < horizontalPointCount; horizontalIndex++)
             {
-                for(int k = 0; k < depthLength; k++)
+                for(int depthIndex = 0; depthIndex < depthPointCount; depthIndex++)
                 {
-                    float left = (i - 1) < 0 ? 0 : gridPoints[i - 1, j, k].GetCurrentHeat();
-                    float right = (i + 1) >= verticalLength ? 0 : gridPoints[i + 1, j, k].GetCurrentHeat();
-                    float behind = (j-1) < 0 ? 0 : gridPoints[i, j-1, k].GetCurrentHeat();
-                    float front = (j + 1) >= horizontalLength ? 0 : gridPoints[i, j + 1, k].GetCurrentHeat();
-                    float down = (k - 1) < 0 ? 0 : gridPoints[i, j, k-1].GetCurrentHeat();
-                    float up = (k + 1) >= depthLength ? 0 : gridPoints[i, j, k + 1].GetCurrentHeat();
-                    gridPoints[i, j, k].RecalculateHeat(left, right, up, down, front, behind, sectionSize);
+                    float left = (verticalIndex - 1) < 0 ? 0 : gridPoints[verticalIndex - 1, horizontalIndex, depthIndex].GetCurrentHeat();
+                    float right = (verticalIndex + 1) >= verticalPointCount ? 0 : gridPoints[verticalIndex + 1, horizontalIndex, depthIndex].GetCurrentHeat();
+                    float behind = (horizontalIndex-1) < 0 ? 0 : gridPoints[verticalIndex, horizontalIndex-1, depthIndex].GetCurrentHeat();
+                    float front = (horizontalIndex + 1) >= horizontalPointCount ? 0 : gridPoints[verticalIndex, horizontalIndex + 1, depthIndex].GetCurrentHeat();
+                    float down = (depthIndex - 1) < 0 ? 0 : gridPoints[verticalIndex, horizontalIndex, depthIndex-1].GetCurrentHeat();
+                    float up = (depthIndex + 1) >= depthPointCount ? 0 : gridPoints[verticalIndex, horizontalIndex, depthIndex + 1].GetCurrentHeat();
+                    gridPoints[verticalIndex, horizontalIndex, depthIndex].RecalculateHeat(left, right, up, down, front, behind, sectionSize);
                 }
             }
         }
@@ -42,9 +45,9 @@ public class Grid : MonoBehaviour
         if (sectionSize <= 0)
             return;
 
-        int verticalPointCount = (int)(verticalLength / sectionSize);
-        int horizontalPointCount = (int) (depthLength / sectionSize);
-        int depthPointCount = (int)(horizontalLength / sectionSize);
+        this.verticalPointCount = (int)(verticalLength / sectionSize);
+        this.horizontalPointCount = (int) (depth / sectionSize);
+        this.depthPointCount = (int)(horizontalLength / sectionSize);
 
         gridPoints = new GridPoint[verticalPointCount, horizontalPointCount, depthPointCount];
         for(int verticalIndex = 0; verticalIndex < verticalPointCount; verticalIndex++)
@@ -54,13 +57,14 @@ public class Grid : MonoBehaviour
                 for(int depthIndex = 0;  depthIndex < depthPointCount; depthIndex++)
                 {
                     float xCoord = verticalIndex * sectionSize;
-                    float yCoord = (horizontalIndex * sectionSize);
+                    float yCoord = horizontalIndex * sectionSize;
                     float zCoord = depthIndex * sectionSize;
                     Vector3 pointPosition = new Vector3(xCoord, yCoord, zCoord);
 
                     GameObject newPoint = new GameObject($"Gridpoint_{xCoord}_{yCoord}_{zCoord}");
                     newPoint.transform.SetParent(this.transform);
                     newPoint.transform.localPosition = pointPosition;
+                    newPoint.tag = "GridPoint";
                     pointObjects.Add(newPoint);
 
                     GridPoint newGridPoint = newPoint.AddComponent<GridPoint>();
@@ -77,7 +81,7 @@ public class Grid : MonoBehaviour
         Setup();
         foreach(GridPoint gridPoint in gridPoints)
         {
-            gridPoint.SetHeat(outsideHeat);
+            gridPoint.SetCurrentHeat(outsideHeat);
         }
     }
 
