@@ -12,4 +12,9 @@ public class RadiatingObject : ScriptableObject
 
     [Header("Calculation Info")]
     public float surfaceHeat;
+
+    public GameObject getPrefab()
+    {
+        return prefab;
+    }
 }

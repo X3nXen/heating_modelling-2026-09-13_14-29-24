@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5549999490202176545}
   - component: {fileID: 6681030061566965786}
   - component: {fileID: 6951960855849972538}
+  - component: {fileID: 4177747955390283766}
   m_Layer: 0
   m_Name: Wall_N
   m_TagString: Wall
@@ -28,8 +29,8 @@ Transform:
   m_GameObject: {fileID: 1474295088517987950}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9.76, y: 0.5, z: 0}
-  m_LocalScale: {x: 0.5, y: 4, z: 20}
+  m_LocalPosition: {x: 9.76, y: 2, z: 0}
+  m_LocalScale: {x: 1, y: 7, z: 20.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2714348359225824700}
@@ -106,12 +107,24 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4177747955390283766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1474295088517987950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b092c362b5c7d364f824f42885f41a45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WallGridCollusion
 --- !u!1 &3271781412406570736
 GameObject:
   m_ObjectHideFlags: 0
@@ -124,6 +137,7 @@ GameObject:
   - component: {fileID: 3585588437726099145}
   - component: {fileID: 43615719177396290}
   - component: {fileID: 6727138703402754910}
+  - component: {fileID: 2435304671948664443}
   m_Layer: 0
   m_Name: Wall_E
   m_TagString: Wall
@@ -140,8 +154,8 @@ Transform:
   m_GameObject: {fileID: 3271781412406570736}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: -9.76}
-  m_LocalScale: {x: 20, y: 4, z: 0.5}
+  m_LocalPosition: {x: 0, y: 2, z: -9.76}
+  m_LocalScale: {x: 20.5, y: 7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2714348359225824700}
@@ -218,12 +232,24 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2435304671948664443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3271781412406570736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b092c362b5c7d364f824f42885f41a45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WallGridCollusion
 --- !u!1 &5938164206858579437
 GameObject:
   m_ObjectHideFlags: 0
@@ -236,6 +262,7 @@ GameObject:
   - component: {fileID: 6988078117272796210}
   - component: {fileID: 1092594842353907535}
   - component: {fileID: 5801460386568176501}
+  - component: {fileID: 531320135124377800}
   m_Layer: 0
   m_Name: Wall_W
   m_TagString: Wall
@@ -252,8 +279,8 @@ Transform:
   m_GameObject: {fileID: 5938164206858579437}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0.5, z: 9.76}
-  m_LocalScale: {x: 20, y: 4, z: 0.5}
+  m_LocalPosition: {x: -0, y: 2, z: 9.76}
+  m_LocalScale: {x: 20.5, y: 7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2714348359225824700}
@@ -330,12 +357,24 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &531320135124377800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5938164206858579437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b092c362b5c7d364f824f42885f41a45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WallGridCollusion
 --- !u!1 &6433866842373185553
 GameObject:
   m_ObjectHideFlags: 0
@@ -404,6 +443,7 @@ GameObject:
   - component: {fileID: 4779238870207528602}
   - component: {fileID: 5897945345427369052}
   - component: {fileID: 6554329952820169783}
+  - component: {fileID: 330696126761292351}
   m_Layer: 0
   m_Name: Wall_S
   m_TagString: Wall
@@ -420,8 +460,8 @@ Transform:
   m_GameObject: {fileID: 6612719259130711339}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -9.76, y: 0.5, z: 0}
-  m_LocalScale: {x: 0.5, y: 4, z: 20}
+  m_LocalPosition: {x: -9.76, y: 2, z: 0}
+  m_LocalScale: {x: 1, y: 7, z: 20.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2714348359225824700}
@@ -498,12 +538,24 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &330696126761292351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6612719259130711339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b092c362b5c7d364f824f42885f41a45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WallGridCollusion
 --- !u!1 &7169749236083774728
 GameObject:
   m_ObjectHideFlags: 0
@@ -516,7 +568,8 @@ GameObject:
   - component: {fileID: 8031547777743096917}
   - component: {fileID: 3076577268492090382}
   - component: {fileID: 7919288861534214287}
-  m_Layer: 0
+  - component: {fileID: 8343998682540059146}
+  m_Layer: 6
   m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -532,8 +585,8 @@ Transform:
   m_GameObject: {fileID: 7169749236083774728}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 20, y: 0.5, z: 20}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
+  m_LocalScale: {x: 20, y: 1, z: 20}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2714348359225824700}
@@ -610,12 +663,24 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8343998682540059146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7169749236083774728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b092c362b5c7d364f824f42885f41a45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WallGridCollusion
 --- !u!1 &7787440706801959409
 GameObject:
   m_ObjectHideFlags: 0
@@ -629,7 +694,7 @@ GameObject:
   - component: {fileID: 6460518333901383316}
   m_Layer: 0
   m_Name: House Occlusion Box
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -643,8 +708,8 @@ Transform:
   m_GameObject: {fileID: 7787440706801959409}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 20, y: 4, z: 20}
+  m_LocalPosition: {x: 0, y: 3.5, z: 0}
+  m_LocalScale: {x: 20, y: 7, z: 20}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2714348359225824700}
@@ -668,8 +733,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 0.76542765, z: 1}
+  m_Center: {x: 0, y: -0.11728705, z: 0}
 --- !u!54 &6460518333901383316
 Rigidbody:
   m_ObjectHideFlags: 0

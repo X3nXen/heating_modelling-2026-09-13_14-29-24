@@ -15,4 +15,4 @@ MonoBehaviour:
   displayName: "Kaz\xE1n"
   displayImage: {fileID: 21300000, guid: 784ce84594133b74e93b836c8fb283e9, type: 3}
   prefab: {fileID: 6439603838816461787, guid: 53fc903a61573e948bd2dd1dd73d7d41, type: 3}
-  surfaceHeat: 36
+  surfaceHeat: 50

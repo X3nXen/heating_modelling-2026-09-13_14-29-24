@@ -6,7 +6,7 @@ public class GridPoint : MonoBehaviour
 {
     private GameObject representation;
     private Vector3 position;
-    private float diffusivity = 0.000019f;
+    public float diffusivity = 0.000019f;
     [SerializeField]
     private float currentHeat;
     private bool shouldUpdate = true;
@@ -24,11 +24,11 @@ public class GridPoint : MonoBehaviour
         }
     }
 
-    public void RecalculateHeat(float left, float right, float up, float down, float front, float behind, float sectionSize)
+    public void RecalculateHeat(float left, float right, float up, float down, float front, float behind, float sectionSize, float timeStep)
     {
         if (!shouldUpdate)
             return;
-        float heatChange = diffusivity * (1 / Mathf.Pow(sectionSize, 2)) * (left + right + front + behind + up + down - 6 * currentHeat);
+        float heatChange = diffusivity * (timeStep / Mathf.Pow(sectionSize, 2)) * (left + right + front + behind + up + down - 6 * currentHeat);
         currentHeat = currentHeat + heatChange;
     }
 
@@ -45,5 +45,10 @@ public class GridPoint : MonoBehaviour
     public void SetShouldUpdate(bool shouldUpdate)
     {
         this.shouldUpdate = shouldUpdate;
+    }
+
+    public void SetDiffusivity(float diffusivity)
+    {
+        this.diffusivity = diffusivity;
     }
 }

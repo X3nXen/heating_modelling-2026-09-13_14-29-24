@@ -8,6 +8,7 @@ TagManager:
   - Wall
   - GridPoint
   - RadiatingObject
+  - Gridpoint
   layers:
   - Default
   - TransparentFX
@@ -15,7 +16,7 @@ TagManager:
   - Wall Layer
   - Water
   - UI
-  - 
+  - House Layer
   - 
   - 
   - 

@@ -20,7 +20,7 @@ public class Grid : MonoBehaviour
     private GridPoint[,,] gridPoints;
     private List<GameObject> pointObjects = new List<GameObject>();
 
-    public void RecalculatePoints()
+    public void RecalculatePoints(float timeStep)
     {
         for(int verticalIndex = 0; verticalIndex < verticalPointCount; verticalIndex++)
         {
@@ -34,7 +34,7 @@ public class Grid : MonoBehaviour
                     float front = (horizontalIndex + 1) >= horizontalPointCount ? 0 : gridPoints[verticalIndex, horizontalIndex + 1, depthIndex].GetCurrentHeat();
                     float down = (depthIndex - 1) < 0 ? 0 : gridPoints[verticalIndex, horizontalIndex, depthIndex-1].GetCurrentHeat();
                     float up = (depthIndex + 1) >= depthPointCount ? 0 : gridPoints[verticalIndex, horizontalIndex, depthIndex + 1].GetCurrentHeat();
-                    gridPoints[verticalIndex, horizontalIndex, depthIndex].RecalculateHeat(left, right, up, down, front, behind, sectionSize);
+                    gridPoints[verticalIndex, horizontalIndex, depthIndex].RecalculateHeat(left, right, up, down, front, behind, sectionSize, timeStep);
                 }
             }
         }
