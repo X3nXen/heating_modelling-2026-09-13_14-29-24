@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5534427972486341239}
   - component: {fileID: 6920289564638156890}
   - component: {fileID: 2778095032102863626}
-  - component: {fileID: 4966194418788310611}
+  - component: {fileID: -8798520011859395531}
   m_Layer: 5
   m_Name: Boiler UI
   m_TagString: Untagged
@@ -78,7 +78,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &4966194418788310611
+--- !u!114 &-8798520011859395531
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -87,14 +87,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 5221888858184051035}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86503a3cbaa8e34438fee6cc84db15aa, type: 3}
+  m_Script: {fileID: 11500000, guid: 7d2f3fad06624424993539d251178ffe, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: '::'
-  dragAndDropObject: {fileID: 6439603838816461787, guid: 53fc903a61573e948bd2dd1dd73d7d41, type: 3}
-  raycastLayerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  maxRaycastDistance: 100
+  m_EditorClassIdentifier: Assembly-CSharp::Boiler
 --- !u!1 &6527676723303706405
 GameObject:
   m_ObjectHideFlags: 0

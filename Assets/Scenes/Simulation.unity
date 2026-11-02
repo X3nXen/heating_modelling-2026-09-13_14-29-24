@@ -306,7 +306,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -49.181, y: 27224.273}
+  m_AnchoredPosition: {x: -49.181, y: 37910.895}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &153337767
@@ -790,6 +790,7 @@ GameObject:
   - component: {fileID: 627235815}
   - component: {fileID: 627235814}
   - component: {fileID: 627235818}
+  - component: {fileID: 627235819}
   m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
@@ -909,6 +910,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &627235819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 627235813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18b026b78ca349e40bc9fc1ce17a4564, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIController
 --- !u!1 &636441288
 GameObject:
   m_ObjectHideFlags: 0
@@ -1071,18 +1084,6 @@ MonoBehaviour:
       - m_Target: {fileID: 1714856012}
         m_TargetAssemblyTypeName: SimulationManager, Assembly-CSharp
         m_MethodName: CycleSimulationSpeed
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
-      - m_Target: {fileID: 1337469489}
-        m_TargetAssemblyTypeName: UIController, Assembly-CSharp
-        m_MethodName: CycleSpeedButtonSprite
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1422,12 +1423,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 910826938}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad0dbc1935354254995c4fba7968503a, type: 3}
+  m_Script: {fileID: 11500000, guid: 4b39cc4fefc28804b8864f8b48f8f14d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MenuControls
-  elementsToClose:
-  - {fileID: 1391673821}
-  - {fileID: 1531465630}
+  m_EditorClassIdentifier: Assembly-CSharp::ToggleUIElement
 --- !u!1 &1025070863
 GameObject:
   m_ObjectHideFlags: 0
@@ -1549,9 +1547,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1391673823}
-        m_TargetAssemblyTypeName: MenuButtons, Assembly-CSharp
-        m_MethodName: SetElementActive
+      - m_Target: {fileID: 627235819}
+        m_TargetAssemblyTypeName: UIController, Assembly-CSharp
+        m_MethodName: ToggleHeatersMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1715,59 +1713,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1113305100}
   m_CullTransparentMesh: 1
---- !u!1 &1337469488
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1337469490}
-  - component: {fileID: 1337469489}
-  m_Layer: 0
-  m_Name: UI Controller
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1337469489
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1337469488}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18b026b78ca349e40bc9fc1ce17a4564, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UIController
-  startButtonSprites:
-  - {fileID: 21300000, guid: 3875d74695d3d464093ffa849593aa28, type: 3}
-  - {fileID: 21300000, guid: 42e77ce9ea377ca4aa08386071199404, type: 3}
-  startButtonIcon: {fileID: 1735257593}
-  speedButtonSprites:
-  - {fileID: 21300000, guid: 864936e0b79c45f47aee2518372600c8, type: 3}
-  - {fileID: 21300000, guid: 46e418359b012d0419101bb75cd00300, type: 3}
-  - {fileID: 21300000, guid: 4b24d9960519da844ab6c56c53726621, type: 3}
-  speedButtonIcon: {fileID: 1519986156}
---- !u!4 &1337469490
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1337469488}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2971.8755, y: -0.00002, z: 22552.732}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1391673821
 GameObject:
   m_ObjectHideFlags: 0
@@ -1781,7 +1726,7 @@ GameObject:
   - component: {fileID: 1391673826}
   - component: {fileID: 1391673825}
   - component: {fileID: 1391673824}
-  - component: {fileID: 1391673823}
+  - component: {fileID: 1391673828}
   m_Layer: 5
   m_Name: Heaters scrollable
   m_TagString: Untagged
@@ -1809,20 +1754,6 @@ RectTransform:
   m_AnchoredPosition: {x: -175, y: -1.1000061}
   m_SizeDelta: {x: 350, y: -2.199994}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1391673823
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1391673821}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d98e97a6aa19d14a9eb70437dba59a7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MenuButtons
-  otherToClose:
-  - {fileID: 1531465630}
 --- !u!95 &1391673824
 Animator:
   serializedVersion: 7
@@ -1913,6 +1844,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1391673821}
   m_CullTransparentMesh: 1
+--- !u!114 &1391673828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1391673821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b39cc4fefc28804b8864f8b48f8f14d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ToggleUIElement
 --- !u!1 &1408131972
 GameObject:
   m_ObjectHideFlags: 0
@@ -2156,7 +2099,7 @@ GameObject:
   - component: {fileID: 1531465634}
   - component: {fileID: 1531465633}
   - component: {fileID: 1531465632}
-  - component: {fileID: 1531465631}
+  - component: {fileID: 1531465637}
   m_Layer: 5
   m_Name: Emitters scrollable
   m_TagString: Untagged
@@ -2164,20 +2107,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1531465631
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1531465630}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d98e97a6aa19d14a9eb70437dba59a7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MenuButtons
-  otherToClose:
-  - {fileID: 1391673821}
 --- !u!95 &1531465632
 Animator:
   serializedVersion: 7
@@ -2288,6 +2217,18 @@ RectTransform:
   m_AnchoredPosition: {x: -175, y: -1.0999756}
   m_SizeDelta: {x: 350, y: -2.1999817}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1531465637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1531465630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b39cc4fefc28804b8864f8b48f8f14d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ToggleUIElement
 --- !u!1 &1613068601
 GameObject:
   m_ObjectHideFlags: 0
@@ -2459,7 +2400,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -2572,9 +2514,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6e5bf33c86066e4c83ca1a17e0a8274, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SimulationManager
-  timeStep: 1
   grid: {fileID: 507887496}
-  timeDisplay: {fileID: 1703321011}
+  outsideHeat: 21
+  ui: {fileID: 627235813}
+  startButton: {fileID: 1735257591}
+  speedButton: {fileID: 1519986155}
+  timeDisplay: {fileID: 1703321010}
 --- !u!4 &1714856013
 Transform:
   m_ObjectHideFlags: 0
@@ -2700,7 +2645,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.80100006, y: 0}
   m_AnchorMax: {x: 1, y: 0.098124094}
-  m_AnchoredPosition: {x: 47.9, y: 0.6000061}
+  m_AnchoredPosition: {x: 47.899994, y: 0.6000366}
   m_SizeDelta: {x: 783, y: 493}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1767027245
@@ -2827,18 +2772,6 @@ MonoBehaviour:
       - m_Target: {fileID: 1714856012}
         m_TargetAssemblyTypeName: SimulationManager, Assembly-CSharp
         m_MethodName: ToggleSimulation
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
-      - m_Target: {fileID: 1337469489}
-        m_TargetAssemblyTypeName: UIController, Assembly-CSharp
-        m_MethodName: ToggleStartButtonSprite
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3097,9 +3030,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1531465631}
-        m_TargetAssemblyTypeName: MenuButtons, Assembly-CSharp
-        m_MethodName: SetElementActive
+      - m_Target: {fileID: 627235819}
+        m_TargetAssemblyTypeName: UIController, Assembly-CSharp
+        m_MethodName: ToggleEmittersMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3192,9 +3125,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 910826944}
-        m_TargetAssemblyTypeName: MenuControls, Assembly-CSharp
-        m_MethodName: SetMenuActive
+      - m_Target: {fileID: 627235819}
+        m_TargetAssemblyTypeName: UIController, Assembly-CSharp
+        m_MethodName: ToggleSlidingMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3203,7 +3136,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 2
+        m_CallState: 1
 --- !u!114 &1980214647
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3502,4 +3435,3 @@ SceneRoots:
   - {fileID: 1062749517}
   - {fileID: 507887497}
   - {fileID: 1714856013}
-  - {fileID: 1337469490}

@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 5477875581497259551}
   - component: {fileID: 4563375174511764117}
   - component: {fileID: 8892753483652462481}
-  - component: {fileID: 4349564573654994330}
+  - component: {fileID: 316320072309329997}
   m_Layer: 0
-  m_Name: Boiler prefab
+  m_Name: Boiler_prefab
   m_TagString: RadiatingObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -141,7 +141,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &4349564573654994330
+--- !u!114 &316320072309329997
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -150,7 +150,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 6439603838816461787}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fe6141e952614c48a4b7ec48f9d3968, type: 3}
+  m_Script: {fileID: 11500000, guid: 7d2f3fad06624424993539d251178ffe, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RadiationPointOcclusion
-  radiatingObject: {fileID: 11400000, guid: 45b9668148577df49b037325df7b24b5, type: 2}
+  m_EditorClassIdentifier: Assembly-CSharp::Boiler

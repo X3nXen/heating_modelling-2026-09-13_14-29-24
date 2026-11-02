@@ -5,18 +5,30 @@ using static UnityEngine.LowLevelPhysics2D.PhysicsWorld;
 
 public class SimulationManager : MonoBehaviour
 {
-    public float timeStep = 1;
+    private float timeStep = 1;
     private float nextUpdate = 1;
+
     [SerializeField]
     private Grid grid;
+
     [SerializeField]
-    private Text timeDisplay;
     private float outsideHeat = 21f;
+
     private bool isStarted = false;
     private float simulationTime = 0f;
+
+    [SerializeField]
+    private GameObject ui;
+    [SerializeField]
+    private GameObject startButton;
+    [SerializeField]
+    private GameObject speedButton;
+    [SerializeField]
+    private GameObject timeDisplay;
+
     void Start()
     {
-        
+        ui.GetComponent<UIController>().Init(startButton.GetComponent<Image>(), speedButton.GetComponent<Image>(), timeDisplay.GetComponent<Text>());
     }
 
     void Update()
@@ -26,8 +38,7 @@ public class SimulationManager : MonoBehaviour
 
         simulationTime += Time.deltaTime * timeStep;
 
-        var ts = TimeSpan.FromSeconds(simulationTime);
-        timeDisplay.text = string.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
+        ui.GetComponent<UIController>().UpdateTimeDisplay(simulationTime);
 
         if (Time.time >= nextUpdate)
         {
@@ -47,12 +58,14 @@ public class SimulationManager : MonoBehaviour
         {
             isStarted = false;
             grid.CleanUp();
+            ui.GetComponent<UIController>().ToggleStartButtonSprite();
             return;
         }
         isStarted = true;
         grid.StartSim(outsideHeat);
         simulationTime = 0;
-        timeDisplay.text = string.Format("{0:00}:{1:00}:{2:00}", 0, 0, 0);
+        ui.GetComponent<UIController>().ToggleStartButtonSprite();
+        ui.GetComponent<UIController>().UpdateTimeDisplay(0f);
     }
 
     public void CycleSimulationSpeed()
@@ -71,5 +84,6 @@ public class SimulationManager : MonoBehaviour
             default:
                 break;
         }
+        ui.GetComponent<UIController>().CycleSpeedButtonSprite();
     }
 }
