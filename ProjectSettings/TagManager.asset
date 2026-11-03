@@ -4,7 +4,11 @@
 TagManager:
   serializedVersion: 3
   tags:
+  - Building
   - Wall
+  - GridPoint
+  - RadiatingObject
+  - Gridpoint
   layers:
   - Default
   - TransparentFX
@@ -12,7 +16,7 @@ TagManager:
   - Wall Layer
   - Water
   - UI
-  - 
+  - House_layer
   - 
   - 
   - 
