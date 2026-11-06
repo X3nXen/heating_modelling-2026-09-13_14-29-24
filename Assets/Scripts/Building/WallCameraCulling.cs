@@ -16,13 +16,7 @@ public class WallOcclusion : MonoBehaviour
     void Start()
     {
         cameraPos = Camera.main.transform;
-        foreach (Transform child in transform)
-        {
-            if(child.gameObject.tag == "Wall")
-            {
-                walls.Add(child.gameObject);
-            }
-        }
+        
     }
 
     void Update()

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,15 +16,20 @@ public class UIController : MonoBehaviour
 
     private Text timeDisplay;
 
-    private Transform slidingMenu;
-    private Transform heatersScrollableMenu;
-    private Transform emittersScrollableMenu;
+    private GameObject slidingMenu;
+    private GameObject heatersScrollableMenu;
+    private GameObject emittersScrollableMenu;
+    private GameObject buildingsScrollableMenu;
 
-    public void Init(Image startButton, Image speedButton, Text timeDisplay)
+    public void Init(
+        List<IPlaceableObject> heaters,
+        List<IPlaceableObject> emitters,
+        List<IPlaceableObject> buildings,
+        Action<IPlaceableObject> onBuildingClick)
     {
-        this.startButton = startButton;
-        this.speedButton = speedButton;
-        this.timeDisplay = timeDisplay;
+        this.startButton = this.transform.Find("Start stop").Find("Start icon").Find("Icon").gameObject.GetComponent<Image>();
+        this.speedButton = this.transform.Find("Speed control").Find("Fastforward icon").Find("Icon").gameObject.GetComponent<Image>();
+        this.timeDisplay = this.transform.Find("Time Display").Find("Time").gameObject.GetComponent<Text>(); ;
         startButtonSprites = new Sprite[2];
         startButtonSprites[0] = Resources.Load<Sprite>("Images/Pause_icon");
         startButtonSprites[1] = Resources.Load<Sprite>("Images/Play_icon");
@@ -32,12 +39,30 @@ public class UIController : MonoBehaviour
         speedButtonSprites[1] = Resources.Load<Sprite>("Images/Bar-3");
         speedButtonSprites[2] = Resources.Load<Sprite>("Images/Bar-1");
 
-        slidingMenu = this.transform.Find("Sliding menu");
-        heatersScrollableMenu = this.transform.Find("Heaters scrollable");
-        emittersScrollableMenu = this.transform.Find("Emitters scrollable");
-        slidingMenu.GetComponent<ToggleUIElement>().SetCollapseElements(new Transform[] { heatersScrollableMenu, emittersScrollableMenu });
-        heatersScrollableMenu.GetComponent<ToggleUIElement>().SetCollapseElements(new Transform[] { emittersScrollableMenu });
-        emittersScrollableMenu.GetComponent<ToggleUIElement>().SetCollapseElements(new Transform[] { heatersScrollableMenu });
+        slidingMenu = this.transform.Find("Sliding menu").gameObject;
+        heatersScrollableMenu = this.transform.Find("Heaters scrollable").gameObject;
+        emittersScrollableMenu = this.transform.Find("Emitters scrollable").gameObject;
+        buildingsScrollableMenu = this.transform.Find("Buildings scrollable").gameObject;
+
+        MenuUIElement slidingMenuElement = slidingMenu.AddComponent<MenuUIElement>();
+        slidingMenuElement.Setup(new GameObject[] { heatersScrollableMenu, emittersScrollableMenu, buildingsScrollableMenu });
+
+        MenuUIElement heatersScrollableElement = heatersScrollableMenu.AddComponent<MenuUIElement>();
+        GameObject heaterParent = heatersScrollableMenu.transform.Find("View").Find("Content").gameObject;
+        heatersScrollableElement.Setup(new GameObject[] { emittersScrollableMenu, buildingsScrollableMenu }, heaters, heaterParent);
+
+        MenuUIElement emittersScrollableElement = emittersScrollableMenu.AddComponent<MenuUIElement>();
+        GameObject emitterParent = emittersScrollableMenu.transform.Find("View").Find("Content").gameObject;
+        emittersScrollableElement.Setup(new GameObject[] { heatersScrollableMenu, buildingsScrollableMenu }, emitters, emitterParent);
+
+        MenuUIElement buildingsScrollableElement = buildingsScrollableMenu.AddComponent<MenuUIElement>();
+        GameObject buildingParent = buildingsScrollableMenu.transform.Find("View").Find("Content").gameObject;
+        buildingsScrollableElement.Setup(new GameObject[] { heatersScrollableMenu, emittersScrollableMenu }, buildings, buildingParent, onBuildingClick ,true);
+    }
+
+    public void BuildingButtonClicked()
+    {
+
     }
     public void CycleSpeedButtonSprite()
     {
@@ -59,16 +84,21 @@ public class UIController : MonoBehaviour
 
     public void ToggleSlidingMenu()
     {
-        slidingMenu.GetComponent<ToggleUIElement>().ToggleElement();
+        slidingMenu.GetComponent<MenuUIElement>().ToggleElement(false);
     }
 
     public void ToggleHeatersMenu()
     {
-        heatersScrollableMenu.GetComponent<ToggleUIElement>().ToggleElement();
+        heatersScrollableMenu.GetComponent<MenuUIElement>().ToggleElement(true);
     }
 
     public void ToggleEmittersMenu()
     {
-        emittersScrollableMenu.GetComponent<ToggleUIElement>().ToggleElement();
+        emittersScrollableMenu.GetComponent<MenuUIElement>().ToggleElement(true);
+    }
+
+    public void ToggleBuildingsMenu()
+    {
+        buildingsScrollableMenu.GetComponent<MenuUIElement>().ToggleElement(true);
     }
 }

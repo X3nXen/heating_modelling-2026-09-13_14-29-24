@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEngine.LowLevelPhysics2D.PhysicsWorld;
@@ -7,28 +9,47 @@ public class SimulationManager : MonoBehaviour
 {
     private float timeStep = 1;
     private float nextUpdate = 1;
-
-    [SerializeField]
-    private Grid grid;
-
     [SerializeField]
     private float outsideHeat = 21f;
-
     private bool isStarted = false;
     private float simulationTime = 0f;
 
+    private BuildingManager buildingManager;
+    [SerializeField]
+    private SimulationGrid grid;
     [SerializeField]
     private GameObject ui;
-    [SerializeField]
-    private GameObject startButton;
-    [SerializeField]
-    private GameObject speedButton;
-    [SerializeField]
-    private GameObject timeDisplay;
 
-    void Start()
+    private List<IPlaceableObject> heaters;
+    private List<IPlaceableObject> emitters;
+    private List<IPlaceableObject> buildings;
+    void Awake()
     {
-        ui.GetComponent<UIController>().Init(startButton.GetComponent<Image>(), speedButton.GetComponent<Image>(), timeDisplay.GetComponent<Text>());
+        GameObject[] heaterPrefabs = Resources.LoadAll<GameObject>("Prefabs/Heaters");
+        heaters = new List<IPlaceableObject>();
+        emitters = new List<IPlaceableObject>(); //Resources.LoadAll("Prefabs/Emitters/") as APlaceableObject[];
+        GameObject[] buildingPrefabs = Resources.LoadAll<GameObject>("Prefabs/Buildings");
+        buildings = new List<IPlaceableObject>();
+        foreach (GameObject go in heaterPrefabs)
+        {
+            if (go != null)
+            {
+                IPlaceableObject temp = go.GetComponent<IPlaceableObject>();
+                temp.Init();
+                heaters.Add(temp);
+            }
+        }
+        foreach(GameObject go in buildingPrefabs)
+        {
+            if (go != null)
+            {
+                IPlaceableObject temp = go.GetComponent<IPlaceableObject>();
+                temp.Init();
+                buildings.Add(go.GetComponent<IPlaceableObject>());
+            }
+        }
+        ui.GetComponent<UIController>().Init(heaters, emitters, buildings, new Action<IPlaceableObject>((IPlaceableObject buildingObject) => { this.SetNewBuilding(buildingObject.GetPrefab()); }));
+        this.buildingManager = this.gameObject.AddComponent<BuildingManager>();
     }
 
     void Update()
@@ -39,6 +60,7 @@ public class SimulationManager : MonoBehaviour
         simulationTime += Time.deltaTime * timeStep;
 
         ui.GetComponent<UIController>().UpdateTimeDisplay(simulationTime);
+        buildingManager.UpdateWallOpacity();
 
         if (Time.time >= nextUpdate)
         {
@@ -85,5 +107,10 @@ public class SimulationManager : MonoBehaviour
                 break;
         }
         ui.GetComponent<UIController>().CycleSpeedButtonSprite();
+    }
+
+    public void SetNewBuilding(GameObject building)
+    {
+        this.buildingManager.SetBuildingObject(building);
     }
 }
