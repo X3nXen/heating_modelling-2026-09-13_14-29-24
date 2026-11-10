@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 public interface IPlaceableObject
 {
@@ -7,7 +9,7 @@ public interface IPlaceableObject
 
     GameObject GetPrefab();
 
-    void Init();
+    void Init(Action<List<InformationFlag>, AInformationPanelOpener> infoPanelOpen);
 
     string GetDisplayName();
 

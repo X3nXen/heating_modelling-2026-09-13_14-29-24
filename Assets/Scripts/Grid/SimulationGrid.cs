@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class SimulationGrid : MonoBehaviour
 {
@@ -40,7 +41,7 @@ public class SimulationGrid : MonoBehaviour
         }
     }
 
-    public void Setup()
+    public void Setup(Action<List<InformationFlag>, AInformationPanelOpener> panelOpener)
     {
         if (sectionSize <= 0)
             return;
@@ -63,16 +64,18 @@ public class SimulationGrid : MonoBehaviour
 
                     GameObject newGridPoint = GridPoint.CreateGridpointGameobject(pointRepresentation, pointPosition, this);
                     pointObjects.Add(newGridPoint);
+                    GridPoint gridPointComponent = newGridPoint.GetComponent<GridPoint>();
+                    gridPointComponent.Init(panelOpener);
 
-                    gridPoints[verticalIndex, horizontalIndex, depthIndex] = newGridPoint.GetComponent<GridPoint>();
+                    gridPoints[verticalIndex, horizontalIndex, depthIndex] = gridPointComponent;
                 }
             }
         }
     }
 
-    public void StartSim(float outsideHeat)
+    public void StartSim(float outsideHeat, Action<List<InformationFlag>, AInformationPanelOpener> panelOpener)
     {
-        Setup();
+        Setup(panelOpener);
         foreach(GridPoint gridPoint in gridPoints)
         {
             gridPoint.SetCurrentHeat(outsideHeat);

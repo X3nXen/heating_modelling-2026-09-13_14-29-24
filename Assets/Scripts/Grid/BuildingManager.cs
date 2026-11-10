@@ -16,8 +16,8 @@ public class BuildingManager: MonoBehaviour
     private void Awake()
     {
         cameraPos = Camera.main.transform;
-        baseMaterial = Resources.Load("Materials/BrickWall") as Material;
-        invisibleMaterial = Resources.Load("Materials/Invisible") as Material;
+        baseMaterial = ResourceLoader.Get("Materials/BrickWall") as Material;
+        invisibleMaterial = ResourceLoader.Get("Materials/Invisible") as Material;
         buildingObject = null;
     }
 

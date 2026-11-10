@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 public class Building_1: MonoBehaviour, IPlaceableObject
 {
@@ -27,16 +30,11 @@ public class Building_1: MonoBehaviour, IPlaceableObject
         return prefab;
     }
 
-    public void Init()
+    public void Init(Action<List<InformationFlag>, AInformationPanelOpener> _)
     {
         this.displayName = "Kocka ház";
-        this.displayImage = Resources.Load<Sprite>("Images/Boiler_display_icon");
+        this.displayImage = ResourceLoader.Get("Images/Boiler_display_icon") as Sprite;
 
-        this.prefab = Resources.Load<GameObject>("Prefabs/Buildings/Box_house");
-    }
-
-    private void Awake()
-    {
-        Init();
+        this.prefab = ResourceLoader.Get("Prefabs/Buildings/Box_house") as GameObject;
     }
 }

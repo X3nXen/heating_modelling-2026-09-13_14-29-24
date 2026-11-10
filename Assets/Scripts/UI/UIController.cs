@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,6 +22,8 @@ public class UIController : MonoBehaviour
     private GameObject emittersScrollableMenu;
     private GameObject buildingsScrollableMenu;
 
+    private InformationPanelController informationPanelController;
+
     public void Init(
         List<IPlaceableObject> heaters,
         List<IPlaceableObject> emitters,
@@ -31,13 +34,13 @@ public class UIController : MonoBehaviour
         this.speedButton = this.transform.Find("Speed control").Find("Fastforward icon").Find("Icon").gameObject.GetComponent<Image>();
         this.timeDisplay = this.transform.Find("Time Display").Find("Time").gameObject.GetComponent<Text>(); ;
         startButtonSprites = new Sprite[2];
-        startButtonSprites[0] = Resources.Load<Sprite>("Images/Pause_icon");
-        startButtonSprites[1] = Resources.Load<Sprite>("Images/Play_icon");
+        startButtonSprites[0] = ResourceLoader.Get("Images/Pause_icon") as Sprite;
+        startButtonSprites[1] = ResourceLoader.Get("Images/Play_icon") as Sprite;
 
         speedButtonSprites = new Sprite[3];
-        speedButtonSprites[0] = Resources.Load<Sprite>("Images/Bar-2");
-        speedButtonSprites[1] = Resources.Load<Sprite>("Images/Bar-3");
-        speedButtonSprites[2] = Resources.Load<Sprite>("Images/Bar-1");
+        speedButtonSprites[0] = ResourceLoader.Get("Images/Bar-2") as Sprite;
+        speedButtonSprites[1] = ResourceLoader.Get("Images/Bar-3") as Sprite;
+        speedButtonSprites[2] = ResourceLoader.Get("Images/Bar-1") as Sprite;
 
         slidingMenu = this.transform.Find("Sliding menu").gameObject;
         heatersScrollableMenu = this.transform.Find("Heaters scrollable").gameObject;
@@ -58,12 +61,28 @@ public class UIController : MonoBehaviour
         MenuUIElement buildingsScrollableElement = buildingsScrollableMenu.AddComponent<MenuUIElement>();
         GameObject buildingParent = buildingsScrollableMenu.transform.Find("View").Find("Content").gameObject;
         buildingsScrollableElement.Setup(new GameObject[] { heatersScrollableMenu, emittersScrollableMenu }, buildings, buildingParent, onBuildingClick ,true);
+
+        GameObject informationPanel = this.transform.Find("Information Panel").gameObject;
+        this.informationPanelController = informationPanel.AddComponent<InformationPanelController>();
+        this.informationPanelController.Init();
     }
 
-    public void BuildingButtonClicked()
+    public void OpenInformationPanel(List<InformationFlag> informationFlags)
     {
-
+        this.informationPanelController.ToggleVisibility(informationFlags);
     }
+
+    public void ResetInformationPanel()
+    {
+        this.informationPanelController.ResetObject();
+    }
+
+    public void UpdateInformationPanelValue(InformationFlag informationFlag, float value)
+    {
+        Debug.Log("Information Update");
+        this.informationPanelController.UpdateValue(informationFlag, value.ToString());
+    }
+
     public void CycleSpeedButtonSprite()
     {
         speedButtonIndex = (speedButtonIndex+1) % speedButtonSprites.Length;

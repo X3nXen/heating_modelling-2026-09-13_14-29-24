@@ -1,8 +1,9 @@
 using System;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Boiler : MonoBehaviour, IRadiatingObject, IDragAndDropObject
+public class Boiler : AInformationPanelOpener, IRadiatingObject, IDragAndDropObject
 {
     public float radiationHeat { get ; set; }
     public string displayName { get; set; }
@@ -30,15 +31,16 @@ public class Boiler : MonoBehaviour, IRadiatingObject, IDragAndDropObject
         return prefab;
     }
 
-    public void Init()
+    public void Init(Action<List<InformationFlag>, AInformationPanelOpener> infoPanelOpen)
     {
         this.displayName = "Kazán";
-        this.displayImage = Resources.Load<Sprite>("Images/Boiler_display_icon");
+        this.displayImage = ResourceLoader.Get("Images/Boiler_display_icon") as Sprite;
 
-        this.prefab = Resources.Load<GameObject>("Prefabs/Heaters/Boiler_prefab");
+        this.prefab = ResourceLoader.Get("Prefabs/Heaters/Boiler_prefab") as GameObject;
         this.layerMask = LayerMask.GetMask("House_layer");
 
         this.radiationHeat = 35;
+        InitInfoPanel(new List<InformationFlag>() { InformationFlag.TEMPERATURE }, infoPanelOpen);
     }
 
     public void OnTriggerEnter(Collider other)
@@ -58,8 +60,8 @@ public class Boiler : MonoBehaviour, IRadiatingObject, IDragAndDropObject
         }
     }
 
-    private void Awake()
+    public override void UpdateInformation(Action<InformationFlag, float> panelInfoUpdater)
     {
-        Init();
+        panelInfoUpdater(InformationFlag.TEMPERATURE, this.radiationHeat);
     }
 }

@@ -16,7 +16,7 @@ public class MenuUIElement: MonoBehaviour
     }
     public void Setup(GameObject[] collapseElements, List<IPlaceableObject> objectElements, GameObject parent, Action<IPlaceableObject> clickEvent = null, bool clickable = false)
     {
-        this.uiElementPrefab = clickable ? Resources.Load<GameObject>("Prefabs/Clickable_Content_Element") : Resources.Load<GameObject>("Prefabs/Content_Element");
+        this.uiElementPrefab = clickable ? ResourceLoader.Get("Prefabs/Clickable_Content_Element") as GameObject : ResourceLoader.Get("Prefabs/Content_Element") as GameObject;
         this.collapseElements = collapseElements;
         foreach (IPlaceableObject element in objectElements)
         {

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CameraMovement : MonoBehaviour
 {
@@ -10,12 +11,38 @@ public class CameraMovement : MonoBehaviour
     public Vector3 start = new Vector3(-20, 10, 0);
     public Vector3 lookAt = new Vector3(0, 0, 0);
     public float radius = 10;
+    private float moveDirection = 0f;
     void Start()
     {
         transform.position = start;
 
     }
-    void Update()
+
+    private void Update()
+    {
+        if(moveDirection != 0f)
+        {
+            transform.RotateAround(lookAt, Vector3.up, moveDirection * moveSpeed * Time.deltaTime);
+            transform.LookAt(lookAt);
+        }
+    }
+
+    public void Move(InputAction.CallbackContext context)
+    {
+        string actionName = context.action.name;
+
+        if (actionName == "Left")
+        {
+            if (context.performed) moveDirection = 1f;
+            else if (context.canceled) moveDirection = 0f;
+        }
+        else if (actionName == "Right")
+        {
+            if (context.performed) moveDirection = -1f;
+            else if (context.canceled) moveDirection = 0f;
+        }
+    }
+    /*void Update()
     {
         if (Input.GetAxisRaw("Horizontal") != 0)
         {
@@ -29,5 +56,5 @@ public class CameraMovement : MonoBehaviour
             Camera.main.fieldOfView = fov;
         }
         transform.LookAt(lookAt);
-    }
+    }*/
 }

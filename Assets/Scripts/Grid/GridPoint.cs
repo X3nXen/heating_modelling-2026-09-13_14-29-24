@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class GridPoint : ADiffuseMaterial
 {
     public static GameObject CreateGridpointGameobject(GameObject prefab, Vector3 position, SimulationGrid parent)
     {
-        Material barelyVisibleMaterial = Resources.Load("Materials/Invisible") as Material;
+        Material barelyVisibleMaterial = ResourceLoader.Get("Materials/Invisible") as Material;
         GameObject newPoint = Instantiate(prefab, position, Quaternion.identity);
         newPoint.name = $"Gridpoint_{position.x}_{position.y}_{position.z}";
         newPoint.transform.SetParent(parent.transform);
@@ -24,12 +22,6 @@ public class GridPoint : ADiffuseMaterial
     private float currentHeat;
     private bool shouldUpdate = true;
     private Material visibleMaterial;
-
-    public void Awake()
-    {
-        this.visibleMaterial = Resources.Load("Materials/Visible") as Material;
-        this.diffusivity = 0.000019f;
-    }
     public void RecalculateHeat(float left, float right, float up, float down, float front, float behind, float sectionSize, float timeStep)
     {
         if (!shouldUpdate)
@@ -64,5 +56,18 @@ public class GridPoint : ADiffuseMaterial
         {
             this.gameObject.GetComponent<MeshRenderer>().SetMaterials(new List<Material>() { visibleMaterial });
         }
+    }
+
+    public override void Init(Action<List<InformationFlag>, AInformationPanelOpener> informationPanelOpener)
+    {
+        this.visibleMaterial = ResourceLoader.Get("Materials/Visible") as Material;
+        this.diffusivity = 0.000019f;
+        InitInfoPanel(new List<InformationFlag>() { InformationFlag.TEMPERATURE, InformationFlag.DIFFUSIVITY }, informationPanelOpener);
+    }
+
+    public override void UpdateInformation(Action<InformationFlag, float> panelInfoUpdater)
+    {
+        panelInfoUpdater(InformationFlag.TEMPERATURE, this.currentHeat);
+        panelInfoUpdater(InformationFlag.DIFFUSIVITY, this.diffusivity);
     }
 }

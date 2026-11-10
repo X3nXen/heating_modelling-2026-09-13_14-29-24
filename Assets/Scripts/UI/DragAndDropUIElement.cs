@@ -10,7 +10,6 @@ public class DragAndDropUIElement: UIObject, IBeginDragHandler, IEndDragHandler,
     private Vector3 itemHeighOffset;
     protected GameObject dragItem;
     protected GameObject prefab;
-    protected IPlaceableObject mountComponent;
 
     public override void InitUIObject()
     {

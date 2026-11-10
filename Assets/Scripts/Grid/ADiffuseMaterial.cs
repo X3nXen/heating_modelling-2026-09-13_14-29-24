@@ -1,9 +1,14 @@
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ADiffuseMaterial: MonoBehaviour
+public abstract class ADiffuseMaterial: AInformationPanelOpener
 {
     [SerializeField]
     protected float diffusivity;
+
+    public abstract void Init(Action<List<InformationFlag>, AInformationPanelOpener> informationPanelOpener);
 
     public virtual void OnTriggerEnter(Collider other)
     {
