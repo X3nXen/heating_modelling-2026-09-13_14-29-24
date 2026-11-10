@@ -1,34 +1,56 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using static UnityEngine.LowLevelPhysics2D.PhysicsWorld;
 
 public class SimulationManager : MonoBehaviour
 {
     private float timeStep = 1;
     private float nextUpdate = 1;
-
-    [SerializeField]
-    private Grid grid;
-
     [SerializeField]
     private float outsideHeat = 21f;
-
     private bool isStarted = false;
     private float simulationTime = 0f;
 
+    private BuildingManager buildingManager;
+    [SerializeField]
+    private SimulationGrid grid;
     [SerializeField]
     private GameObject ui;
-    [SerializeField]
-    private GameObject startButton;
-    [SerializeField]
-    private GameObject speedButton;
-    [SerializeField]
-    private GameObject timeDisplay;
+    private UIController uiController;
 
-    void Start()
+    private List<IPlaceableObject> heaters;
+    private List<IPlaceableObject> emitters;
+    private List<IPlaceableObject> buildings;
+
+    private AInformationPanelOpener panelOwner;
+    void Awake()
     {
-        ui.GetComponent<UIController>().Init(startButton.GetComponent<Image>(), speedButton.GetComponent<Image>(), timeDisplay.GetComponent<Text>());
+        this.uiController = ui.GetComponent<UIController>();
+        var heaterPrefabs = ResourceLoader.GetAll("Prefabs/Heaters");
+        heaters = new List<IPlaceableObject>();
+        emitters = new List<IPlaceableObject>(); //Resources.LoadAll("Prefabs/Emitters/") as APlaceableObject[];
+        var buildingPrefabs = ResourceLoader.GetAll("Prefabs/Buildings");
+        buildings = new List<IPlaceableObject>();
+        foreach (var go in heaterPrefabs)
+        {
+            if (go != null)
+            {
+                IPlaceableObject temp = (go as GameObject).GetComponent<IPlaceableObject>();
+                temp.Init(OpenInformationPanel);
+                heaters.Add(temp);
+            }
+        }
+        foreach(var go in buildingPrefabs)
+        {
+            if (go != null)
+            {
+                IPlaceableObject temp = (go as GameObject).GetComponent<IPlaceableObject>();
+                temp.Init(OpenInformationPanel);
+                buildings.Add(temp);
+            }
+        }
+        this.uiController.Init(heaters, emitters, buildings, new Action<IPlaceableObject>((IPlaceableObject buildingObject) => { this.SetNewBuilding(buildingObject.GetPrefab()); }));
+        this.buildingManager = this.gameObject.AddComponent<BuildingManager>();
     }
 
     void Update()
@@ -39,6 +61,8 @@ public class SimulationManager : MonoBehaviour
         simulationTime += Time.deltaTime * timeStep;
 
         ui.GetComponent<UIController>().UpdateTimeDisplay(simulationTime);
+        buildingManager.UpdateWallOpacity();
+        UpdateInformationPanel();
 
         if (Time.time >= nextUpdate)
         {
@@ -62,7 +86,7 @@ public class SimulationManager : MonoBehaviour
             return;
         }
         isStarted = true;
-        grid.StartSim(outsideHeat);
+        grid.StartSim(outsideHeat, OpenInformationPanel);
         simulationTime = 0;
         ui.GetComponent<UIController>().ToggleStartButtonSprite();
         ui.GetComponent<UIController>().UpdateTimeDisplay(0f);
@@ -85,5 +109,28 @@ public class SimulationManager : MonoBehaviour
                 break;
         }
         ui.GetComponent<UIController>().CycleSpeedButtonSprite();
+    }
+
+    public void OpenInformationPanel(List<InformationFlag> informationFlag, AInformationPanelOpener newOwner)
+    {
+        if(this.panelOwner != null && this.panelOwner != newOwner)
+        {
+            this.uiController.ResetInformationPanel();
+        }
+        this.uiController.OpenInformationPanel(informationFlag);
+        this.panelOwner = newOwner;
+    }
+
+    public void UpdateInformationPanel()
+    {
+        if(this.panelOwner != null)
+        {
+            panelOwner.UpdateInformation(this.uiController.UpdateInformationPanelValue);
+        }
+    }
+
+    public void SetNewBuilding(GameObject building)
+    {
+        this.buildingManager.SetBuildingObject(building);
     }
 }
