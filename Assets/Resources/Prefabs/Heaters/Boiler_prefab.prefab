@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4563375174511764117}
   - component: {fileID: 8892753483652462481}
   - component: {fileID: -8467871062591005260}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Boiler_prefab
   m_TagString: RadiatingObject
   m_Icon: {fileID: 0}

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -12,7 +13,6 @@ public class BuildingManager: MonoBehaviour
     private Material invisibleMaterial;
     private GameObject buildingObject;
     private Vector3 placePosition = new Vector3(15f, 1.5f, 15f);
-
     private void Awake()
     {
         cameraPos = Camera.main.transform;
@@ -21,7 +21,7 @@ public class BuildingManager: MonoBehaviour
         buildingObject = null;
     }
 
-    public void SetBuildingObject(GameObject buildingObject)
+    public void SetBuildingObject(GameObject buildingObject, Action<List<InformationFlag>, IInformationPanelOpener, Dictionary<InformationFlag, string>> infoPanelOpen)
     {
         if(this.buildingObject != null)
         {
@@ -34,13 +34,11 @@ public class BuildingManager: MonoBehaviour
             if (child.gameObject.tag == "Wall")
             {
                 walls.Add(child.gameObject);
-                
-            }
-            if(child.gameObject.tag != "Building")
-            {
-                child.gameObject.AddComponent<Wall>();
+                Wall wallComponent = child.gameObject.AddComponent<Wall>();
+                wallComponent.Init(infoPanelOpen);
             }
         }
+        UpdateWallOpacity();
     }
 
     public void UpdateWallOpacity()
@@ -56,7 +54,11 @@ public class BuildingManager: MonoBehaviour
                 minDistanceWall = wall;
             }
             wall.GetComponent<MeshRenderer>().material = baseMaterial;
+            wall.layer = LayerMask.NameToLayer("Clickable");
         }
         minDistanceWall.GetComponent<MeshRenderer>().material = invisibleMaterial;
+        minDistanceWall.layer = LayerMask.NameToLayer("Default");
     }
+
+    
 }

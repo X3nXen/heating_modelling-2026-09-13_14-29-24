@@ -1,37 +1,18 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class Boiler : AInformationPanelOpener, IRadiatingObject, IDragAndDropObject
+public class Boiler : ASimulationObject, IRadiatingObject, IDragAndDropObject
 {
     public float radiationHeat { get ; set; }
-    public string displayName { get; set; }
-    public Sprite displayImage { get; set; }
-    public GameObject prefab { get; set; }
     public LayerMask layerMask { get; set; }
-
-    public Sprite GetDisplayImage()
-    {
-        return displayImage;
-    }
-
-    public string GetDisplayName()
-    {
-        return displayName;
-    }
 
     public LayerMask GetLayerMask()
     {
-        return this.layerMask;
+        return layerMask;
     }
 
-    public GameObject GetPrefab()
-    {
-        return prefab;
-    }
-
-    public void Init(Action<List<InformationFlag>, AInformationPanelOpener> infoPanelOpen)
+    public override void Init(Action<List<InformationFlag>, IInformationPanelOpener, Dictionary<InformationFlag, string>> infoPanelOpen)
     {
         this.displayName = "Kazán";
         this.displayImage = ResourceLoader.Get("Images/Boiler_display_icon") as Sprite;
@@ -40,7 +21,9 @@ public class Boiler : AInformationPanelOpener, IRadiatingObject, IDragAndDropObj
         this.layerMask = LayerMask.GetMask("House_layer");
 
         this.radiationHeat = 35;
-        InitInfoPanel(new List<InformationFlag>() { InformationFlag.TEMPERATURE }, infoPanelOpen);
+        this.editableDefaultValues = new Dictionary<InformationFlag, string>();
+        this.editableDefaultValues.Add(InformationFlag.OBJECT_TEMPERATURE, this.radiationHeat.ToString());
+        InitInfoPanel(new List<InformationFlag>() { InformationFlag.TEMPERATURE, InformationFlag.OBJECT_TEMPERATURE }, infoPanelOpen);
     }
 
     public void OnTriggerEnter(Collider other)
@@ -60,8 +43,27 @@ public class Boiler : AInformationPanelOpener, IRadiatingObject, IDragAndDropObj
         }
     }
 
-    public override void UpdateInformation(Action<InformationFlag, float> panelInfoUpdater)
+    public override void UpdateInformation(Action<InformationFlag, string> panelInfoUpdater)
     {
-        panelInfoUpdater(InformationFlag.TEMPERATURE, this.radiationHeat);
+        panelInfoUpdater(InformationFlag.OBJECT_NAME, this.displayName);
+        panelInfoUpdater(InformationFlag.TEMPERATURE, this.radiationHeat.ToString());
+    }
+
+    public override void SetEqualTo(ASimulationObject simulationObject)
+    {
+        this.informationFlags = simulationObject.informationFlags;
+        this.panelOpener = simulationObject.panelOpener;
+        this.displayImage = simulationObject.displayImage;
+        this.displayName = simulationObject.displayName;
+        this.prefab = simulationObject.prefab;
+        this.radiationHeat = ((Boiler)simulationObject).radiationHeat;
+        this.layerMask = ((Boiler)simulationObject).layerMask;
+        this.editableDefaultValues = new Dictionary<InformationFlag, string>(simulationObject.editableDefaultValues);
+    }
+
+    public void SetRadiationHeat(float radiationHeat)
+    {
+        this.radiationHeat = radiationHeat;
+        this.editableDefaultValues[InformationFlag.OBJECT_TEMPERATURE] = this.radiationHeat.ToString();
     }
 }

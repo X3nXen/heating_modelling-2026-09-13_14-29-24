@@ -3,5 +3,9 @@ using UnityEngine;
 public enum InformationFlag
 {
     TEMPERATURE,
-    DIFFUSIVITY
+    DIFFUSIVITY,
+    OBJECT_NAME,
+    OBJECT_TEMPERATURE,
+    WALL_MATERIAL,
+    WALL_INSULATED
 }

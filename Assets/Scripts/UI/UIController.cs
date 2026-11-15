@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,12 +24,15 @@ public class UIController : MonoBehaviour
     private GameObject buildingsScrollableMenu;
 
     private InformationPanelController informationPanelController;
+    private TextMeshProUGUI globalInformationAverageDisplay;
+    private TMP_InputField globalInformationOutsideTempInput;
+    private TMP_InputField globalInformationInsideTempInput;
 
     public void Init(
-        List<IPlaceableObject> heaters,
-        List<IPlaceableObject> emitters,
-        List<IPlaceableObject> buildings,
-        Action<IPlaceableObject> onBuildingClick)
+        List<ASimulationObject> heaters,
+        List<ASimulationObject> emitters,
+        List<ASimulationObject> buildings,
+        Action<ASimulationObject> onBuildingClick)
     {
         this.startButton = this.transform.Find("Start stop").Find("Start icon").Find("Icon").gameObject.GetComponent<Image>();
         this.speedButton = this.transform.Find("Speed control").Find("Fastforward icon").Find("Icon").gameObject.GetComponent<Image>();
@@ -65,11 +69,21 @@ public class UIController : MonoBehaviour
         GameObject informationPanel = this.transform.Find("Information Panel").gameObject;
         this.informationPanelController = informationPanel.AddComponent<InformationPanelController>();
         this.informationPanelController.Init();
+
+        Transform globalInformationPanel = this.transform.Find("Global Information");
+        this.globalInformationAverageDisplay = globalInformationPanel.transform.Find("INFORMATION.AVG_TEMPERATURE").Find("Value").gameObject.GetComponent<TextMeshProUGUI>();
+        this.globalInformationInsideTempInput = globalInformationPanel.transform.Find("INFORMATION.INSIDE_TEMPERATURE").Find("Value").GetComponent<TMP_InputField>();
+        this.globalInformationOutsideTempInput = globalInformationPanel.transform.Find("INFORMATION.OUTSIDE_TEMPERATURE").Find("Value").GetComponent<TMP_InputField>();
     }
 
-    public void OpenInformationPanel(List<InformationFlag> informationFlags)
+    public void OpenInformationPanel(List<InformationFlag> informationFlags, Dictionary<InformationFlag, string> editableDefaultValues)
     {
-        this.informationPanelController.ToggleVisibility(informationFlags);
+        this.informationPanelController.ToggleVisibility(informationFlags, editableDefaultValues);
+    }
+
+    public void CloseInformationPanel()
+    {
+        this.informationPanelController.ClosePanel();
     }
 
     public void ResetInformationPanel()
@@ -77,10 +91,42 @@ public class UIController : MonoBehaviour
         this.informationPanelController.ResetObject();
     }
 
-    public void UpdateInformationPanelValue(InformationFlag informationFlag, float value)
+    public int GetInformationPanelWallMaterialValue()
     {
-        Debug.Log("Information Update");
-        this.informationPanelController.UpdateValue(informationFlag, value.ToString());
+        return this.informationPanelController.GetWallMaterialInputValue();
+    }
+
+    public float GetObjectTemperatureInputValue()
+    {
+        return this.informationPanelController.GetObjectTemperatureInputValue();
+    }
+
+    public void UpdateInformationPanelValue(InformationFlag informationFlag, string value)
+    {
+        this.informationPanelController.UpdateValue(informationFlag, value);
+    }
+
+    public void UpdateGlobalInformation(string averageTemperature, string insideTemperature, string outsideTemperature)
+    {
+        this.globalInformationAverageDisplay.text = averageTemperature + "°C";
+        if(this.globalInformationInsideTempInput.text == "" || this.globalInformationInsideTempInput == null)
+        {
+            this.globalInformationInsideTempInput.text = insideTemperature;
+        }
+        if (this.globalInformationOutsideTempInput.text == "" || this.globalInformationOutsideTempInput == null)
+        {
+            this.globalInformationOutsideTempInput.text = outsideTemperature;
+        }
+    }
+
+    public float GetGlobalInformationInsideTemperature()
+    {
+        return float.Parse(this.globalInformationInsideTempInput.text);
+    }
+
+    public float GetGlobalInformationOutsideTemperature()
+    {
+        return float.Parse(this.globalInformationOutsideTempInput.text);
     }
 
     public void CycleSpeedButtonSprite()

@@ -14,11 +14,11 @@ public class MenuUIElement: MonoBehaviour
     { 
         this.collapseElements = collapseElements;
     }
-    public void Setup(GameObject[] collapseElements, List<IPlaceableObject> objectElements, GameObject parent, Action<IPlaceableObject> clickEvent = null, bool clickable = false)
+    public void Setup(GameObject[] collapseElements, List<ASimulationObject> objectElements, GameObject parent, Action<ASimulationObject> clickEvent = null, bool clickable = false)
     {
         this.uiElementPrefab = clickable ? ResourceLoader.Get("Prefabs/Clickable_Content_Element") as GameObject : ResourceLoader.Get("Prefabs/Content_Element") as GameObject;
         this.collapseElements = collapseElements;
-        foreach (IPlaceableObject element in objectElements)
+        foreach (ASimulationObject element in objectElements)
         {
             GameObject newObject = Instantiate(uiElementPrefab);
             newObject.name = element.displayName + "_choice";
@@ -38,6 +38,7 @@ public class MenuUIElement: MonoBehaviour
                 newUIObject.SetDisplayName(element.GetDisplayName());
                 newUIObject.SetDisplayImage(element.GetDisplayImage());
                 newUIObject.SetLayerMask(((IDragAndDropObject)element).GetLayerMask());
+                newUIObject.SetComponentToCopy(element);
                 newUIObject.InitUIObject();
             }
         }
