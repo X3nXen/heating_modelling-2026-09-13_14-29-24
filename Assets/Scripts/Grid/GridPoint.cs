@@ -17,17 +17,20 @@ public class GridPoint : ADiffuseMaterial
         return newPoint;
     }
 
-    private Vector3 position;
     [SerializeField]
     private float currentHeat;
     private bool shouldUpdate = true;
     private Material visibleMaterial;
-    public void RecalculateHeat(float left, float right, float up, float down, float front, float behind, float sectionSize, float timeStep)
+    private float outsideHeat;
+    private float insideHeat;
+    private bool isInside = false;
+    public float RecalculateHeat(float left, float right, float up, float down, float front, float behind, float sectionSize, float timeStep)
     {
         if (!shouldUpdate)
-            return;
-        float heatChange = diffusivity * (timeStep / Mathf.Pow(sectionSize, 2)) * (left + right + front + behind + up + down - 6 * currentHeat);
-        currentHeat = currentHeat + heatChange;
+            return 0;
+        float heatChange = this.diffusivity * (timeStep / Mathf.Pow(sectionSize, 2)) * (left + right + front + behind + up + down - 6 * this.currentHeat);
+        this.currentHeat = Math.Max(currentHeat + heatChange, outsideHeat);
+        return currentHeat;
     }
 
     public void SetCurrentHeat(float currentHeat)
@@ -55,19 +58,43 @@ public class GridPoint : ADiffuseMaterial
         if (other.gameObject.tag == "Building")
         {
             this.gameObject.GetComponent<MeshRenderer>().SetMaterials(new List<Material>() { visibleMaterial });
+            this.isInside = true;
+            this.currentHeat = insideHeat;
         }
     }
 
-    public override void Init(Action<List<InformationFlag>, AInformationPanelOpener> informationPanelOpener)
+    public void SetInsideHeat(float insideHeat)
+    {
+        this.insideHeat = insideHeat;
+    }
+
+    public override void Init(Action<List<InformationFlag>, IInformationPanelOpener, Dictionary<InformationFlag, string>> informationPanelOpener)
     {
         this.visibleMaterial = ResourceLoader.Get("Materials/Visible") as Material;
         this.diffusivity = 0.000019f;
+        this.editableDefaultValues = null;
         InitInfoPanel(new List<InformationFlag>() { InformationFlag.TEMPERATURE, InformationFlag.DIFFUSIVITY }, informationPanelOpener);
     }
 
-    public override void UpdateInformation(Action<InformationFlag, float> panelInfoUpdater)
+    public override void UpdateInformation(Action<InformationFlag, string> panelInfoUpdater)
     {
-        panelInfoUpdater(InformationFlag.TEMPERATURE, this.currentHeat);
-        panelInfoUpdater(InformationFlag.DIFFUSIVITY, this.diffusivity);
+        panelInfoUpdater(InformationFlag.OBJECT_NAME, "Rácspont");
+        panelInfoUpdater(InformationFlag.TEMPERATURE, this.currentHeat.ToString());
+        panelInfoUpdater(InformationFlag.DIFFUSIVITY, this.diffusivity.ToString());
+    }
+
+    public void SetOutsideHeat(float outsideHeat)
+    {
+        this.outsideHeat = outsideHeat;
+    }
+
+    public float GetOutsideHeat()
+    {
+        return this.outsideHeat;
+    }
+
+    public bool IsInside()
+    {
+        return this.isInside;
     }
 }

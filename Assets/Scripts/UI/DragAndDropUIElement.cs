@@ -10,6 +10,7 @@ public class DragAndDropUIElement: UIObject, IBeginDragHandler, IEndDragHandler,
     private Vector3 itemHeighOffset;
     protected GameObject dragItem;
     protected GameObject prefab;
+    protected ASimulationObject componentToCopy;
 
     public override void InitUIObject()
     {
@@ -38,6 +39,7 @@ public class DragAndDropUIElement: UIObject, IBeginDragHandler, IEndDragHandler,
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        this.dragItem.GetComponent<ASimulationObject>().SetEqualTo(componentToCopy);
         this.dragItem = null;
     }
     private void UpdateItemPosition(PointerEventData eventData)
@@ -65,5 +67,10 @@ public class DragAndDropUIElement: UIObject, IBeginDragHandler, IEndDragHandler,
     public void SetLayerMask(LayerMask layerMask)
     {
         this.raycastLayerMask = layerMask;
+    }
+
+    public void SetComponentToCopy(ASimulationObject simulationObject)
+    {
+        this.componentToCopy = simulationObject;
     }
 }

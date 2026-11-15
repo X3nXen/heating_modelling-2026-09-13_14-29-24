@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1945239417992894784}
   - component: {fileID: -3479512388610807552}
   - component: {fileID: 6852613528266368844}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GridPoint
   m_TagString: Gridpoint
   m_Icon: {fileID: 0}

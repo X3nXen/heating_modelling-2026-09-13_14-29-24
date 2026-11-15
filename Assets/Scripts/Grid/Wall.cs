@@ -4,18 +4,37 @@ using UnityEngine;
 
 public class Wall: ADiffuseMaterial
 {
-    public override void Init(Action<List<InformationFlag>, AInformationPanelOpener> informationPanelOpener)
+    private WallMaterial material;
+    private bool isInsulated;
+    public override void Init(Action<List<InformationFlag>, IInformationPanelOpener, Dictionary<InformationFlag, string>> informationPanelOpener)
     {
-        InitInfoPanel(new List<InformationFlag>() { InformationFlag.DIFFUSIVITY }, informationPanelOpener);
+        this.isInsulated = false;
+        this.material = WallMaterial.BRICK_COMMON;
+        this.diffusivity = EnumHelper.GetWallMaterialDiffusivity(material);
+        this.editableDefaultValues = new Dictionary<InformationFlag, string>();
+        this.editableDefaultValues.Add(InformationFlag.WALL_MATERIAL, ((int)this.material).ToString());
+        this.editableDefaultValues.Add(InformationFlag.WALL_INSULATED, this.isInsulated.ToString());
+        InitInfoPanel(new List<InformationFlag>() { InformationFlag.DIFFUSIVITY, InformationFlag.WALL_MATERIAL, InformationFlag.WALL_INSULATED }, informationPanelOpener);
     }
 
-    public override void UpdateInformation(Action<InformationFlag, float> panelInfoUpdater)
+    public override void UpdateInformation(Action<InformationFlag, string> panelInfoUpdater)
     {
-        panelInfoUpdater(InformationFlag.DIFFUSIVITY, this.diffusivity);
+        panelInfoUpdater(InformationFlag.OBJECT_NAME, "Épület fal");
+        panelInfoUpdater(InformationFlag.DIFFUSIVITY, this.diffusivity.ToString());
     }
 
-    private void Awake()
+    public void SetMaterial(WallMaterial material)
     {
-        this.diffusivity = 0.00000052f;
+        this.material = material;
+        this.diffusivity = EnumHelper.GetWallMaterialDiffusivity(material);
+        this.editableDefaultValues[InformationFlag.WALL_MATERIAL] = ((int)this.material).ToString();
     }
+
+    public bool SetInsulated()
+    {
+        this.isInsulated = !isInsulated;
+        this.editableDefaultValues[InformationFlag.WALL_INSULATED] = this.isInsulated.ToString();
+        return this.isInsulated;
+    }
+
 }

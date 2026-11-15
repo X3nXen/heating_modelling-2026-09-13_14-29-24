@@ -9,7 +9,7 @@ public interface IPlaceableObject
 
     GameObject GetPrefab();
 
-    void Init(Action<List<InformationFlag>, AInformationPanelOpener> infoPanelOpen);
+    void Init(Action<List<InformationFlag>, IInformationPanelOpener, Dictionary<InformationFlag, string>> infoPanelOpen);
 
     string GetDisplayName();
 
