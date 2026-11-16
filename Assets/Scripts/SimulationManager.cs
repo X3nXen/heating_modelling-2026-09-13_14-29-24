@@ -15,6 +15,7 @@ public class SimulationManager : MonoBehaviour
     [SerializeField]
     private GameObject ui;
     private UIController uiController;
+    private CameraMovement cameraController;
 
     private List<ASimulationObject> heaters;
     private List<ASimulationObject> emitters;
@@ -27,6 +28,7 @@ public class SimulationManager : MonoBehaviour
     void Awake()
     {
         this.uiController = ui.GetComponent<UIController>();
+        this.cameraController = Camera.main.gameObject.GetComponent<CameraMovement>();
         var heaterPrefabs = ResourceLoader.GetAll("Prefabs/Heaters");
         heaters = new List<ASimulationObject>();
         emitters = new List<ASimulationObject>(); //Resources.LoadAll("Prefabs/Emitters/") as APlaceableObject[];
@@ -54,6 +56,7 @@ public class SimulationManager : MonoBehaviour
         this.uiController.UpdateGlobalInformation(this.insideHeat.ToString(), this.insideHeat.ToString(), this.outsideHeat.ToString());
         this.buildingManager = this.gameObject.AddComponent<BuildingManager>();
         this.buildingManager.SetBuildingObject(buildingPrefabs[0] as GameObject, OpenInformationPanel);
+        this.cameraController.SetFreeMovement(false);
     }
 
     void Update()
@@ -175,5 +178,11 @@ public class SimulationManager : MonoBehaviour
             float objectHeat = this.uiController.GetObjectTemperatureInputValue();
             (this.panelOwner as IRadiatingObject).SetRadiationHeat(objectHeat);
         }
+    }
+
+    public void ToggleFreeCamera()
+    {
+        bool isFreeMovement = this.cameraController.IsFreeMovement();
+        this.cameraController.SetFreeMovement(!isFreeMovement);
     }
 }
