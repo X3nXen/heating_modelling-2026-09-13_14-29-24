@@ -25,6 +25,8 @@ public class SimulationManager : MonoBehaviour
 
     private float insideHeat = 21;
     private float outsideHeat = 15;
+
+    private bool isGridView = true;
     void Awake()
     {
         this.uiController = ui.GetComponent<UIController>();
@@ -113,6 +115,13 @@ public class SimulationManager : MonoBehaviour
         this.uiController.CycleSpeedButtonSprite();
     }
 
+    public void ToggleView()
+    {
+        this.isGridView = !this.isGridView;
+        this.uiController.ToggleViewDisplay(this.isGridView);
+        this.grid.SetView(isGridView);
+    }
+
     public void OpenInformationPanel(List<InformationFlag> informationFlag, IInformationPanelOpener newOwner, Dictionary<InformationFlag, string> editableDefaultValues)
     {
         if(this.panelOwner != null && this.panelOwner != newOwner)
@@ -138,6 +147,8 @@ public class SimulationManager : MonoBehaviour
 
     public void SetNewBuilding(GameObject building)
     {
+        if (this.isStarted)
+            return;
         this.buildingManager.SetBuildingObject(building, OpenInformationPanel);
     }
 
