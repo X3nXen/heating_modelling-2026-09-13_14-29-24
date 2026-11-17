@@ -27,7 +27,10 @@ public class Wall: ADiffuseMaterial
     {
         this.material = material;
         this.diffusivity = EnumHelper.GetWallMaterialDiffusivity(material);
-        this.editableDefaultValues[InformationFlag.WALL_MATERIAL] = ((int)this.material).ToString();
+        if(this.editableDefaultValues != null)
+        {
+            this.editableDefaultValues[InformationFlag.WALL_MATERIAL] = ((int)this.material).ToString();
+        }
     }
 
     public bool SetInsulated()

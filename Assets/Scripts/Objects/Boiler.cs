@@ -33,7 +33,7 @@ public class Boiler : ASimulationObject, IRadiatingObject, IDragAndDropObject
             try
             {
                 GridPoint gridPoint = other.GetComponentInParent<GridPoint>();
-                gridPoint.SetShouldUpdate(false);
+                gridPoint.SetIsLocked(true);
                 gridPoint.SetCurrentHeat(this.radiationHeat);
             }
             catch (Exception e)

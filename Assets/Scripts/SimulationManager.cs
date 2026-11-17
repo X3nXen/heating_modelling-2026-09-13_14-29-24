@@ -25,6 +25,8 @@ public class SimulationManager : MonoBehaviour
 
     private float insideHeat = 21;
     private float outsideHeat = 15;
+
+    private bool isGridView = true;
     void Awake()
     {
         this.uiController = ui.GetComponent<UIController>();
@@ -52,7 +54,7 @@ public class SimulationManager : MonoBehaviour
                 buildings.Add(temp);
             }
         }
-        this.uiController.Init(heaters, emitters, buildings, new Action<ASimulationObject>((ASimulationObject buildingObject) => { this.SetNewBuilding(buildingObject.GetPrefab()); }));
+        this.uiController.Init(heaters, emitters, buildings, new Action<ASimulationObject>((ASimulationObject buildingObject) => { if(!this.isStarted)this.SetNewBuilding(buildingObject.GetPrefab()); }));
         this.uiController.UpdateGlobalInformation(this.insideHeat.ToString(), this.insideHeat.ToString(), this.outsideHeat.ToString());
         this.buildingManager = this.gameObject.AddComponent<BuildingManager>();
         this.buildingManager.SetBuildingObject(buildingPrefabs[0] as GameObject, OpenInformationPanel);
@@ -83,8 +85,9 @@ public class SimulationManager : MonoBehaviour
         if (isStarted)
         {
             isStarted = false;
+            this.uiController.BlockOnSimulationStart(isStarted);
+            this.uiController.ToggleStartButtonSprite();
             grid.CleanUp();
-           this.uiController.ToggleStartButtonSprite();
             return;
         }
         isStarted = true;
@@ -92,6 +95,7 @@ public class SimulationManager : MonoBehaviour
         simulationTime = 0;
         this.uiController.ToggleStartButtonSprite();
         this.uiController.UpdateTimeDisplay(0f);
+        this.uiController.BlockOnSimulationStart(isStarted);
     }
 
     public void CycleSimulationSpeed()
@@ -111,6 +115,13 @@ public class SimulationManager : MonoBehaviour
                 break;
         }
         this.uiController.CycleSpeedButtonSprite();
+    }
+
+    public void ToggleView()
+    {
+        this.isGridView = !this.isGridView;
+        this.uiController.ToggleViewDisplay(this.isGridView);
+        this.grid.SetView(isGridView);
     }
 
     public void OpenInformationPanel(List<InformationFlag> informationFlag, IInformationPanelOpener newOwner, Dictionary<InformationFlag, string> editableDefaultValues)
@@ -138,6 +149,8 @@ public class SimulationManager : MonoBehaviour
 
     public void SetNewBuilding(GameObject building)
     {
+        if (this.isStarted)
+            return;
         this.buildingManager.SetBuildingObject(building, OpenInformationPanel);
     }
 

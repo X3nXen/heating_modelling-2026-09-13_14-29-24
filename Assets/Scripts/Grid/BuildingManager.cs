@@ -33,9 +33,15 @@ public class BuildingManager: MonoBehaviour
         {
             if (child.gameObject.tag == "Wall")
             {
-                walls.Add(child.gameObject);
                 Wall wallComponent = child.gameObject.AddComponent<Wall>();
-                wallComponent.Init(infoPanelOpen);
+                if(child.gameObject.layer != LayerMask.NameToLayer("Ceiling"))
+                {
+                    walls.Add(child.gameObject);
+                    wallComponent.Init(infoPanelOpen);
+                } else
+                {
+                    wallComponent.SetMaterial(WallMaterial.BRICK_COMMON);
+                }
             }
         }
         UpdateWallOpacity();
@@ -54,7 +60,7 @@ public class BuildingManager: MonoBehaviour
                 minDistanceWall = wall;
             }
             wall.GetComponent<MeshRenderer>().material = baseMaterial;
-            wall.layer = LayerMask.NameToLayer("Clickable");
+            wall.layer = LayerMask.NameToLayer("Wall_layer");
         }
         minDistanceWall.GetComponent<MeshRenderer>().material = invisibleMaterial;
         minDistanceWall.layer = LayerMask.NameToLayer("Default");

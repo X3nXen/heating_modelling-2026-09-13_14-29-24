@@ -10,6 +10,8 @@ public class MenuUIElement: MonoBehaviour
     private GameObject[] expandElements;
     private GameObject uiElementPrefab;
 
+    private List<DragAndDropUIElement> uIObjects;
+
     public void Setup(GameObject[] collapseElements) 
     { 
         this.collapseElements = collapseElements;
@@ -18,6 +20,7 @@ public class MenuUIElement: MonoBehaviour
     {
         this.uiElementPrefab = clickable ? ResourceLoader.Get("Prefabs/Clickable_Content_Element") as GameObject : ResourceLoader.Get("Prefabs/Content_Element") as GameObject;
         this.collapseElements = collapseElements;
+        this.uIObjects = new List<DragAndDropUIElement>();
         foreach (ASimulationObject element in objectElements)
         {
             GameObject newObject = Instantiate(uiElementPrefab);
@@ -40,6 +43,7 @@ public class MenuUIElement: MonoBehaviour
                 newUIObject.SetLayerMask(((IDragAndDropObject)element).GetLayerMask());
                 newUIObject.SetComponentToCopy(element);
                 newUIObject.InitUIObject();
+                this.uIObjects.Add(newUIObject);
             }
         }
     }
@@ -72,5 +76,13 @@ public class MenuUIElement: MonoBehaviour
     public void SetExpandElements(GameObject[] expandElements)
     {
         this.expandElements = expandElements;
+    }
+
+    public void BlockDragObjects(bool block)
+    {
+        foreach(DragAndDropUIElement element in this.uIObjects)
+        {
+            element.SetCanDrag(block);
+        }
     }
 }

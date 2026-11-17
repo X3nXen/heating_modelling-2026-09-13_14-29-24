@@ -121,4 +121,11 @@ public class InformationPanelController : MonoBehaviour
             }
         }
     }
+
+    public void BlockOnSimulationStart(bool isStarted)
+    {
+        this.wallMaterialInput.interactable = !isStarted;
+        this.insulatedInput.interactable = !isStarted;
+        this.objectTemperatureInput.interactable = !isStarted;
+    }
 }

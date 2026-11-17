@@ -13,13 +13,13 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Wall Layer
+  - Wall_layer
   - Water
   - UI
   - House_layer
   - Surface
   - Clickable
-  - 
+  - Ceiling
   - 
   - 
   - 

@@ -11,6 +11,7 @@ public class DragAndDropUIElement: UIObject, IBeginDragHandler, IEndDragHandler,
     protected GameObject dragItem;
     protected GameObject prefab;
     protected ASimulationObject componentToCopy;
+    protected bool isStarted;
 
     public override void InitUIObject()
     {
@@ -21,11 +22,14 @@ public class DragAndDropUIElement: UIObject, IBeginDragHandler, IEndDragHandler,
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        this.itemHeighOffset = new Vector3(0, this.prefab.transform.localScale.y/2, 0);
-        this.dragItem = Instantiate(this.prefab, Vector3.zero, Quaternion.identity);
-        this.dragItem.SetActive(true);
+        if (!isStarted)
+        {
+            this.itemHeighOffset = new Vector3(0, this.prefab.transform.localScale.y/2, 0);
+            this.dragItem = Instantiate(this.prefab, Vector3.zero, Quaternion.identity);
+            this.dragItem.SetActive(true);
 
-        UpdateItemPosition(eventData);
+            UpdateItemPosition(eventData);
+        }
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -39,8 +43,11 @@ public class DragAndDropUIElement: UIObject, IBeginDragHandler, IEndDragHandler,
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        this.dragItem.GetComponent<ASimulationObject>().SetEqualTo(componentToCopy);
-        this.dragItem = null;
+        if(this.dragItem != null)
+        {
+            this.dragItem.GetComponent<ASimulationObject>().SetEqualTo(componentToCopy);
+            this.dragItem = null;
+        }
     }
     private void UpdateItemPosition(PointerEventData eventData)
     {
@@ -72,5 +79,10 @@ public class DragAndDropUIElement: UIObject, IBeginDragHandler, IEndDragHandler,
     public void SetComponentToCopy(ASimulationObject simulationObject)
     {
         this.componentToCopy = simulationObject;
+    }
+
+    public void SetCanDrag(bool canDrag)
+    {
+        this.isStarted = canDrag;
     }
 }

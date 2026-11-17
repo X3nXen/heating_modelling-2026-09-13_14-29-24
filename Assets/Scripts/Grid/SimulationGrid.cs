@@ -23,30 +23,27 @@ public class SimulationGrid : MonoBehaviour
     private float sumForAverage = 0;
     private int insidePointCount = 0;
     private float shownAverageTemp;
+    
 
     public void RecalculatePoints(float timeStep)
     {
         this.sumForAverage = 0;
         this.insidePointCount = 0;
-        for(int verticalIndex = 0; verticalIndex < verticalPointCount; verticalIndex++)
+        foreach (GridPoint point in gridPoints)
         {
-            for(int horizontalIndex = 0; horizontalIndex < horizontalPointCount; horizontalIndex++)
+            point.CalculateNextHeat(sectionSize, timeStep);
+        }
+
+        foreach (GridPoint point in gridPoints)
+        {
+            if (point.IsInside())
             {
-                for(int depthIndex = 0; depthIndex < depthPointCount; depthIndex++)
-                {
-                    float left = (verticalIndex - 1) < 0 ? 0 : gridPoints[verticalIndex - 1, horizontalIndex, depthIndex].GetCurrentHeat();
-                    float right = (verticalIndex + 1) >= verticalPointCount ? 0 : gridPoints[verticalIndex + 1, horizontalIndex, depthIndex].GetCurrentHeat();
-                    float behind = (horizontalIndex-1) < 0 ? 0 : gridPoints[verticalIndex, horizontalIndex-1, depthIndex].GetCurrentHeat();
-                    float front = (horizontalIndex + 1) >= horizontalPointCount ? 0 : gridPoints[verticalIndex, horizontalIndex + 1, depthIndex].GetCurrentHeat();
-                    float down = (depthIndex - 1) < 0 ? 0 : gridPoints[verticalIndex, horizontalIndex, depthIndex-1].GetCurrentHeat();
-                    float up = (depthIndex + 1) >= depthPointCount ? 0 : gridPoints[verticalIndex, horizontalIndex, depthIndex + 1].GetCurrentHeat();
-                    float changedHeat = gridPoints[verticalIndex, horizontalIndex, depthIndex].RecalculateHeat(left, right, up, down, front, behind, sectionSize, timeStep);
-                    if(gridPoints[verticalIndex, horizontalIndex, depthIndex].IsInside())
-                    {
-                        this.sumForAverage += changedHeat;
-                        insidePointCount++;
-                    }
-                }
+                this.sumForAverage += point.ApplyNextHeat();
+                this.insidePointCount++;
+            }
+            else
+            {
+                point.ApplyNextHeat();
             }
         }
         shownAverageTemp = this.sumForAverage / insidePointCount;
@@ -60,6 +57,7 @@ public class SimulationGrid : MonoBehaviour
         this.verticalPointCount = (int)(verticalLength / sectionSize);
         this.horizontalPointCount = (int) (depth / sectionSize);
         this.depthPointCount = (int)(horizontalLength / sectionSize);
+        List<GridPoint> gridPointsNeighbours;
 
         gridPoints = new GridPoint[verticalPointCount, horizontalPointCount, depthPointCount];
         for(int verticalIndex = 0; verticalIndex < verticalPointCount; verticalIndex++)
@@ -80,7 +78,6 @@ public class SimulationGrid : MonoBehaviour
                     gridPointComponent.SetOutsideHeat(outsideHeat);
                     gridPointComponent.SetInsideHeat(insideHeat);
                     gridPointComponent.Init(panelOpener);
-
                     gridPoints[verticalIndex, horizontalIndex, depthIndex] = gridPointComponent;
                 }
             }
@@ -88,6 +85,41 @@ public class SimulationGrid : MonoBehaviour
         this.sumForAverage = insideHeat;
         this.shownAverageTemp = this.sumForAverage;
         this.insidePointCount = 0;
+        for(int verticalIndex = 0; verticalIndex < verticalPointCount; verticalIndex++)
+        {
+            for(int horizontalIndex = 0; horizontalIndex < horizontalPointCount; horizontalIndex++)
+            {
+                for (int depthIndex = 0; depthIndex < depthPointCount; depthIndex++)
+                {
+                    gridPointsNeighbours = new List<GridPoint>();
+                    if ((verticalIndex - 1) >= 0)
+                    {
+                        gridPointsNeighbours.Add(gridPoints[verticalIndex - 1, horizontalIndex, depthIndex]);
+                    }
+                    if((verticalIndex + 1) < verticalPointCount)
+                    {
+                        gridPointsNeighbours.Add(gridPoints[verticalIndex + 1, horizontalIndex, depthIndex]);
+                    }
+                    if((horizontalIndex - 1) >= 0)
+                    {
+                        gridPointsNeighbours.Add(gridPoints[verticalIndex, horizontalIndex - 1, depthIndex]);
+                    }
+                    if((horizontalIndex + 1) < horizontalPointCount)
+                    {
+                        gridPointsNeighbours.Add(gridPoints[verticalIndex, horizontalIndex + 1, depthIndex]);
+                    }
+                    if((depthIndex - 1) >= 0)
+                    {
+                        gridPointsNeighbours.Add(gridPoints[verticalIndex, horizontalIndex, depthIndex - 1]);
+                    }
+                    if((depthIndex + 1) < depthPointCount)
+                    {
+                        gridPointsNeighbours.Add(gridPoints[verticalIndex, horizontalIndex, depthIndex + 1]);
+                    }
+                    gridPoints[verticalIndex, horizontalIndex, depthIndex].SetNeighbors(gridPointsNeighbours);
+                }
+            }
+        }
     }
 
     public void StartSim(Action<List<InformationFlag>, IInformationPanelOpener, Dictionary<InformationFlag, string>> panelOpener, float insideHeat, float outsideHeat)
@@ -113,5 +145,13 @@ public class SimulationGrid : MonoBehaviour
     public float GetAverageInsideTemperature()
     {
         return this.shownAverageTemp;
+    }
+
+    public void SetView(bool isGridView)
+    {
+        foreach(GridPoint gridpoint in this.gridPoints)
+        {
+            gridpoint.SwitchLook(isGridView);
+        }
     }
 }

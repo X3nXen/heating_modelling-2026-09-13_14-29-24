@@ -16,6 +16,9 @@ public class UIController : MonoBehaviour
     private Image speedButton;
     private int speedButtonIndex = 0;
 
+    private Sprite[] viewButtonSprites;
+    private Image viewButton;
+
     private Text timeDisplay;
 
     private GameObject slidingMenu;
@@ -36,7 +39,8 @@ public class UIController : MonoBehaviour
     {
         this.startButton = this.transform.Find("Start stop").Find("Start icon").Find("Icon").gameObject.GetComponent<Image>();
         this.speedButton = this.transform.Find("Speed control").Find("Fastforward icon").Find("Icon").gameObject.GetComponent<Image>();
-        this.timeDisplay = this.transform.Find("Time Display").Find("Time").gameObject.GetComponent<Text>(); ;
+        this.timeDisplay = this.transform.Find("Time Display").Find("Time").gameObject.GetComponent<Text>();
+        this.viewButton = this.transform.Find("Grid view button").Find("Grid view icon").Find("Icon").gameObject.GetComponent<Image>();
         startButtonSprites = new Sprite[2];
         startButtonSprites[0] = ResourceLoader.Get("Images/Pause_icon") as Sprite;
         startButtonSprites[1] = ResourceLoader.Get("Images/Play_icon") as Sprite;
@@ -45,6 +49,10 @@ public class UIController : MonoBehaviour
         speedButtonSprites[0] = ResourceLoader.Get("Images/Bar-2") as Sprite;
         speedButtonSprites[1] = ResourceLoader.Get("Images/Bar-3") as Sprite;
         speedButtonSprites[2] = ResourceLoader.Get("Images/Bar-1") as Sprite;
+
+        viewButtonSprites = new Sprite[2];
+        viewButtonSprites[0] = ResourceLoader.Get("Images/Grid_icon") as Sprite;
+        viewButtonSprites[1] = ResourceLoader.Get("Images/Graph_icon") as Sprite;
 
         slidingMenu = this.transform.Find("Sliding menu").gameObject;
         heatersScrollableMenu = this.transform.Find("Heaters scrollable").gameObject;
@@ -147,6 +155,11 @@ public class UIController : MonoBehaviour
         timeDisplay.text = string.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
     }
 
+    public void ToggleViewDisplay(bool isGridView)
+    {
+        viewButton.sprite = viewButtonSprites[isGridView ? 1 : 0];
+    }
+
     public void ToggleSlidingMenu()
     {
         slidingMenu.GetComponent<MenuUIElement>().ToggleElement(false);
@@ -165,5 +178,13 @@ public class UIController : MonoBehaviour
     public void ToggleBuildingsMenu()
     {
         buildingsScrollableMenu.GetComponent<MenuUIElement>().ToggleElement(true);
+    }
+
+    public void BlockOnSimulationStart(bool isStarted)
+    {
+        heatersScrollableMenu.GetComponent<MenuUIElement>().BlockDragObjects(isStarted);
+        this.globalInformationInsideTempInput.interactable = !isStarted;
+        this.globalInformationOutsideTempInput.interactable = !isStarted;
+        this.informationPanelController.BlockOnSimulationStart(isStarted);
     }
 }
