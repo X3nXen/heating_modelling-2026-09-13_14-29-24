@@ -54,7 +54,7 @@ public class SimulationManager : MonoBehaviour
                 buildings.Add(temp);
             }
         }
-        this.uiController.Init(heaters, emitters, buildings, new Action<ASimulationObject>((ASimulationObject buildingObject) => { this.SetNewBuilding(buildingObject.GetPrefab()); }));
+        this.uiController.Init(heaters, emitters, buildings, new Action<ASimulationObject>((ASimulationObject buildingObject) => { if(!this.isStarted)this.SetNewBuilding(buildingObject.GetPrefab()); }));
         this.uiController.UpdateGlobalInformation(this.insideHeat.ToString(), this.insideHeat.ToString(), this.outsideHeat.ToString());
         this.buildingManager = this.gameObject.AddComponent<BuildingManager>();
         this.buildingManager.SetBuildingObject(buildingPrefabs[0] as GameObject, OpenInformationPanel);
@@ -85,8 +85,9 @@ public class SimulationManager : MonoBehaviour
         if (isStarted)
         {
             isStarted = false;
+            this.uiController.BlockOnSimulationStart(isStarted);
+            this.uiController.ToggleStartButtonSprite();
             grid.CleanUp();
-           this.uiController.ToggleStartButtonSprite();
             return;
         }
         isStarted = true;
@@ -94,6 +95,7 @@ public class SimulationManager : MonoBehaviour
         simulationTime = 0;
         this.uiController.ToggleStartButtonSprite();
         this.uiController.UpdateTimeDisplay(0f);
+        this.uiController.BlockOnSimulationStart(isStarted);
     }
 
     public void CycleSimulationSpeed()

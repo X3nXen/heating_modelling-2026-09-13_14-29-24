@@ -135,6 +135,7 @@ public class CameraMovement : MonoBehaviour
             Vector3 currentAngles = this.transform.eulerAngles;
             this.yaw = currentAngles.y;
             this.pitch = currentAngles.x;
+            this.zoomValue = 0f;
         } else
         {
             this.transform.LookAt(this.lookAt);

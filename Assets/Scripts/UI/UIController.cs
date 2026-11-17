@@ -179,4 +179,12 @@ public class UIController : MonoBehaviour
     {
         buildingsScrollableMenu.GetComponent<MenuUIElement>().ToggleElement(true);
     }
+
+    public void BlockOnSimulationStart(bool isStarted)
+    {
+        heatersScrollableMenu.GetComponent<MenuUIElement>().BlockDragObjects(isStarted);
+        this.globalInformationInsideTempInput.interactable = !isStarted;
+        this.globalInformationOutsideTempInput.interactable = !isStarted;
+        this.informationPanelController.BlockOnSimulationStart(isStarted);
+    }
 }
