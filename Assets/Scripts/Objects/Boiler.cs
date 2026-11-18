@@ -6,6 +6,19 @@ public class Boiler : ASimulationObject, IRadiatingObject, IDragAndDropObject
 {
     public float radiationHeat { get ; set; }
     public LayerMask layerMask { get; set; }
+    public bool directional { get; set; }
+
+    public float heightOffset { get; set; }
+    public float widthOffset { get; set; }
+    public float GetHeightOffset()
+    {
+        return heightOffset;
+    }
+
+    public float GetWidthOffset()
+    {
+        return widthOffset;
+    }
 
     public LayerMask GetLayerMask()
     {
@@ -23,6 +36,9 @@ public class Boiler : ASimulationObject, IRadiatingObject, IDragAndDropObject
         this.radiationHeat = 35;
         this.editableDefaultValues = new Dictionary<InformationFlag, string>();
         this.editableDefaultValues.Add(InformationFlag.OBJECT_TEMPERATURE, this.radiationHeat.ToString());
+        this.directional = false;
+        this.heightOffset = this.prefab.transform.localScale.y / 2;
+        this.widthOffset = 0f;
         InitInfoPanel(new List<InformationFlag>() { InformationFlag.TEMPERATURE, InformationFlag.OBJECT_TEMPERATURE }, infoPanelOpen);
     }
 
@@ -65,5 +81,10 @@ public class Boiler : ASimulationObject, IRadiatingObject, IDragAndDropObject
     {
         this.radiationHeat = radiationHeat;
         this.editableDefaultValues[InformationFlag.OBJECT_TEMPERATURE] = this.radiationHeat.ToString();
+    }
+
+    public bool GetDirectional()
+    {
+        return this.directional;
     }
 }

@@ -18,8 +18,9 @@ public class SimulationManager : MonoBehaviour
     private CameraMovement cameraController;
 
     private List<ASimulationObject> heaters;
-    private List<ASimulationObject> emitters;
     private List<ASimulationObject> buildings;
+    private List<ASimulationObject> fenestration;
+    private List<ASimulationObject> drawingObjects;
 
     private IInformationPanelOpener panelOwner;
 
@@ -33,9 +34,12 @@ public class SimulationManager : MonoBehaviour
         this.cameraController = Camera.main.gameObject.GetComponent<CameraMovement>();
         var heaterPrefabs = ResourceLoader.GetAll("Prefabs/Heaters");
         heaters = new List<ASimulationObject>();
-        emitters = new List<ASimulationObject>(); //Resources.LoadAll("Prefabs/Emitters/") as APlaceableObject[];
         var buildingPrefabs = ResourceLoader.GetAll("Prefabs/Buildings");
         buildings = new List<ASimulationObject>();
+        var fenestrationPrefabs = ResourceLoader.GetAll("Prefabs/Fenestration");
+        fenestration = new List<ASimulationObject>();
+        var drawingPrefabs = ResourceLoader.GetAll("Prefabs/Drawobjects");
+        drawingObjects = new List<ASimulationObject>();
         foreach (var go in heaterPrefabs)
         {
             if (go != null)
@@ -54,7 +58,25 @@ public class SimulationManager : MonoBehaviour
                 buildings.Add(temp);
             }
         }
-        this.uiController.Init(heaters, emitters, buildings, new Action<ASimulationObject>((ASimulationObject buildingObject) => { if(!this.isStarted)this.SetNewBuilding(buildingObject.GetPrefab()); }));
+        foreach(var go in fenestrationPrefabs)
+        {
+            if (go != null)
+            {
+                ASimulationObject temp = (go as GameObject).GetComponent<ASimulationObject>();
+                temp.Init(OpenInformationPanel);
+                fenestration.Add(temp);
+            }
+        }
+        foreach (var go in drawingPrefabs)
+        {
+            if (go != null)
+            {
+                ASimulationObject temp = (go as GameObject).GetComponent<ASimulationObject>();
+                temp.Init(OpenInformationPanel);
+                drawingObjects.Add(temp);
+            }
+        }
+        this.uiController.Init(heaters, buildings, fenestration, drawingObjects, new Action<ASimulationObject>((ASimulationObject buildingObject) => { if(!this.isStarted)this.SetNewBuilding(buildingObject.GetPrefab()); }));
         this.uiController.UpdateGlobalInformation(this.insideHeat.ToString(), this.insideHeat.ToString(), this.outsideHeat.ToString());
         this.buildingManager = this.gameObject.AddComponent<BuildingManager>();
         this.buildingManager.SetBuildingObject(buildingPrefabs[0] as GameObject, OpenInformationPanel);
@@ -172,6 +194,24 @@ public class SimulationManager : MonoBehaviour
         {
             WallMaterial material = (WallMaterial)this.uiController.GetInformationPanelWallMaterialValue();
             (this.panelOwner as Wall).SetMaterial(material);
+        }
+    }
+
+    public void SetDoorMaterial(int _)
+    {
+        if(panelOwner != null)
+        {
+            DoorMaterials doorMaterial = (DoorMaterials)this.uiController.GetInformationPanelDoorMaterialValue();
+            (this.panelOwner as Door).SetMaterial(doorMaterial);
+        }
+    }
+
+    public void SetWindowMaterial(int _)
+    {
+        if(panelOwner != null)
+        {
+            WindowMaterials windowMaterial = (WindowMaterials)this.uiController.GetInformationPanelWindowMaterialValue();
+            (this.panelOwner as Window).SetMaterial(windowMaterial);
         }
     }
 

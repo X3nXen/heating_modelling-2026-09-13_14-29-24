@@ -115,7 +115,10 @@ public class GridPoint : ADiffuseMaterial
 
     public void SetDiffusivity(float diffusivity)
     {
-        this.diffusivity = diffusivity;
+        if(diffusivity < this.diffusivity)
+        {
+            this.diffusivity = diffusivity;
+        }
     }
 
     public override void OnTriggerEnter(Collider other)

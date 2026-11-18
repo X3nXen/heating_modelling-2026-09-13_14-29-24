@@ -10,6 +10,7 @@ public abstract class ASimulationObject : MonoBehaviour, IInformationPanelOpener
     public string displayName { get; set; }
     public Sprite displayImage { get; set; }
     public GameObject prefab { get; set; }
+    protected float diffusivity;
 
     public Dictionary<InformationFlag, string> editableDefaultValues;
 

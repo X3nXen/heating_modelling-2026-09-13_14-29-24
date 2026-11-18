@@ -16,7 +16,7 @@ public class MenuUIElement: MonoBehaviour
     { 
         this.collapseElements = collapseElements;
     }
-    public void Setup(GameObject[] collapseElements, List<ASimulationObject> objectElements, GameObject parent, Action<ASimulationObject> clickEvent = null, bool clickable = false)
+    public void Setup(GameObject[] collapseElements, List<ASimulationObject> objectElements, GameObject parent, Action<ASimulationObject> clickEvent = null, bool clickable = false, Action menuCloser = null)
     {
         this.uiElementPrefab = clickable ? ResourceLoader.Get("Prefabs/Clickable_Content_Element") as GameObject : ResourceLoader.Get("Prefabs/Content_Element") as GameObject;
         this.collapseElements = collapseElements;
@@ -32,18 +32,31 @@ public class MenuUIElement: MonoBehaviour
                 newUIObject.GetComponent<Button>().onClick.AddListener(new UnityAction(() => clickEvent(element)));
                 newUIObject.SetDisplayName(element.GetDisplayName());
                 newUIObject.SetDisplayImage(element.GetDisplayImage());
-                newUIObject.InitUIObject();
+                newUIObject.InitUIObject(menuCloser);
             }
             else
             {
-                DragAndDropUIElement newUIObject = newObject.AddComponent<DragAndDropUIElement>();
-                newUIObject.SetPrefab(element.GetPrefab());
-                newUIObject.SetDisplayName(element.GetDisplayName());
-                newUIObject.SetDisplayImage(element.GetDisplayImage());
-                newUIObject.SetLayerMask(((IDragAndDropObject)element).GetLayerMask());
-                newUIObject.SetComponentToCopy(element);
-                newUIObject.InitUIObject();
-                this.uIObjects.Add(newUIObject);
+                if (element is Wall)
+                {
+                    DrawingDragAndDropUIElement wallUIObject = newObject.AddComponent<DrawingDragAndDropUIElement>();
+                    wallUIObject.SetPrefab(element.GetPrefab());
+                    wallUIObject.SetDisplayName(element.GetDisplayName());
+                    wallUIObject.SetDisplayImage(element.GetDisplayImage());
+                    wallUIObject.SetLayerMask(((IDragAndDropObject)element).GetLayerMask());
+                    wallUIObject.SetComponentToCopy(element);
+                    wallUIObject.InitUIObject(menuCloser);
+                    this.uIObjects.Add(wallUIObject);
+                } else
+                {
+                    DragAndDropUIElement newUIObject = newObject.AddComponent<DragAndDropUIElement>();
+                    newUIObject.SetPrefab(element.GetPrefab());
+                    newUIObject.SetDisplayName(element.GetDisplayName());
+                    newUIObject.SetDisplayImage(element.GetDisplayImage());
+                    newUIObject.SetLayerMask(((IDragAndDropObject)element).GetLayerMask());
+                    newUIObject.SetComponentToCopy(element);
+                    newUIObject.InitUIObject(menuCloser);
+                    this.uIObjects.Add(newUIObject);
+                }
             }
         }
     }

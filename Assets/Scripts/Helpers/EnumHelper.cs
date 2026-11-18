@@ -32,18 +32,55 @@ public static class EnumHelper
         }
     }
 
-    public static WallMaterial GetWallMaterialFromName(string name)
+    public static float GetDoorMaterialDiffusivity(DoorMaterials doorMaterial)
     {
-        switch (name)
+        switch (doorMaterial)
         {
-            case "Tégla":
-                return WallMaterial.BRICK_COMMON;
-            case "Vályogtégla":
-                return WallMaterial.BRICK_ADOBE;
-            case "Beton":
-                return WallMaterial.CONCRETE;
+            case DoorMaterials.WOOD:
+                return 0.000000082f;
+            case DoorMaterials.PLASTIC:
+                return 0.00000018f;
+            case DoorMaterials.GLASS:
+                return 0.00000034f;
             default:
-                return WallMaterial.BRICK_COMMON;
+                return 0.000000082f;
+        }
+    }
+
+    public static string GetDoorMaterialName(DoorMaterials doorMaterial)
+    {
+        switch (doorMaterial)
+        {
+            case DoorMaterials.WOOD:
+                return "Fa (mahagóni)";
+            case DoorMaterials.PLASTIC:
+                return "Műanyag (uPVC)";
+            case DoorMaterials.GLASS:
+                return "Üveg";
+            default:
+                return "Fa (mahagóni)";
+        }
+    }
+
+    public static float GetWindowMaterialDiffusivity(WindowMaterials windowMaterial)
+    {
+        switch (windowMaterial)
+        {
+            case WindowMaterials.GLASS:
+                return 0.00000077f;
+            default:
+                return 0.00000077f;
+        }
+    }
+
+    public static string GetWindowMaterialName(WindowMaterials windowMaterial)
+    {
+        switch (windowMaterial)
+        {
+            case WindowMaterials.GLASS:
+                return "Szóda-mész üveg";
+            default:
+                return "Szóda-mész üveg";
         }
     }
 }
