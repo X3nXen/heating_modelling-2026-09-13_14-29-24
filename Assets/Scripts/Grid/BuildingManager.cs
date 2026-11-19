@@ -13,6 +13,9 @@ public class BuildingManager: MonoBehaviour
     private Material invisibleMaterial;
     private GameObject buildingObject;
     private Vector3 placePosition = new Vector3(15f, 1.5f, 15f);
+    private GameObject floorObject;
+    private ClickDrawingObject floorClickDrawingObject;
+    private List<ClickDrawingObject> wallClickDrawingObjects;
     private void Awake()
     {
         cameraPos = Camera.main.transform;
@@ -29,6 +32,9 @@ public class BuildingManager: MonoBehaviour
         }
         this.buildingObject = Instantiate(buildingObject, placePosition, Quaternion.identity);
         this.walls = new List<GameObject>();
+        this.floorObject = this.buildingObject.transform.Find("Floor").gameObject;
+        this.floorClickDrawingObject = this.floorObject.AddComponent<ClickDrawingObject>();
+        this.wallClickDrawingObjects = new List<ClickDrawingObject>();
         foreach (Transform child in this.buildingObject.transform)
         {
             if (child.gameObject.tag == "Wall")
@@ -38,6 +44,8 @@ public class BuildingManager: MonoBehaviour
                 {
                     walls.Add(child.gameObject);
                     wallComponent.Init(infoPanelOpen);
+                    ClickDrawingObject clickDrawingObject = child.AddComponent<ClickDrawingObject>();
+                    wallClickDrawingObjects.Add(clickDrawingObject);
                 } else
                 {
                     wallComponent.SetMaterial(WallMaterial.BRICK_COMMON);
@@ -66,5 +74,18 @@ public class BuildingManager: MonoBehaviour
         minDistanceWall.layer = LayerMask.NameToLayer("Default");
     }
 
-    
+    public GameObject GetFloorObject()
+    {
+        return this.floorObject;
+    }
+
+    public ClickDrawingObject GetFloorClickDrawingObject()
+    {
+        return this.floorClickDrawingObject;
+    }
+
+    public List<ClickDrawingObject> GetWallClickDrawingObjects()
+    {
+        return this.wallClickDrawingObjects;
+    }
 }

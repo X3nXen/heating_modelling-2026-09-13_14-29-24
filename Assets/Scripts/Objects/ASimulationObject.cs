@@ -10,6 +10,7 @@ public abstract class ASimulationObject : MonoBehaviour, IInformationPanelOpener
     public string displayName { get; set; }
     public Sprite displayImage { get; set; }
     public GameObject prefab { get; set; }
+    protected float diffusivity;
 
     public Dictionary<InformationFlag, string> editableDefaultValues;
 
@@ -36,7 +37,7 @@ public abstract class ASimulationObject : MonoBehaviour, IInformationPanelOpener
         this.panelOpener = panelOpener;
     }
 
-    public void OnPointerDown(PointerEventData eventData)
+    public virtual void OnPointerDown(PointerEventData eventData)
     {
         if (informationFlags.Count > 0 && panelOpener != null)
         {
@@ -54,5 +55,27 @@ public abstract class ASimulationObject : MonoBehaviour, IInformationPanelOpener
         this.displayName = simulationObject.displayName;
         this.prefab = simulationObject.prefab;
         this.editableDefaultValues = simulationObject.editableDefaultValues;
+        this.diffusivity = simulationObject.diffusivity;
+    }
+
+    public virtual void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "GridPoint")
+        {
+            try
+            {
+                GridPoint gridPoint = other.GetComponent<GridPoint>();
+                gridPoint.SetDiffusivity(diffusivity);
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogException(e);
+            }
+        }
+    }
+
+    public float GetDiffusivity()
+    {
+        return diffusivity;
     }
 }

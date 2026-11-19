@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -7,24 +8,28 @@ public class DragAndDropUIElement: UIObject, IBeginDragHandler, IEndDragHandler,
 {
     protected LayerMask raycastLayerMask;
     protected float maxRaycastDistance = 1000f;
-    private Vector3 itemHeighOffset;
+    private Vector3 itemHeightOffset;
+    private Vector3 itemWidthOffset;
     protected GameObject dragItem;
     protected GameObject prefab;
     protected ASimulationObject componentToCopy;
     protected bool isStarted;
 
-    public override void InitUIObject()
+    public override void InitUIObject(Action menuCloser)
     {
         this.transform.Find("Image").gameObject.GetComponent<Image>().sprite = this.displayImage;
         this.transform.Find("Name").gameObject.GetComponent<TextMeshProUGUI>().text = this.displayName;
         this.transform.localScale = Vector3.one;
+        this.menuCloser = menuCloser;
     }
 
-    public void OnBeginDrag(PointerEventData eventData)
+    public virtual void OnBeginDrag(PointerEventData eventData)
     {
         if (!isStarted)
         {
-            this.itemHeighOffset = new Vector3(0, this.prefab.transform.localScale.y/2, 0);
+            this.menuCloser();
+            this.itemHeightOffset = new Vector3(0, ((IDragAndDropObject)this.componentToCopy).GetHeightOffset(), 0);
+            this.itemWidthOffset = new Vector3(((IDragAndDropObject)this.componentToCopy).GetWidthOffset(), 0, ((IDragAndDropObject)this.componentToCopy).GetWidthOffset());
             this.dragItem = Instantiate(this.prefab, Vector3.zero, Quaternion.identity);
             this.dragItem.SetActive(true);
 
@@ -32,7 +37,7 @@ public class DragAndDropUIElement: UIObject, IBeginDragHandler, IEndDragHandler,
         }
     }
 
-    public void OnDrag(PointerEventData eventData)
+    public virtual void OnDrag(PointerEventData eventData)
     {
         if (this.dragItem != null)
         {
@@ -41,7 +46,7 @@ public class DragAndDropUIElement: UIObject, IBeginDragHandler, IEndDragHandler,
     }
 
 
-    public void OnEndDrag(PointerEventData eventData)
+    public virtual void OnEndDrag(PointerEventData eventData)
     {
         if(this.dragItem != null)
         {
@@ -54,7 +59,17 @@ public class DragAndDropUIElement: UIObject, IBeginDragHandler, IEndDragHandler,
         Ray ray = Camera.main.ScreenPointToRay(eventData.position);
         if (Physics.Raycast(ray, out RaycastHit hit, this.maxRaycastDistance, this.raycastLayerMask))
         {
-            this.dragItem.transform.position = hit.point + itemHeighOffset;
+            if (((IDragAndDropObject)componentToCopy).GetDirectional())
+            {
+                if (hit.normal != Vector3.zero)
+                {
+                    this.dragItem.transform.rotation = Quaternion.LookRotation(-hit.normal);
+                }
+            }
+
+            Vector3 rotatedWidthOffset = this.dragItem.transform.rotation * itemWidthOffset;
+
+            this.dragItem.transform.position = hit.point + itemHeightOffset + rotatedWidthOffset;
         }
         else
         {

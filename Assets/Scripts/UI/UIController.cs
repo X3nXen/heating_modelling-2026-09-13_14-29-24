@@ -23,8 +23,9 @@ public class UIController : MonoBehaviour
 
     private GameObject slidingMenu;
     private GameObject heatersScrollableMenu;
-    private GameObject emittersScrollableMenu;
     private GameObject buildingsScrollableMenu;
+    private GameObject fenestrationMenu;
+    private GameObject drawingMenu;
 
     private InformationPanelController informationPanelController;
     private TextMeshProUGUI globalInformationAverageDisplay;
@@ -33,9 +34,11 @@ public class UIController : MonoBehaviour
 
     public void Init(
         List<ASimulationObject> heaters,
-        List<ASimulationObject> emitters,
         List<ASimulationObject> buildings,
-        Action<ASimulationObject> onBuildingClick)
+        List<ASimulationObject> fenestration,
+        List<ASimulationObject> drawing,
+        Action<ASimulationObject> onBuildingClick,
+        Action<ASimulationObject> onToolClick)
     {
         this.startButton = this.transform.Find("Start stop").Find("Start icon").Find("Icon").gameObject.GetComponent<Image>();
         this.speedButton = this.transform.Find("Speed control").Find("Fastforward icon").Find("Icon").gameObject.GetComponent<Image>();
@@ -56,23 +59,28 @@ public class UIController : MonoBehaviour
 
         slidingMenu = this.transform.Find("Sliding menu").gameObject;
         heatersScrollableMenu = this.transform.Find("Heaters scrollable").gameObject;
-        emittersScrollableMenu = this.transform.Find("Emitters scrollable").gameObject;
         buildingsScrollableMenu = this.transform.Find("Buildings scrollable").gameObject;
+        fenestrationMenu = this.transform.Find("Fenestration menu").gameObject;
+        drawingMenu = this.transform.Find("Tool menu").gameObject;
 
         MenuUIElement slidingMenuElement = slidingMenu.AddComponent<MenuUIElement>();
-        slidingMenuElement.Setup(new GameObject[] { heatersScrollableMenu, emittersScrollableMenu, buildingsScrollableMenu });
+        slidingMenuElement.Setup(new GameObject[] { heatersScrollableMenu, buildingsScrollableMenu, fenestrationMenu, drawingMenu });
 
         MenuUIElement heatersScrollableElement = heatersScrollableMenu.AddComponent<MenuUIElement>();
         GameObject heaterParent = heatersScrollableMenu.transform.Find("View").Find("Content").gameObject;
-        heatersScrollableElement.Setup(new GameObject[] { emittersScrollableMenu, buildingsScrollableMenu }, heaters, heaterParent);
-
-        MenuUIElement emittersScrollableElement = emittersScrollableMenu.AddComponent<MenuUIElement>();
-        GameObject emitterParent = emittersScrollableMenu.transform.Find("View").Find("Content").gameObject;
-        emittersScrollableElement.Setup(new GameObject[] { heatersScrollableMenu, buildingsScrollableMenu }, emitters, emitterParent);
+        heatersScrollableElement.Setup(new GameObject[] { buildingsScrollableMenu, fenestrationMenu, drawingMenu }, heaters, heaterParent, null, false, TurnMenusOff);
 
         MenuUIElement buildingsScrollableElement = buildingsScrollableMenu.AddComponent<MenuUIElement>();
         GameObject buildingParent = buildingsScrollableMenu.transform.Find("View").Find("Content").gameObject;
-        buildingsScrollableElement.Setup(new GameObject[] { heatersScrollableMenu, emittersScrollableMenu }, buildings, buildingParent, onBuildingClick ,true);
+        buildingsScrollableElement.Setup(new GameObject[] { heatersScrollableMenu, fenestrationMenu, drawingMenu }, buildings, buildingParent, onBuildingClick ,true);
+
+        MenuUIElement fenestrationElement = fenestrationMenu.AddComponent<MenuUIElement>();
+        GameObject fenestrationParent = fenestrationMenu.transform.Find("Content").gameObject;
+        fenestrationElement.Setup(new GameObject[] { heatersScrollableMenu, buildingsScrollableMenu, drawingMenu }, fenestration, fenestrationParent, null, false, TurnMenusOff);
+
+        MenuUIElement drawingElement = drawingMenu.AddComponent<MenuUIElement>();
+        GameObject drawingParent = drawingElement.transform.Find("Content").gameObject;
+        drawingElement.Setup(new GameObject[] {heatersScrollableMenu, buildingsScrollableMenu, fenestrationMenu}, drawing, drawingParent, new Action<ASimulationObject>((ASimulationObject so) => { onToolClick(so); }), true, TurnMenusOff);
 
         GameObject informationPanel = this.transform.Find("Information Panel").gameObject;
         this.informationPanelController = informationPanel.AddComponent<InformationPanelController>();
@@ -107,6 +115,21 @@ public class UIController : MonoBehaviour
     public float GetObjectTemperatureInputValue()
     {
         return this.informationPanelController.GetObjectTemperatureInputValue();
+    }
+
+    public int GetInformationPanelDoorMaterialValue()
+    {
+        return this.informationPanelController.GetDoorMaterialInputValue();
+    }
+
+    public int GetInformationPanelWindowMaterialValue()
+    {
+        return this.informationPanelController.GetWindowMaterialInputValue();
+    }
+
+    public int GetInformationPanelPipeMaterialValue()
+    {
+        return this.informationPanelController.GetPipeMaterialInputValue();
     }
 
     public void UpdateInformationPanelValue(InformationFlag informationFlag, string value)
@@ -170,11 +193,6 @@ public class UIController : MonoBehaviour
         heatersScrollableMenu.GetComponent<MenuUIElement>().ToggleElement(true);
     }
 
-    public void ToggleEmittersMenu()
-    {
-        emittersScrollableMenu.GetComponent<MenuUIElement>().ToggleElement(true);
-    }
-
     public void ToggleBuildingsMenu()
     {
         buildingsScrollableMenu.GetComponent<MenuUIElement>().ToggleElement(true);
@@ -186,5 +204,20 @@ public class UIController : MonoBehaviour
         this.globalInformationInsideTempInput.interactable = !isStarted;
         this.globalInformationOutsideTempInput.interactable = !isStarted;
         this.informationPanelController.BlockOnSimulationStart(isStarted);
+    }
+
+    public void ToggleFenestrationMenu()
+    {
+        fenestrationMenu.GetComponent<MenuUIElement>().ToggleElement(true);
+    }
+
+    public void ToggleToolsMenu()
+    {
+        drawingMenu.GetComponent<MenuUIElement>().ToggleElement(true);
+    }
+
+    public void TurnMenusOff()
+    {
+        slidingMenu.GetComponent<MenuUIElement>().ToggleElement(false);
     }
 }
