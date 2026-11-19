@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 5672647450567623118}
   - component: {fileID: 3852365009031775746}
   - component: {fileID: 2346409913195474703}
-  m_Layer: 0
+  - component: {fileID: 2648190404150216607}
+  m_Layer: 3
   m_Name: Wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -125,3 +126,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fccf6bc3a1c6574b8949fa0e990f92b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Wall
+--- !u!114 &2648190404150216607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 182691261333798230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 107740c258f9dc6438b8d8b19e1c5c55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ClickDrawingObject

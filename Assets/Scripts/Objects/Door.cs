@@ -44,22 +44,6 @@ public class Door: ASimulationObject, IDragAndDropObject
         panelInfoUpdater(InformationFlag.DIFFUSIVITY, this.diffusivity.ToString());
     }
 
-    public void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.tag == "GridPoint")
-        {
-            try
-            {
-                GridPoint gridPoint = other.GetComponentInParent<GridPoint>();
-                gridPoint.SetDiffusivity(this.diffusivity);
-            }
-            catch (Exception e)
-            {
-                Debug.LogException(e);
-            }
-        }
-    }
-
     public void SetMaterial(DoorMaterials material)
     {
         this.material = material;

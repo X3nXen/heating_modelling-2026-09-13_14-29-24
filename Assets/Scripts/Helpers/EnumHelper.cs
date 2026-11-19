@@ -83,4 +83,34 @@ public static class EnumHelper
                 return "Szóda-mész üveg";
         }
     }
+
+    public static float GetPipeMaterialDiffusivity(PipeMaterial pipeMaterial)
+    {
+        switch (pipeMaterial)
+        {
+            case PipeMaterial.COPPER:
+                return 0.00000116f;
+            case PipeMaterial.PLASTIC:
+                return 0.00000019f;
+            case PipeMaterial.STEEL:
+                return 0.00000656f;
+            default:
+                return 0.00000116f;
+        }
+    }
+
+    public static string GetPipeMaterialName(PipeMaterial pipeMaterial) 
+    {
+        switch (pipeMaterial)
+        {
+            case PipeMaterial.COPPER:
+                return "Réz";
+            case PipeMaterial.PLASTIC:
+                return "Műanyag";
+            case PipeMaterial.STEEL:
+                return "Acél";
+            default:
+                return "Réz";
+        }
+    }
 }

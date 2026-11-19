@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Wall: ASimulationObject, IDragAndDropObject
 {
@@ -24,8 +25,8 @@ public class Wall: ASimulationObject, IDragAndDropObject
         this.prefab = ResourceLoader.Get("Prefabs/Drawobjects/Wall") as GameObject;
         this.layerMask = LayerMask.GetMask("House_layer");
         this.directional = false;
-        this.heightOffset = 0;
-        this.widthOffset = 0;
+        this.heightOffset = this.prefab.transform.localScale.y / 2 - 1;
+        this.widthOffset = 0.5f;
         this.editableDefaultValues.Add(InformationFlag.WALL_MATERIAL, ((int)this.material).ToString());
         this.editableDefaultValues.Add(InformationFlag.WALL_INSULATED, this.isInsulated.ToString());
         InitInfoPanel(new List<InformationFlag>() { InformationFlag.DIFFUSIVITY, InformationFlag.WALL_MATERIAL, InformationFlag.WALL_INSULATED }, informationPanelOpener);
@@ -72,5 +73,16 @@ public class Wall: ASimulationObject, IDragAndDropObject
     public float GetWidthOffset()
     {
         return this.widthOffset;
+    }
+
+    public override void OnPointerDown(PointerEventData eventData)
+    {
+        if (!this.gameObject.GetComponent<ClickDrawingObject>().GetIsDrawing())
+        {
+            if (informationFlags.Count > 0 && panelOpener != null)
+            {
+                panelOpener(informationFlags, this, editableDefaultValues);
+            }
+        } 
     }
 }

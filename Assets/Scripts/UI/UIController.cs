@@ -37,7 +37,8 @@ public class UIController : MonoBehaviour
         List<ASimulationObject> buildings,
         List<ASimulationObject> fenestration,
         List<ASimulationObject> drawing,
-        Action<ASimulationObject> onBuildingClick)
+        Action<ASimulationObject> onBuildingClick,
+        Action<ASimulationObject> onToolClick)
     {
         this.startButton = this.transform.Find("Start stop").Find("Start icon").Find("Icon").gameObject.GetComponent<Image>();
         this.speedButton = this.transform.Find("Speed control").Find("Fastforward icon").Find("Icon").gameObject.GetComponent<Image>();
@@ -79,7 +80,7 @@ public class UIController : MonoBehaviour
 
         MenuUIElement drawingElement = drawingMenu.AddComponent<MenuUIElement>();
         GameObject drawingParent = drawingElement.transform.Find("Content").gameObject;
-        drawingElement.Setup(new GameObject[] {heatersScrollableMenu, buildingsScrollableMenu, fenestrationMenu}, drawing, drawingParent, null, false, TurnMenusOff);
+        drawingElement.Setup(new GameObject[] {heatersScrollableMenu, buildingsScrollableMenu, fenestrationMenu}, drawing, drawingParent, new Action<ASimulationObject>((ASimulationObject so) => { onToolClick(so); }), true, TurnMenusOff);
 
         GameObject informationPanel = this.transform.Find("Information Panel").gameObject;
         this.informationPanelController = informationPanel.AddComponent<InformationPanelController>();
@@ -124,6 +125,11 @@ public class UIController : MonoBehaviour
     public int GetInformationPanelWindowMaterialValue()
     {
         return this.informationPanelController.GetWindowMaterialInputValue();
+    }
+
+    public int GetInformationPanelPipeMaterialValue()
+    {
+        return this.informationPanelController.GetPipeMaterialInputValue();
     }
 
     public void UpdateInformationPanelValue(InformationFlag informationFlag, string value)

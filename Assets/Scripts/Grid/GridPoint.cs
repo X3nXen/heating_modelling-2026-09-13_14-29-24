@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GridPoint : ADiffuseMaterial
+public class GridPoint : ASimulationObject
 {
     public static GameObject CreateGridpointGameobject(GameObject prefab, Vector3 position, SimulationGrid parent)
     {

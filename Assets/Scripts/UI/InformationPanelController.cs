@@ -12,6 +12,7 @@ public class InformationPanelController : MonoBehaviour
     private TMP_InputField objectTemperatureInput;
     private TMP_Dropdown doorMaterialInput;
     private TMP_Dropdown windowMaterialInput;
+    private TMP_Dropdown pipeMaterialInput;
 
     public void Init()
     {
@@ -28,6 +29,7 @@ public class InformationPanelController : MonoBehaviour
         GameObject insulationObject = editableContent.Find("INFORMATION.WALL_INSULATED").gameObject;
         GameObject doorMaterialObject = editableContent.Find("INFORMATION.DOOR_MATERIAL").gameObject;
         GameObject windowMaterialObject = editableContent.Find("INFORMATION.WINDOW_MATERIAL").gameObject;
+        GameObject pipeMaterialObject = editableContent.Find("INFORMATION.PIPE_MATERIAL").gameObject;
 
 
         flagToGameobject.Add(InformationFlag.OBJECT_NAME, nameObject);
@@ -39,6 +41,7 @@ public class InformationPanelController : MonoBehaviour
         flagToGameobject.Add(InformationFlag.WALL_INSULATED, insulationObject);
         flagToGameobject.Add(InformationFlag.DOOR_MATERIAL, doorMaterialObject);
         flagToGameobject.Add(InformationFlag.WINDOW_MATERIAL, windowMaterialObject);
+        flagToGameobject.Add(InformationFlag.PIPE_MATERIAL, pipeMaterialObject);
 
         List<TMP_Dropdown.OptionData> wallMaterialOptions = new List<TMP_Dropdown.OptionData>();
         foreach(WallMaterial item in Enum.GetValues(typeof(WallMaterial)))
@@ -55,16 +58,23 @@ public class InformationPanelController : MonoBehaviour
         {
             doorMaterialOptions.Add(new TMP_Dropdown.OptionData(EnumHelper.GetWindowMaterialName(item)));
         }
+        List<TMP_Dropdown.OptionData> pipeMaterialOptions = new List<TMP_Dropdown.OptionData>();
+        foreach (PipeMaterial item in Enum.GetValues(typeof(PipeMaterial)))
+        {
+            pipeMaterialOptions.Add(new TMP_Dropdown.OptionData(EnumHelper.GetPipeMaterialName(item)));
+        }
 
         this.wallMaterialInput = wallMaterialObject.transform.Find("Value").gameObject.GetComponent<TMP_Dropdown>();
         this.insulatedInput = insulationObject.transform.Find("Value").gameObject.GetComponent<Toggle>();
         this.objectTemperatureInput = objectTemperatureObject.transform.Find("Value").gameObject.GetComponent<TMP_InputField>();
         this.doorMaterialInput = doorMaterialObject.transform.Find("Value").gameObject.GetComponent<TMP_Dropdown>();
         this.windowMaterialInput = windowMaterialObject.transform.Find("Value").gameObject.GetComponent<TMP_Dropdown>();
+        this.pipeMaterialInput = pipeMaterialObject.transform.Find("Value").gameObject.GetComponent<TMP_Dropdown>();
 
         this.wallMaterialInput.AddOptions(wallMaterialOptions);
         this.doorMaterialInput.AddOptions(doorMaterialOptions);
         this.windowMaterialInput.AddOptions(windowMaterialOptions);
+        this.pipeMaterialInput.AddOptions(pipeMaterialOptions);
     }
 
     public int GetWallMaterialInputValue()
@@ -80,6 +90,11 @@ public class InformationPanelController : MonoBehaviour
     public int GetWindowMaterialInputValue()
     {
         return this.windowMaterialInput.value;
+    }
+    
+    public int GetPipeMaterialInputValue()
+    {
+        return this.pipeMaterialInput.value;
     }
     public float GetObjectTemperatureInputValue()
     {
@@ -123,6 +138,9 @@ public class InformationPanelController : MonoBehaviour
                     case InformationFlag.WINDOW_MATERIAL:
                         this.wallMaterialInput.SetValueWithoutNotify(Int32.Parse(editableDefaultValues[flag]));
                         break;
+                    case InformationFlag.PIPE_MATERIAL:
+                        this.pipeMaterialInput.SetValueWithoutNotify(Int32.Parse(editableDefaultValues[flag]));
+                        break;
                 }
             }
         }
@@ -164,5 +182,6 @@ public class InformationPanelController : MonoBehaviour
         this.objectTemperatureInput.interactable = !isStarted;
         this.doorMaterialInput.interactable = !isStarted;
         this.windowMaterialInput.interactable = !isStarted;
+        this.pipeMaterialInput.interactable = !isStarted;
     }
 }

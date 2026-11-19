@@ -29,34 +29,21 @@ public class MenuUIElement: MonoBehaviour
             if (clickable && clickEvent != null)
             {
                 UIObject newUIObject = newObject.AddComponent<UIObject>();
-                newUIObject.GetComponent<Button>().onClick.AddListener(new UnityAction(() => clickEvent(element)));
+                newUIObject.GetComponent<Button>().onClick.AddListener(new UnityAction(() => { clickEvent(element); menuCloser(); }));
                 newUIObject.SetDisplayName(element.GetDisplayName());
                 newUIObject.SetDisplayImage(element.GetDisplayImage());
                 newUIObject.InitUIObject(menuCloser);
             }
             else
             {
-                if (element is Wall)
-                {
-                    DrawingDragAndDropUIElement wallUIObject = newObject.AddComponent<DrawingDragAndDropUIElement>();
-                    wallUIObject.SetPrefab(element.GetPrefab());
-                    wallUIObject.SetDisplayName(element.GetDisplayName());
-                    wallUIObject.SetDisplayImage(element.GetDisplayImage());
-                    wallUIObject.SetLayerMask(((IDragAndDropObject)element).GetLayerMask());
-                    wallUIObject.SetComponentToCopy(element);
-                    wallUIObject.InitUIObject(menuCloser);
-                    this.uIObjects.Add(wallUIObject);
-                } else
-                {
-                    DragAndDropUIElement newUIObject = newObject.AddComponent<DragAndDropUIElement>();
-                    newUIObject.SetPrefab(element.GetPrefab());
-                    newUIObject.SetDisplayName(element.GetDisplayName());
-                    newUIObject.SetDisplayImage(element.GetDisplayImage());
-                    newUIObject.SetLayerMask(((IDragAndDropObject)element).GetLayerMask());
-                    newUIObject.SetComponentToCopy(element);
-                    newUIObject.InitUIObject(menuCloser);
-                    this.uIObjects.Add(newUIObject);
-                }
+                DragAndDropUIElement newUIObject = newObject.AddComponent<DragAndDropUIElement>();
+                newUIObject.SetPrefab(element.GetPrefab());
+                newUIObject.SetDisplayName(element.GetDisplayName());
+                newUIObject.SetDisplayImage(element.GetDisplayImage());
+                newUIObject.SetLayerMask(((IDragAndDropObject)element).GetLayerMask());
+                newUIObject.SetComponentToCopy(element);
+                newUIObject.InitUIObject(menuCloser);
+                this.uIObjects.Add(newUIObject);
             }
         }
     }

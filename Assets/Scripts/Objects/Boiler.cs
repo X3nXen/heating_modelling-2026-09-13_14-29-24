@@ -42,7 +42,7 @@ public class Boiler : ASimulationObject, IRadiatingObject, IDragAndDropObject
         InitInfoPanel(new List<InformationFlag>() { InformationFlag.TEMPERATURE, InformationFlag.OBJECT_TEMPERATURE }, infoPanelOpen);
     }
 
-    public void OnTriggerEnter(Collider other)
+    public override void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "GridPoint")
         {

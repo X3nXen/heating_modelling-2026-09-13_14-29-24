@@ -28,6 +28,9 @@ public class SimulationManager : MonoBehaviour
     private float outsideHeat = 15;
 
     private bool isGridView = true;
+    private ClickDrawingObject floorClickDrawingObject;
+    private List<ClickDrawingObject> wallClickDrawingObjects;
+    ClickDrawingObject currentDrawingWall;
     void Awake()
     {
         this.uiController = ui.GetComponent<UIController>();
@@ -76,10 +79,12 @@ public class SimulationManager : MonoBehaviour
                 drawingObjects.Add(temp);
             }
         }
-        this.uiController.Init(heaters, buildings, fenestration, drawingObjects, new Action<ASimulationObject>((ASimulationObject buildingObject) => { if(!this.isStarted)this.SetNewBuilding(buildingObject.GetPrefab()); }));
+        this.uiController.Init(heaters, buildings, fenestration, drawingObjects, new Action<ASimulationObject>((ASimulationObject buildingObject) => { this.SetNewBuilding(buildingObject.GetPrefab()); }), SetUsedTool);
         this.uiController.UpdateGlobalInformation(this.insideHeat.ToString(), this.insideHeat.ToString(), this.outsideHeat.ToString());
         this.buildingManager = this.gameObject.AddComponent<BuildingManager>();
         this.buildingManager.SetBuildingObject(buildingPrefabs[0] as GameObject, OpenInformationPanel);
+        this.floorClickDrawingObject = this.buildingManager.GetFloorClickDrawingObject();
+        this.wallClickDrawingObjects = this.buildingManager.GetWallClickDrawingObjects();
         this.cameraController.SetFreeMovement(false);
     }
 
@@ -87,6 +92,28 @@ public class SimulationManager : MonoBehaviour
     {
         buildingManager.UpdateWallOpacity();
         UpdateInformationPanel();
+        foreach(ClickDrawingObject clickDrawingObject in this.wallClickDrawingObjects)
+        {
+            if (clickDrawingObject.GetIsDragging())
+            {
+                currentDrawingWall = clickDrawingObject;
+            }
+        }
+        if (currentDrawingWall != null && currentDrawingWall.GetIsDragging())
+        {
+            currentDrawingWall.UpdateSecondPosition();
+            foreach(ClickDrawingObject clickDrawingObject in this.wallClickDrawingObjects)
+            {
+                if(clickDrawingObject != currentDrawingWall && clickDrawingObject.GetIsDrawing())
+                {
+                    clickDrawingObject.SetIsDrawing(false);
+                }
+            }
+        }
+        if (this.floorClickDrawingObject.GetIsDragging())
+        {
+            this.floorClickDrawingObject.UpdateSecondPosition();
+        }
         
         if (!isStarted)
             return;
@@ -176,6 +203,29 @@ public class SimulationManager : MonoBehaviour
         this.buildingManager.SetBuildingObject(building, OpenInformationPanel);
     }
 
+    public void SetUsedTool(ASimulationObject simulationObject)
+    {
+        if (!isStarted)
+        {
+            if(simulationObject is Wall)
+            {
+                floorClickDrawingObject.SetObjectToCopy(simulationObject);
+                floorClickDrawingObject.SetObjectToDraw(simulationObject);
+                floorClickDrawingObject.SetIsDrawing(true);
+            } 
+            else
+            {
+                foreach(ClickDrawingObject clickDrawingObject in wallClickDrawingObjects)
+                {
+                    clickDrawingObject.SetObjectToCopy(simulationObject);
+                    clickDrawingObject.SetObjectToDraw(simulationObject);
+                    clickDrawingObject.SetIsDrawing(true);
+                    Debug.Log("Drawing again");
+                }
+            }
+        }
+    }
+
     public void SetInsideHeat(float insideHeat)
     {
         this.insideHeat = this.uiController.GetGlobalInformationInsideTemperature();
@@ -212,6 +262,15 @@ public class SimulationManager : MonoBehaviour
         {
             WindowMaterials windowMaterial = (WindowMaterials)this.uiController.GetInformationPanelWindowMaterialValue();
             (this.panelOwner as Window).SetMaterial(windowMaterial);
+        }
+    }
+
+    public void SetPipeMaterial(int _)
+    {
+        if (panelOwner != null)
+        {
+            PipeMaterial pipeMaterial = (PipeMaterial)this.uiController.GetInformationPanelPipeMaterialValue();
+            (this.panelOwner as Pipe).SetMaterial(pipeMaterial);
         }
     }
 
