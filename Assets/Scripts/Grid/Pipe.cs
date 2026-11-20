@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Pipe: ASimulationObject, IRadiatingObject, IDragAndDropObject
 {
     private PipeMaterial material;
-
-    public LayerMask layerMask { get; set; }
-    public bool directional { get; set; }
-    public float heightOffset { get; set; }
-    public float widthOffset { get; set; }
     public float radiationHeat { get; set; }
+
 
     public override void Init(Action<List<InformationFlag>, IInformationPanelOpener, Dictionary<InformationFlag, string>> informationPanelOpener)
     {
@@ -28,7 +25,7 @@ public class Pipe: ASimulationObject, IRadiatingObject, IDragAndDropObject
         this.widthOffset = 0.5f;
         this.editableDefaultValues.Add(InformationFlag.PIPE_MATERIAL, ((int)this.material).ToString());
         this.editableDefaultValues.Add(InformationFlag.OBJECT_TEMPERATURE, this.radiationHeat.ToString());
-        InitInfoPanel(new List<InformationFlag>() { InformationFlag.DIFFUSIVITY, InformationFlag.TEMPERATURE, InformationFlag.OBJECT_TEMPERATURE, InformationFlag.PIPE_MATERIAL }, informationPanelOpener);
+        InitInfoPanel(new List<InformationFlag>() { InformationFlag.DIFFUSIVITY, InformationFlag.TEMPERATURE, InformationFlag.OBJECT_TEMPERATURE, InformationFlag.PIPE_MATERIAL, InformationFlag.DELETE_ACTION, InformationFlag.RESIZE_ACTION }, informationPanelOpener);
     }
 
     public override void UpdateInformation(Action<InformationFlag, string> panelInfoUpdater)
@@ -59,6 +56,9 @@ public class Pipe: ASimulationObject, IRadiatingObject, IDragAndDropObject
         this.editableDefaultValues = simulationObject.editableDefaultValues;
         this.diffusivity = simulationObject.GetDiffusivity();
         this.radiationHeat = ((Pipe)simulationObject).radiationHeat;
+        this.heightOffset = ((Pipe)simulationObject).GetHeightOffset();
+        this.widthOffset = ((Pipe)simulationObject).GetWidthOffset();
+        this.directional = ((Pipe)simulationObject).GetDirectional();
     }
 
     public override void OnTriggerEnter(Collider other)
@@ -79,29 +79,10 @@ public class Pipe: ASimulationObject, IRadiatingObject, IDragAndDropObject
         }
     }
 
-    public LayerMask GetLayerMask()
-    {
-        return layerMask;
-    }
-
-    public bool GetDirectional()
-    {
-        return this.directional;
-    }
-
-    public float GetHeightOffset()
-    {
-        return this.heightOffset;
-    }
-
-    public float GetWidthOffset()
-    {
-        return this.widthOffset;
-    }
-
     public void SetRadiationHeat(float radiationHeat)
     {
         this.radiationHeat = radiationHeat;
         this.editableDefaultValues[InformationFlag.OBJECT_TEMPERATURE] = this.radiationHeat.ToString();
     }
+
 }

@@ -5,20 +5,6 @@ using UnityEngine;
 public class Door: ASimulationObject, IDragAndDropObject
 {
     private DoorMaterials material;
-    public bool directional { get; set; }
-
-    public LayerMask layerMask { get; set; }
-
-    public float heightOffset { get; set; }
-    public float widthOffset { get; set; }
-    public float GetHeightOffset()
-    {
-        return heightOffset;
-    }
-    public float GetWidthOffset()
-    {
-        return widthOffset;
-    }
 
     public override void Init(Action<List<InformationFlag>, IInformationPanelOpener, Dictionary<InformationFlag, string>> informationPanelOpener)
     {
@@ -35,7 +21,7 @@ public class Door: ASimulationObject, IDragAndDropObject
         this.directional = true;
         this.heightOffset = 0f;
         this.widthOffset = 0.5f;
-        InitInfoPanel(new List<InformationFlag>() { InformationFlag.DIFFUSIVITY, InformationFlag.DOOR_MATERIAL }, informationPanelOpener);
+        InitInfoPanel(new List<InformationFlag>() { InformationFlag.DIFFUSIVITY, InformationFlag.DOOR_MATERIAL, InformationFlag.DELETE_ACTION, InformationFlag.RESIZE_ACTION }, informationPanelOpener);
     }
 
     public override void UpdateInformation(Action<InformationFlag, string> panelInfoUpdater)
@@ -64,15 +50,5 @@ public class Door: ASimulationObject, IDragAndDropObject
         this.prefab = simulationObject.prefab;
         this.layerMask = ((Door)simulationObject).layerMask;
         this.editableDefaultValues = new Dictionary<InformationFlag, string>(simulationObject.editableDefaultValues);
-    }
-
-    public LayerMask GetLayerMask()
-    {
-        return this.layerMask;
-    }
-
-    public bool GetDirectional()
-    {
-        return this.directional;
     }
 }

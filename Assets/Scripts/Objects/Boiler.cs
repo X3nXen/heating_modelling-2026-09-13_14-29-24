@@ -1,29 +1,11 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Boiler : ASimulationObject, IRadiatingObject, IDragAndDropObject
 {
     public float radiationHeat { get ; set; }
-    public LayerMask layerMask { get; set; }
-    public bool directional { get; set; }
-
-    public float heightOffset { get; set; }
-    public float widthOffset { get; set; }
-    public float GetHeightOffset()
-    {
-        return heightOffset;
-    }
-
-    public float GetWidthOffset()
-    {
-        return widthOffset;
-    }
-
-    public LayerMask GetLayerMask()
-    {
-        return layerMask;
-    }
 
     public override void Init(Action<List<InformationFlag>, IInformationPanelOpener, Dictionary<InformationFlag, string>> infoPanelOpen)
     {
@@ -39,7 +21,7 @@ public class Boiler : ASimulationObject, IRadiatingObject, IDragAndDropObject
         this.directional = false;
         this.heightOffset = this.prefab.transform.localScale.y / 2;
         this.widthOffset = 0f;
-        InitInfoPanel(new List<InformationFlag>() { InformationFlag.TEMPERATURE, InformationFlag.OBJECT_TEMPERATURE }, infoPanelOpen);
+        InitInfoPanel(new List<InformationFlag>() { InformationFlag.TEMPERATURE, InformationFlag.OBJECT_TEMPERATURE, InformationFlag.DELETE_ACTION, InformationFlag.RESIZE_ACTION }, infoPanelOpen);
     }
 
     public override void OnTriggerEnter(Collider other)
@@ -75,16 +57,12 @@ public class Boiler : ASimulationObject, IRadiatingObject, IDragAndDropObject
         this.radiationHeat = ((Boiler)simulationObject).radiationHeat;
         this.layerMask = ((Boiler)simulationObject).layerMask;
         this.editableDefaultValues = new Dictionary<InformationFlag, string>(simulationObject.editableDefaultValues);
+        this.heightOffset = ((Boiler)simulationObject).GetHeightOffset();
     }
 
     public void SetRadiationHeat(float radiationHeat)
     {
         this.radiationHeat = radiationHeat;
         this.editableDefaultValues[InformationFlag.OBJECT_TEMPERATURE] = this.radiationHeat.ToString();
-    }
-
-    public bool GetDirectional()
-    {
-        return this.directional;
     }
 }
