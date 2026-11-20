@@ -32,6 +32,11 @@ public class UIController : MonoBehaviour
     private TMP_InputField globalInformationOutsideTempInput;
     private TMP_InputField globalInformationInsideTempInput;
 
+    private GameObject resizePanel;
+    private TMP_InputField x_scale;
+    private TMP_InputField y_scale;
+    private TMP_InputField z_scale;
+
     public void Init(
         List<ASimulationObject> heaters,
         List<ASimulationObject> buildings,
@@ -62,6 +67,11 @@ public class UIController : MonoBehaviour
         buildingsScrollableMenu = this.transform.Find("Buildings scrollable").gameObject;
         fenestrationMenu = this.transform.Find("Fenestration menu").gameObject;
         drawingMenu = this.transform.Find("Tool menu").gameObject;
+
+        resizePanel = this.transform.Find("Resize panel").gameObject;
+        x_scale = resizePanel.transform.Find("SCALE_X").Find("Input").gameObject.GetComponent<TMP_InputField>();
+        y_scale = resizePanel.transform.Find("SCALE_Y").Find("Input").gameObject.GetComponent<TMP_InputField>();
+        z_scale = resizePanel.transform.Find("SCALE_Z").Find("Input").gameObject.GetComponent<TMP_InputField>();
 
         MenuUIElement slidingMenuElement = slidingMenu.AddComponent<MenuUIElement>();
         slidingMenuElement.Setup(new GameObject[] { heatersScrollableMenu, buildingsScrollableMenu, fenestrationMenu, drawingMenu });
@@ -219,5 +229,25 @@ public class UIController : MonoBehaviour
     public void TurnMenusOff()
     {
         slidingMenu.GetComponent<MenuUIElement>().ToggleElement(false);
+    }
+
+    public void ToggleResizePanel(bool open)
+    {
+        this.resizePanel.SetActive(open);
+    }
+
+    public string GetXScaleValue()
+    {
+        return this.x_scale.text;
+    }
+
+    public string GetYScaleValue()
+    {
+        return this.y_scale.text;
+    }
+
+    public string GetZScaleValue()
+    {
+        return this.z_scale.text;
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -15,7 +16,9 @@ public class ClickDrawingObject : MonoBehaviour, IPointerDownHandler
     private Vector3 heightOffset;
     private Vector3 widthOffset;
 
-    private bool shouldSetClickableBack;
+    private bool shouldSetClickableBack = false;
+    private bool shouldSetWallLayerBack = false;
+    private Action<ClickDrawingObject> onWallAdd;
 
     public void UpdateSecondPosition()
     {
@@ -72,6 +75,11 @@ public class ClickDrawingObject : MonoBehaviour, IPointerDownHandler
                     placedObject.layer = LayerMask.NameToLayer("Default");
                     shouldSetClickableBack = true;
                 }
+                if (LayerMask.LayerToName(placedObject.layer) == "Wall_layer")
+                {
+                    placedObject.layer = LayerMask.NameToLayer("Default");
+                    shouldSetWallLayerBack = true;
+                }
             }
             else
             {
@@ -103,8 +111,19 @@ public class ClickDrawingObject : MonoBehaviour, IPointerDownHandler
                     placedObject.layer = LayerMask.NameToLayer("Clickable");
                     shouldSetClickableBack = false;
                 }
+                if (shouldSetWallLayerBack)
+                {
+                    placedObject.layer = LayerMask.NameToLayer("Wall_layer");
+                    shouldSetWallLayerBack = false;
+                }
 
                 isDragging = false;
+                if(objectToCopy is Wall)
+                {
+                    this.placedObject.GetComponent<Wall>().SetCanDelete(true);
+                    ClickDrawingObject clickDrawingObject = this.placedObject.AddComponent<ClickDrawingObject>();
+                    onWallAdd(clickDrawingObject);
+                }
                 this.placedObject.GetComponent<ASimulationObject>().SetEqualTo(objectToCopy);
                 this.placedObject = null;
                 this.firstPos = Vector3.zero;
@@ -140,5 +159,10 @@ public class ClickDrawingObject : MonoBehaviour, IPointerDownHandler
     public void SetObjectToCopy(ASimulationObject aSimulationObject)
     {
         this.objectToCopy = aSimulationObject;
+    }
+
+    public void SetOnWallAdd(Action<ClickDrawingObject> onWallAdd)
+    {
+        this.onWallAdd = onWallAdd;
     }
 }

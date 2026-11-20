@@ -7,11 +7,7 @@ public class Wall: ASimulationObject, IDragAndDropObject
 {
     private WallMaterial material;
     private bool isInsulated;
-
-    public LayerMask layerMask { get; set; }
-    public bool directional { get; set; }
-    public float heightOffset { get; set; }
-    public float widthOffset { get; set; }
+    private bool canDelete = false;
 
     public override void Init(Action<List<InformationFlag>, IInformationPanelOpener, Dictionary<InformationFlag, string>> informationPanelOpener)
     {
@@ -29,7 +25,12 @@ public class Wall: ASimulationObject, IDragAndDropObject
         this.widthOffset = 0.5f;
         this.editableDefaultValues.Add(InformationFlag.WALL_MATERIAL, ((int)this.material).ToString());
         this.editableDefaultValues.Add(InformationFlag.WALL_INSULATED, this.isInsulated.ToString());
-        InitInfoPanel(new List<InformationFlag>() { InformationFlag.DIFFUSIVITY, InformationFlag.WALL_MATERIAL, InformationFlag.WALL_INSULATED }, informationPanelOpener);
+        List<InformationFlag> informationFlags = new List<InformationFlag>();
+        this.canMove = false;
+        informationFlags.Add(InformationFlag.DIFFUSIVITY);
+        informationFlags.Add(InformationFlag.WALL_MATERIAL);
+        informationFlags.Add(InformationFlag.WALL_INSULATED);
+        InitInfoPanel(informationFlags, informationPanelOpener);
     }
 
     public override void UpdateInformation(Action<InformationFlag, string> panelInfoUpdater)
@@ -55,26 +56,6 @@ public class Wall: ASimulationObject, IDragAndDropObject
         return this.isInsulated;
     }
 
-    public LayerMask GetLayerMask()
-    {
-        return this.layerMask;
-    }
-
-    public bool GetDirectional()
-    {
-        return this.directional;
-    }
-
-    public float GetHeightOffset()
-    {
-        return this.heightOffset;
-    }
-
-    public float GetWidthOffset()
-    {
-        return this.widthOffset;
-    }
-
     public override void OnPointerDown(PointerEventData eventData)
     {
         if (!this.gameObject.GetComponent<ClickDrawingObject>().GetIsDrawing())
@@ -84,5 +65,31 @@ public class Wall: ASimulationObject, IDragAndDropObject
                 panelOpener(informationFlags, this, editableDefaultValues);
             }
         } 
+    }
+
+    public void SetCanDelete(bool canDelete)
+    {
+        this.canDelete = canDelete;
+    }
+
+    public override void SetEqualTo(ASimulationObject simulationObject)
+    {
+        this.informationFlags = simulationObject.informationFlags;
+        if (this.canDelete)
+        {
+            this.informationFlags.Add(InformationFlag.DELETE_ACTION);
+            this.informationFlags.Add(InformationFlag.RESIZE_ACTION);
+            this.canMove = true;
+        }
+        this.panelOpener = simulationObject.panelOpener;
+        this.displayImage = simulationObject.displayImage;
+        this.displayName = simulationObject.displayName;
+        this.prefab = simulationObject.prefab;
+        this.editableDefaultValues = simulationObject.editableDefaultValues;
+        this.diffusivity = simulationObject.GetDiffusivity();
+        this.layerMask = simulationObject.layerMask;
+        this.heightOffset = simulationObject.heightOffset;
+        this.widthOffset = simulationObject.widthOffset;
+        this.directional = simulationObject.directional;
     }
 }

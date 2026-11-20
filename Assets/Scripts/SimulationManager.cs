@@ -181,6 +181,7 @@ public class SimulationManager : MonoBehaviour
         }
         this.uiController.OpenInformationPanel(informationFlag, editableDefaultValues);
         this.panelOwner = newOwner;
+        this.uiController.ToggleResizePanel(false);
     }
 
     public void CloseInformationPanel()
@@ -211,6 +212,7 @@ public class SimulationManager : MonoBehaviour
             {
                 floorClickDrawingObject.SetObjectToCopy(simulationObject);
                 floorClickDrawingObject.SetObjectToDraw(simulationObject);
+                floorClickDrawingObject.SetOnWallAdd((ClickDrawingObject clickDrawingObject) => { this.wallClickDrawingObjects.Add(clickDrawingObject); });
                 floorClickDrawingObject.SetIsDrawing(true);
             } 
             else
@@ -220,7 +222,6 @@ public class SimulationManager : MonoBehaviour
                     clickDrawingObject.SetObjectToCopy(simulationObject);
                     clickDrawingObject.SetObjectToDraw(simulationObject);
                     clickDrawingObject.SetIsDrawing(true);
-                    Debug.Log("Drawing again");
                 }
             }
         }
@@ -296,5 +297,70 @@ public class SimulationManager : MonoBehaviour
     {
         bool isFreeMovement = this.cameraController.IsFreeMovement();
         this.cameraController.SetFreeMovement(!isFreeMovement);
+    }
+
+    public void DeleteObject()
+    {
+        if(this.panelOwner != null && !this.isStarted) 
+        {
+            Destroy(((ASimulationObject)panelOwner).gameObject);
+            this.panelOwner = null;
+            this.CloseInformationPanel();
+        }
+    }
+
+    public void OpenResizePanel()
+    {
+        if(this.panelOwner != null && !this.isStarted) 
+        {
+            this.uiController.ToggleResizePanel(true);
+        }
+    }
+
+    public void SetObjectXScale()
+    {
+        if(this.panelOwner != null && !this.isStarted)
+        {
+            if(this.panelOwner is Floor)
+            {
+                this.buildingManager.ScaleBuildingX(float.Parse(this.uiController.GetXScaleValue()));
+            }
+            else
+            {
+                Vector3 scale = ((ASimulationObject)this.panelOwner).transform.localScale;
+                ((ASimulationObject)this.panelOwner).transform.localScale = new Vector3(scale.x * float.Parse(this.uiController.GetXScaleValue()), scale.y, scale.z); 
+            }
+        }
+    }
+
+    public void SetObjectYScale()
+    {
+        if (this.panelOwner != null && !this.isStarted)
+        {
+            if (this.panelOwner is Floor)
+            {
+                this.buildingManager.ScaleBuildingY(float.Parse(this.uiController.GetYScaleValue()));
+            }
+            else
+            {
+                Vector3 scale = ((ASimulationObject)this.panelOwner).transform.localScale;
+                ((ASimulationObject)this.panelOwner).transform.localScale = new Vector3(scale.x, scale.y * float.Parse(this.uiController.GetYScaleValue()), scale.z);
+            }
+        }
+    }
+
+    public void SetObjectZScale()
+    {
+        if (this.panelOwner != null && !this.isStarted)
+        {
+            if (this.panelOwner is Floor)
+            {
+                this.buildingManager.ScaleBuildingZ(float.Parse(this.uiController.GetZScaleValue()));
+            } else
+            {
+                Vector3 scale = ((ASimulationObject)this.panelOwner).transform.localScale;
+                ((ASimulationObject)this.panelOwner).transform.localScale = new Vector3(scale.x, scale.y, scale.y * float.Parse(this.uiController.GetZScaleValue()));
+            }
+        }
     }
 }

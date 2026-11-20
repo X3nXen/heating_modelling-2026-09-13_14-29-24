@@ -19,6 +19,7 @@ public class InformationPanelController : MonoBehaviour
         Transform content = this.transform.Find("Content");
         Transform generalContent = content.Find("General");
         Transform editableContent = content.Find("Editable");
+        Transform actionsContent = content.Find("Actions");
         
         GameObject nameObject = this.transform.Find("Object name").gameObject;
         GameObject temperatureObject = generalContent.Find("INFORMATION.TEMPERATURE").gameObject;
@@ -31,6 +32,9 @@ public class InformationPanelController : MonoBehaviour
         GameObject windowMaterialObject = editableContent.Find("INFORMATION.WINDOW_MATERIAL").gameObject;
         GameObject pipeMaterialObject = editableContent.Find("INFORMATION.PIPE_MATERIAL").gameObject;
 
+        GameObject deleteObject = actionsContent.Find("INFORMATION.DELETE").gameObject;
+        GameObject resizeObject = actionsContent.Find("INFORMATION.RESIZE").gameObject;
+
 
         flagToGameobject.Add(InformationFlag.OBJECT_NAME, nameObject);
         flagToGameobject.Add(InformationFlag.TEMPERATURE, temperatureObject);
@@ -42,6 +46,9 @@ public class InformationPanelController : MonoBehaviour
         flagToGameobject.Add(InformationFlag.DOOR_MATERIAL, doorMaterialObject);
         flagToGameobject.Add(InformationFlag.WINDOW_MATERIAL, windowMaterialObject);
         flagToGameobject.Add(InformationFlag.PIPE_MATERIAL, pipeMaterialObject);
+
+        flagToGameobject.Add(InformationFlag.DELETE_ACTION, deleteObject);
+        flagToGameobject.Add(InformationFlag.RESIZE_ACTION, resizeObject);
 
         List<TMP_Dropdown.OptionData> wallMaterialOptions = new List<TMP_Dropdown.OptionData>();
         foreach(WallMaterial item in Enum.GetValues(typeof(WallMaterial)))

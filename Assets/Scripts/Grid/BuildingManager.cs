@@ -16,6 +16,9 @@ public class BuildingManager: MonoBehaviour
     private GameObject floorObject;
     private ClickDrawingObject floorClickDrawingObject;
     private List<ClickDrawingObject> wallClickDrawingObjects;
+    private Vector3 initialScale;
+    private Vector3 initialCenter;
+    private Vector3 dimensions;
     private void Awake()
     {
         cameraPos = Camera.main.transform;
@@ -35,6 +38,8 @@ public class BuildingManager: MonoBehaviour
         this.floorObject = this.buildingObject.transform.Find("Floor").gameObject;
         this.floorClickDrawingObject = this.floorObject.AddComponent<ClickDrawingObject>();
         this.wallClickDrawingObjects = new List<ClickDrawingObject>();
+        Floor floorComponent = this.floorObject.AddComponent<Floor>();
+        floorComponent.Init(infoPanelOpen);
         foreach (Transform child in this.buildingObject.transform)
         {
             if (child.gameObject.tag == "Wall")
@@ -53,6 +58,9 @@ public class BuildingManager: MonoBehaviour
             }
         }
         UpdateWallOpacity();
+        this.initialCenter = this.buildingObject.transform.position;
+        this.initialScale = this.buildingObject.transform.localScale;
+        this.dimensions = this.floorObject.transform.localScale;
     }
 
     public void UpdateWallOpacity()
@@ -87,5 +95,23 @@ public class BuildingManager: MonoBehaviour
     public List<ClickDrawingObject> GetWallClickDrawingObjects()
     {
         return this.wallClickDrawingObjects;
+    }
+
+    public void ScaleBuildingX(float x)
+    {
+        Vector3 currentScale = this.buildingObject.transform.localScale;
+        this.buildingObject.transform.localScale = new Vector3(initialScale.x * x, currentScale.y, currentScale.z);
+        this.buildingObject.transform.position = new Vector3(initialCenter.x + (dimensions.x * (x-1) / 2) , this.buildingObject.transform.position.y, this.buildingObject.transform.position.z);
+    }
+    public void ScaleBuildingY(float y)
+    {
+        Vector3 currentScale = this.buildingObject.transform.localScale;
+        this.buildingObject.transform.localScale = new Vector3(currentScale.x, initialScale.y * y, currentScale.z);
+    }
+    public void ScaleBuildingZ(float z)
+    {
+        Vector3 currentScale = this.buildingObject.transform.localScale;
+        this.buildingObject.transform.localScale = new Vector3(currentScale.x, currentScale.y, initialScale.z * z);
+        this.buildingObject.transform.position = new Vector3(this.buildingObject.transform.position.x, this.buildingObject.transform.position.y, initialCenter.z + (dimensions.z * (z-1) / 2));
     }
 }

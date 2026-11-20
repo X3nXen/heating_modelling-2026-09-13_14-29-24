@@ -142,6 +142,7 @@ public class GridPoint : ASimulationObject
         this.editableDefaultValues = null;
         this.meshRenderer = GetComponent<MeshRenderer>();
         this.propBlock = new MaterialPropertyBlock();
+        this.canMove = false;
 
         this.heatGradient = new Gradient();
         this.heatGradient.SetKeys(
