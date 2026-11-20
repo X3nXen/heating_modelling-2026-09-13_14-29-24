@@ -1,7 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem.Controls;
 
 public class BuildingManager: MonoBehaviour
 {
@@ -18,7 +19,15 @@ public class BuildingManager: MonoBehaviour
     private List<ClickDrawingObject> wallClickDrawingObjects;
     private Vector3 initialScale;
     private Vector3 initialCenter;
-    private Vector3 dimensions;
+    private GameObject ceiling;
+    private Vector3 ceilingOriginalPosition;
+    private GameObject collisionBox;
+    private Vector3 collisionBoxOriginalScale;
+    private Vector3 collisionBoxOriginalPosition;
+
+    private List<GameObject> xLengthWalls;
+    private Dictionary<GameObject, Vector3> wallOriginalPositions;
+    private Dictionary<GameObject, Vector3> wallOriginalScales;
     private void Awake()
     {
         cameraPos = Camera.main.transform;
@@ -33,13 +42,20 @@ public class BuildingManager: MonoBehaviour
         {
             Destroy(this.buildingObject);
         }
+
         this.buildingObject = Instantiate(buildingObject, placePosition, Quaternion.identity);
+
         this.walls = new List<GameObject>();
         this.floorObject = this.buildingObject.transform.Find("Floor").gameObject;
         this.floorClickDrawingObject = this.floorObject.AddComponent<ClickDrawingObject>();
         this.wallClickDrawingObjects = new List<ClickDrawingObject>();
+
         Floor floorComponent = this.floorObject.AddComponent<Floor>();
         floorComponent.Init(infoPanelOpen);
+
+        this.xLengthWalls = new List<GameObject>();
+        this.wallOriginalPositions = new Dictionary<GameObject, Vector3>();
+        this.wallOriginalScales = new Dictionary<GameObject, Vector3>();
         foreach (Transform child in this.buildingObject.transform)
         {
             if (child.gameObject.tag == "Wall")
@@ -51,16 +67,28 @@ public class BuildingManager: MonoBehaviour
                     wallComponent.Init(infoPanelOpen);
                     ClickDrawingObject clickDrawingObject = child.AddComponent<ClickDrawingObject>();
                     wallClickDrawingObjects.Add(clickDrawingObject);
+                    if(child.gameObject.transform.localScale.x > child.gameObject.transform.localScale.z)
+                    {
+                        this.xLengthWalls.Add(child.gameObject);
+                    }
+                    this.wallOriginalPositions.Add(child.gameObject, child.gameObject.transform.localPosition + placePosition);
+                    this.wallOriginalScales.Add(child.gameObject, child.gameObject.transform.localScale);
                 } else
                 {
                     wallComponent.SetMaterial(WallMaterial.BRICK_COMMON);
                 }
             }
         }
+
+        this.initialCenter = placePosition;
+        this.initialScale = this.floorObject.transform.localScale;
+        this.ceiling = this.buildingObject.transform.Find("Ceiling").gameObject;
+        this.collisionBox = this.buildingObject.transform.Find("House Occlusion Box").gameObject;
+        this.collisionBoxOriginalScale = this.collisionBox.transform.localScale;
+        this.collisionBoxOriginalPosition = this.collisionBox.transform.position;
+        this.ceilingOriginalPosition = this.ceiling.transform.position;
+
         UpdateWallOpacity();
-        this.initialCenter = this.buildingObject.transform.position;
-        this.initialScale = this.buildingObject.transform.localScale;
-        this.dimensions = this.floorObject.transform.localScale;
     }
 
     public void UpdateWallOpacity()
@@ -99,19 +127,107 @@ public class BuildingManager: MonoBehaviour
 
     public void ScaleBuildingX(float x)
     {
-        Vector3 currentScale = this.buildingObject.transform.localScale;
-        this.buildingObject.transform.localScale = new Vector3(initialScale.x * x, currentScale.y, currentScale.z);
-        this.buildingObject.transform.position = new Vector3(initialCenter.x + (dimensions.x * (x-1) / 2) , this.buildingObject.transform.position.y, this.buildingObject.transform.position.z);
+        // T1 - padló, tető, collision növelés
+        
+        this.floorObject.transform.localScale = new Vector3(initialScale.x * x, this.floorObject.transform.localScale.y, this.floorObject.transform.localScale.z);
+        this.ceiling.transform.localScale = new Vector3(initialScale.x * x, this.ceiling.transform.localScale.y, this.ceiling.transform.localScale.z);
+        this.collisionBox.transform.localScale = new Vector3(initialScale.x * x, this.collisionBox.transform.localScale.y, this.collisionBox.transform.localScale.z);
+
+        // T2 - egész objektum eltolása
+
+        float deltaX = (((initialScale.x * x) - initialScale.x) / 2);
+        Vector3 moveVector = new Vector3(deltaX, 0, 0);
+        this.buildingObject.transform.position = initialCenter + moveVector + new Vector3(0, 0, this.buildingObject.transform.position.z - initialCenter.z);
+
+        // T3 - falak kitolása, amik z szerint nyúlnak
+
+        foreach (GameObject wall in walls)
+        {
+            if (!xLengthWalls.Contains(wall))
+            {
+                //T1 - T2 után számolt koordináta
+                Vector3 currentPosition = wallOriginalPositions[wall] + new Vector3(deltaX, 0, 0);
+
+                int direction = (wallOriginalPositions[wall].x > initialCenter.x ? 1 : -1);
+                // T3 - fal kitolás
+                wall.transform.position = currentPosition + new Vector3(deltaX * direction, wall.transform.position.y - wallOriginalPositions[wall].y, wall.transform.position.z - wallOriginalPositions[wall].z);
+            } else
+            {
+                // T4 - x szerint nyúló falak nyújtása
+                wall.transform.localScale = new Vector3(wallOriginalScales[wall].x * x, wall.transform.localScale.y, wall.transform.localScale.z);
+            }
+        }
     }
     public void ScaleBuildingY(float y)
     {
-        Vector3 currentScale = this.buildingObject.transform.localScale;
-        this.buildingObject.transform.localScale = new Vector3(currentScale.x, initialScale.y * y, currentScale.z);
+        float deltaY = -900;
+        foreach (GameObject wall in walls) 
+        {
+            // T1 - scale Y on walls
+            wall.transform.localScale = new Vector3(wall.transform.localScale.x, wallOriginalScales[wall].y * y, wall.transform.localScale.z);
+            // T2 - move up by the amount it got scaled
+            if(deltaY == -900)
+            {
+                deltaY = (((wallOriginalScales[wall].y * y) - wallOriginalScales[wall].y) / 2);
+            }
+            Debug.Log("Y delta: " + deltaY);
+            wall.transform.position = new Vector3(wall.transform.position.x, wallOriginalPositions[wall].y + deltaY, wall.transform.position.z);
+        }
+
+        // T3 - collision box és ceiling felpozicionálása
+
+        this.collisionBox.transform.localScale = new Vector3(this.collisionBox.transform.localScale.x, this.collisionBoxOriginalScale.y * y, this.collisionBox.transform.localScale.z);
+        this.collisionBox.transform.position = new Vector3(this.collisionBox.transform.position.x, this.collisionBoxOriginalPosition.y + deltaY, this.collisionBox.transform.position.z);
+
+        this.ceiling.transform.position = new Vector3(this.ceiling.transform.position.x, this.ceilingOriginalPosition.y + 2 * deltaY, this.ceiling.transform.position.z);
     }
     public void ScaleBuildingZ(float z)
     {
-        Vector3 currentScale = this.buildingObject.transform.localScale;
-        this.buildingObject.transform.localScale = new Vector3(currentScale.x, currentScale.y, initialScale.z * z);
-        this.buildingObject.transform.position = new Vector3(this.buildingObject.transform.position.x, this.buildingObject.transform.position.y, initialCenter.z + (dimensions.z * (z-1) / 2));
+        // T1 - padló, tető, collision növelés
+
+        this.floorObject.transform.localScale = new Vector3(this.floorObject.transform.localScale.x, this.floorObject.transform.localScale.y, initialScale.z * z);
+        this.ceiling.transform.localScale = new Vector3(this.ceiling.transform.localScale.x, this.ceiling.transform.localScale.y, initialScale.z * z);
+        this.collisionBox.transform.localScale = new Vector3(this.collisionBox.transform.localScale.x, this.collisionBox.transform.localScale.y, initialScale.z * z);
+
+        // T2 - egész objektum eltolása
+
+        float deltaZ = (((initialScale.z * z) - initialScale.z) / 2);
+        Vector3 moveVector = new Vector3(0, 0, deltaZ);
+        this.buildingObject.transform.position = initialCenter + moveVector + new Vector3(this.buildingObject.transform.position.x - initialCenter.x, 0, 0);
+
+        // T3 - falak kitolása, amik z szerint nyúlnak
+
+        foreach (GameObject wall in walls)
+        {
+            if (xLengthWalls.Contains(wall))
+            {
+                //T1 - T2 után számolt koordináta
+                Vector3 currentPosition = wallOriginalPositions[wall] + new Vector3(0, 0, deltaZ);
+
+                int direction = (wallOriginalPositions[wall].z > initialCenter.z ? 1 : -1);
+                // T3 - fal kitolás
+                wall.transform.position = currentPosition + new Vector3(wall.transform.position.x - wallOriginalPositions[wall].x, wall.transform.position.y - wallOriginalPositions[wall].y, deltaZ * direction);
+            }
+            else
+            {
+                // T4 - x szerint nyúló falak nyújtása
+                wall.transform.localScale = new Vector3(wall.transform.localScale.x, wall.transform.localScale.y, wallOriginalScales[wall].z * z);
+            }
+        }
+    }
+
+    public float GetFloorXLength()
+    {
+        return this.floorObject.transform.localScale.x;
+    }
+
+    public float GetFloorZLength()
+    {
+        return this.floorObject.transform.localScale.z;
+    }
+
+    public float GetWallHeight()
+    {
+        return this.walls[0].transform.localScale.y;
     }
 }

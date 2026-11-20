@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GridPoint : ASimulationObject
 {
-    public static GameObject CreateGridpointGameobject(GameObject prefab, Vector3 position, SimulationGrid parent)
+    public static GridPoint CreateGridpointGameobject(GameObject prefab, Vector3 position, SimulationGrid parent)
     {
         Material barelyVisibleMaterial = ResourceLoader.Get("Materials/Invisible") as Material;
         Material gradientMaterial = ResourceLoader.Get("Materials/Gradient") as Material;
@@ -20,7 +20,7 @@ public class GridPoint : ASimulationObject
         pointComponent.SetVisibleMaterial(visibleMaterial);
 
         newPoint.SetActive(true);
-        return newPoint;
+        return pointComponent;
     }
 
     [SerializeField]

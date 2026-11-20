@@ -35,6 +35,7 @@ public class SimulationManager : MonoBehaviour
     {
         this.uiController = ui.GetComponent<UIController>();
         this.cameraController = Camera.main.gameObject.GetComponent<CameraMovement>();
+        GameObject gridRepresentation = ResourceLoader.Get("Prefabs/GridPoint") as GameObject;
         var heaterPrefabs = ResourceLoader.GetAll("Prefabs/Heaters");
         heaters = new List<ASimulationObject>();
         var buildingPrefabs = ResourceLoader.GetAll("Prefabs/Buildings");
@@ -86,6 +87,7 @@ public class SimulationManager : MonoBehaviour
         this.floorClickDrawingObject = this.buildingManager.GetFloorClickDrawingObject();
         this.wallClickDrawingObjects = this.buildingManager.GetWallClickDrawingObjects();
         this.cameraController.SetFreeMovement(false);
+        this.grid.SetPointRepresentation(gridRepresentation);
     }
 
     void Update()
@@ -324,6 +326,7 @@ public class SimulationManager : MonoBehaviour
             if(this.panelOwner is Floor)
             {
                 this.buildingManager.ScaleBuildingX(float.Parse(this.uiController.GetXScaleValue()));
+                this.grid.SetVerticalLength((int)this.buildingManager.GetFloorXLength());
             }
             else
             {
@@ -340,6 +343,7 @@ public class SimulationManager : MonoBehaviour
             if (this.panelOwner is Floor)
             {
                 this.buildingManager.ScaleBuildingY(float.Parse(this.uiController.GetYScaleValue()));
+                this.grid.SetDepth((int)this.buildingManager.GetWallHeight());
             }
             else
             {
@@ -356,6 +360,7 @@ public class SimulationManager : MonoBehaviour
             if (this.panelOwner is Floor)
             {
                 this.buildingManager.ScaleBuildingZ(float.Parse(this.uiController.GetZScaleValue()));
+                this.grid.SetHorizontalLength((int)this.buildingManager.GetFloorZLength());
             } else
             {
                 Vector3 scale = ((ASimulationObject)this.panelOwner).transform.localScale;

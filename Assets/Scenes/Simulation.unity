@@ -4418,11 +4418,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15c4b87ff75914546aa0c32209da1eea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Grid
-  verticalLength: 31
-  horizontalLength: 31
+  verticalLength: 30
+  scaledVerticalLength: 30
+  horizontalLength: 30
+  scaledHorizontalLength: 30
   depth: 10
-  sectionSize: 1
-  pointRepresentation: {fileID: 5550556767579829129, guid: 5bb1413da82e5ef488566ba4275f17e1, type: 3}
+  scaledDepth: 10
 --- !u!4 &507887497
 Transform:
   m_ObjectHideFlags: 0
@@ -10238,7 +10239,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 1.877204e+10, y: 0.5}
+  m_AnchoredPosition: {x: 1.9698674e+10, y: 0.5}
   m_SizeDelta: {x: 600, y: 100}
   m_Pivot: {x: 300, y: 0.5}
 --- !u!114 &1169084574
@@ -14110,7 +14111,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -14425998}
+  m_AnchoredPosition: {x: 0, y: -15073481}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1746612404
