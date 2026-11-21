@@ -2,32 +2,45 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem.Controls;
 
+/**
+ * BuildingManager osztály
+ * Magától nem létezik, a SimulationManager hozza létre.
+ * Az osztály felelős az összes épületeket érintő műveletért
+ * 
+*/
 public class BuildingManager: MonoBehaviour
 {
     private List<GameObject> walls;
-    private Transform cameraPos;
     private GameObject minDistanceWall;
-
     private Material baseMaterial;
     private Material invisibleMaterial;
     private GameObject buildingObject;
+    
+    private List<GameObject> xLengthWalls;
+    private Dictionary<GameObject, Vector3> wallOriginalPositions;
+    private Dictionary<GameObject, Vector3> wallOriginalScales;
+
     private Vector3 placePosition = new Vector3(15f, 1.5f, 15f);
+    private Transform cameraPos;
+
     private GameObject floorObject;
     private ClickDrawingObject floorClickDrawingObject;
     private List<ClickDrawingObject> wallClickDrawingObjects;
     private Vector3 initialScale;
     private Vector3 initialCenter;
+    
     private GameObject ceiling;
     private Vector3 ceilingOriginalPosition;
+    
     private GameObject collisionBox;
     private Vector3 collisionBoxOriginalScale;
     private Vector3 collisionBoxOriginalPosition;
 
-    private List<GameObject> xLengthWalls;
-    private Dictionary<GameObject, Vector3> wallOriginalPositions;
-    private Dictionary<GameObject, Vector3> wallOriginalScales;
+    private float xScale;
+    private float yScale;
+    private float zScale;
+
     private void Awake()
     {
         cameraPos = Camera.main.transform;
@@ -36,12 +49,21 @@ public class BuildingManager: MonoBehaviour
         buildingObject = null;
     }
 
+    /**
+     * Beállít egy teljesen új épületet 
+     * param: buildingObject - GameObject - egy létrehozott épület prefab ellátva egy ASimulationObject-et kiterjesztő komponenssel
+     * param: infoPanelOpen - Action - az InformationPanel megnyitó metódusa
+    */
     public void SetBuildingObject(GameObject buildingObject, Action<List<InformationFlag>, IInformationPanelOpener, Dictionary<InformationFlag, string>> infoPanelOpen)
     {
         if(this.buildingObject != null)
         {
             Destroy(this.buildingObject);
         }
+
+        xScale = 1f;
+        yScale = 1f;
+        zScale = 1f;
 
         this.buildingObject = Instantiate(buildingObject, placePosition, Quaternion.identity);
 
@@ -91,6 +113,9 @@ public class BuildingManager: MonoBehaviour
         UpdateWallOpacity();
     }
 
+    /**
+     * Update-enként meghívható metódus ami a kamerához legközelebbi falat áttetszővé teszi
+     */
     public void UpdateWallOpacity()
     {
         cameraPos = Camera.main.transform;
@@ -110,23 +135,14 @@ public class BuildingManager: MonoBehaviour
         minDistanceWall.layer = LayerMask.NameToLayer("Default");
     }
 
-    public GameObject GetFloorObject()
-    {
-        return this.floorObject;
-    }
 
-    public ClickDrawingObject GetFloorClickDrawingObject()
-    {
-        return this.floorClickDrawingObject;
-    }
-
-    public List<ClickDrawingObject> GetWallClickDrawingObjects()
-    {
-        return this.wallClickDrawingObjects;
-    }
-
+    /**
+     * Az épület X irányú skálázásáért felelős metódus
+     * param: x - float: szorzó, ennyiszeresére skálázódik az x irányú kiterjedése az épületnek
+     */
     public void ScaleBuildingX(float x)
     {
+        this.xScale = x;
         // T1 - padló, tető, collision növelés
         
         this.floorObject.transform.localScale = new Vector3(initialScale.x * x, this.floorObject.transform.localScale.y, this.floorObject.transform.localScale.z);
@@ -158,8 +174,13 @@ public class BuildingManager: MonoBehaviour
             }
         }
     }
+    /**
+     * Az épület Y irányú skálázásáért felelős metódus
+     * param: Y - float: szorzó, ennyiszeresére skálázódik az y irányú kiterjedése az épületnek
+     */
     public void ScaleBuildingY(float y)
     {
+        this.yScale = y;
         float deltaY = -900;
         foreach (GameObject wall in walls) 
         {
@@ -181,8 +202,14 @@ public class BuildingManager: MonoBehaviour
 
         this.ceiling.transform.position = new Vector3(this.ceiling.transform.position.x, this.ceilingOriginalPosition.y + 2 * deltaY, this.ceiling.transform.position.z);
     }
+
+    /**
+     * Az épület Z irányú skálázásáért felelős metódus
+     * param: Z - float: szorzó, ennyiszeresére skálázódik az Z irányú kiterjedése az épületnek
+     */
     public void ScaleBuildingZ(float z)
     {
+        this.zScale = z;
         // T1 - padló, tető, collision növelés
 
         this.floorObject.transform.localScale = new Vector3(this.floorObject.transform.localScale.x, this.floorObject.transform.localScale.y, initialScale.z * z);
@@ -229,5 +256,34 @@ public class BuildingManager: MonoBehaviour
     public float GetWallHeight()
     {
         return this.walls[0].transform.localScale.y;
+    }
+
+    public float GetXScale()
+    {
+        return this.xScale;
+    }
+
+    public float GetYScale()
+    {
+        return this.yScale;
+    }
+
+    public float GetZScale()
+    {
+        return this.zScale;
+    }
+    public GameObject GetFloorObject()
+    {
+        return this.floorObject;
+    }
+
+    public ClickDrawingObject GetFloorClickDrawingObject()
+    {
+        return this.floorClickDrawingObject;
+    }
+
+    public List<ClickDrawingObject> GetWallClickDrawingObjects()
+    {
+        return this.wallClickDrawingObjects;
     }
 }

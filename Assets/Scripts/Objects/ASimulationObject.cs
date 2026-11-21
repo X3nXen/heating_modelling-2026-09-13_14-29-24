@@ -1,8 +1,12 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+/**
+ * ASimulationObject osztály
+ * Minden a szimulációban használt objektum őse. Absztrakciós szint, a kódismétlés elkerülésére.
+ */
 public abstract class ASimulationObject : MonoBehaviour, IInformationPanelOpener, IPlaceableObject, IBeginDragHandler, IEndDragHandler, IDragHandler, IDragAndDropObject
 {
     public List<InformationFlag> informationFlags { get; set; }
@@ -14,6 +18,7 @@ public abstract class ASimulationObject : MonoBehaviour, IInformationPanelOpener
     public bool directional { get; set; }
     public float heightOffset { get; set; }
     public float widthOffset { get; set; }
+    protected LayerMask originalLayer;
 
     protected float diffusivity;
     protected Vector3 itemWidthOffset;
@@ -23,20 +28,6 @@ public abstract class ASimulationObject : MonoBehaviour, IInformationPanelOpener
 
     public Dictionary<InformationFlag, string> editableDefaultValues;
 
-    public Sprite GetDisplayImage()
-    {
-        return displayImage;
-    }
-
-    public string GetDisplayName()
-    {
-        return displayName;
-    }
-
-    public GameObject GetPrefab()
-    {
-        return prefab;
-    }
 
     public abstract void Init(Action<List<InformationFlag>, IInformationPanelOpener, Dictionary<InformationFlag, string>> infoPanelOpen);
 
@@ -93,6 +84,8 @@ public abstract class ASimulationObject : MonoBehaviour, IInformationPanelOpener
     {
         if (canMove)
         {
+            this.originalLayer = this.gameObject.layer;
+            this.gameObject.layer = LayerMask.NameToLayer("Default");
             this.itemHeightOffset = new Vector3(0, this.heightOffset, 0);
             this.itemWidthOffset = new Vector3(this.widthOffset, 0, this.widthOffset);
 
@@ -110,24 +103,23 @@ public abstract class ASimulationObject : MonoBehaviour, IInformationPanelOpener
 
 
     public void OnEndDrag(PointerEventData eventData)
-    {
-
+    { 
+        this.gameObject.layer = this.originalLayer;
     }
-    public void UpdateItemPosition(PointerEventData eventData)
+    public virtual void UpdateItemPosition(PointerEventData eventData)
     {
         Ray ray = Camera.main.ScreenPointToRay(eventData.position);
-        if (Physics.Raycast(ray, out RaycastHit hit, 100f, this.layerMask))
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f, this.layerMask, QueryTriggerInteraction.Collide))
         {
-            if (this.directional)
+            if (hit.normal != Vector3.zero)
             {
-                if (hit.normal != Vector3.zero)
+                if (this.directional)
                 {
-                    this.transform.rotation = Quaternion.LookRotation(-hit.normal);
+                    this.transform.rotation = Quaternion.LookRotation(-hit.normal, Vector3.up);
                 }
             }
 
             Vector3 rotatedWidthOffset = this.transform.rotation * itemWidthOffset;
-
             this.transform.position = hit.point + itemHeightOffset + rotatedWidthOffset;
         }
     }
@@ -150,5 +142,19 @@ public abstract class ASimulationObject : MonoBehaviour, IInformationPanelOpener
     public float GetWidthOffset()
     {
         return this.widthOffset;
+    }
+    public Sprite GetDisplayImage()
+    {
+        return displayImage;
+    }
+
+    public string GetDisplayName()
+    {
+        return displayName;
+    }
+
+    public GameObject GetPrefab()
+    {
+        return prefab;
     }
 }

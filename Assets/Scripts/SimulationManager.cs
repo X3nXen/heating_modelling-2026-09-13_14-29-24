@@ -1,19 +1,26 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+/**
+ * SimulationManager osztály
+ * A szimuláció kontrollerje, innen ered minden interakció és minden változás
+ */
 public class SimulationManager : MonoBehaviour
 {
     private float timeStep = 1;
     private float nextUpdate = 1;
     private bool isStarted = false;
     private float simulationTime = 0f;
+    private float insideHeat = 21;
+    private float outsideHeat = 15;
 
-    private BuildingManager buildingManager;
     [SerializeField]
     private SimulationGrid grid;
     [SerializeField]
     private GameObject ui;
+
+    private BuildingManager buildingManager;
     private UIController uiController;
     private CameraMovement cameraController;
 
@@ -24,13 +31,13 @@ public class SimulationManager : MonoBehaviour
 
     private IInformationPanelOpener panelOwner;
 
-    private float insideHeat = 21;
-    private float outsideHeat = 15;
-
     private bool isGridView = true;
+    
     private ClickDrawingObject floorClickDrawingObject;
+    
     private List<ClickDrawingObject> wallClickDrawingObjects;
     ClickDrawingObject currentDrawingWall;
+    
     void Awake()
     {
         this.uiController = ui.GetComponent<UIController>();
@@ -131,6 +138,11 @@ public class SimulationManager : MonoBehaviour
         }
     }
 
+    /**
+     * A szimuláció elindító gombja által használt metódus.
+     * Ha nincs elindítva még a szimuláció, akkor elindítja a szükséges felállási folyamatokat,
+     * ha pedig már el van indítva a szimuláció, akkor leállítja a  szükséges tisztító folyamatokkal.
+     */
     public void ToggleSimulation()
     {
         if (isStarted)
@@ -149,6 +161,10 @@ public class SimulationManager : MonoBehaviour
         this.uiController.BlockOnSimulationStart(isStarted);
     }
 
+    /**
+     * A szimuláció sebesség állító gombja által hívott metódus. 3 érték között ciklikusan változtatja a
+     * frissítésenként eltelő másodperceket, és a grafikus felületet értesíti a változásról.
+     */
     public void CycleSimulationSpeed()
     {
         switch (timeStep)
@@ -168,6 +184,10 @@ public class SimulationManager : MonoBehaviour
         this.uiController.CycleSpeedButtonSprite();
     }
 
+    /**
+     * A nézet állítás gombja által hívott metódus. Ha rács nézeten van, vált a hőmérséklet színezett nézetre,
+     * ha pedig azon, akkor vált a rácsra.
+     */
     public void ToggleView()
     {
         this.isGridView = !this.isGridView;
@@ -175,6 +195,13 @@ public class SimulationManager : MonoBehaviour
         this.grid.SetView(isGridView);
     }
 
+    /**
+     * A központi, minden objektum által használt metódus ami megnyitja az információs panelt, és beállítja itt
+     * azt, hogy ki a "birtokosa" az információs panelnek
+     * param - informationFlag: egy listányi InformationFlag, amik megmondják mely információknak kell aktívnak lenni a panelen
+     * param - newOwner: a hívó objektum maga
+     * param - editableDefaultValues: a módosító inputok InformationFlagjét és értékét tartalmazó map/dictionary
+     */
     public void OpenInformationPanel(List<InformationFlag> informationFlag, IInformationPanelOpener newOwner, Dictionary<InformationFlag, string> editableDefaultValues)
     {
         if(this.panelOwner != null && this.panelOwner != newOwner)
@@ -186,11 +213,17 @@ public class SimulationManager : MonoBehaviour
         this.uiController.ToggleResizePanel(false);
     }
 
+    /**
+     * Az információs panel bezáró gombja által hívott metódus
+     */
     public void CloseInformationPanel()
     {
         this.uiController.CloseInformationPanel();
     }
 
+    /**
+     * Minden egyes frissítésnél meghívott metódus, ami frissíti az információs panelen az összes értéket az aktuálisra.
+     */
     public void UpdateInformationPanel()
     {
         if(this.panelOwner != null)
@@ -199,13 +232,22 @@ public class SimulationManager : MonoBehaviour
         }
     }
 
+    /**
+     * Az épület menüben kattintott épület által hívott metódus, ami beállítja a használt épületet és bezárja a skálázó menüt
+     * param - building: maga a kattintott épület
+     */
     public void SetNewBuilding(GameObject building)
     {
         if (this.isStarted)
             return;
+        this.uiController.ToggleResizePanel(false);
         this.buildingManager.SetBuildingObject(building, OpenInformationPanel);
     }
 
+    /**
+     * A rajzoló eszközök által hívott metódus, ami inicializálja a rajzoló komponenst.
+     * param - simulationObject: a rajzolni kívánt, ASimulationObject-ből leszármazó objektum
+     */
     public void SetUsedTool(ASimulationObject simulationObject)
     {
         if (!isStarted)
@@ -225,6 +267,68 @@ public class SimulationManager : MonoBehaviour
                     clickDrawingObject.SetObjectToDraw(simulationObject);
                     clickDrawingObject.SetIsDrawing(true);
                 }
+            }
+        }
+    }
+    
+    /**
+     * A skálázó menü által hívott metódus, ami az x komponensű skálázást végzi el, ha az objektum egyszerű (ASimulationObject),
+     * illetve az épület esetén az erre hivatott BuildingManagernek adja át a feladatot.
+     */
+    public void SetObjectXScale()
+    {
+        if(this.panelOwner != null && !this.isStarted)
+        {
+            if(this.panelOwner is Floor)
+            {
+                this.buildingManager.ScaleBuildingX(float.Parse(this.uiController.GetXScaleValue()));
+                this.grid.SetVerticalLength((int)this.buildingManager.GetFloorXLength());
+            }
+            else
+            {
+                Vector3 scale = ((ASimulationObject)this.panelOwner).transform.localScale;
+                ((ASimulationObject)this.panelOwner).transform.localScale = new Vector3(scale.x * float.Parse(this.uiController.GetXScaleValue()), scale.y, scale.z); 
+            }
+        }
+    }
+
+    /**
+     * A skálázó menü által hívott metódus, ami az y komponensű skálázást végzi el, ha az objektum egyszerű (ASimulationObject),
+     * illetve az épület esetén az erre hivatott BuildingManagernek adja át a feladatot.
+     */
+    public void SetObjectYScale()
+    {
+        if (this.panelOwner != null && !this.isStarted)
+        {
+            if (this.panelOwner is Floor)
+            {
+                this.buildingManager.ScaleBuildingY(float.Parse(this.uiController.GetYScaleValue()));
+                this.grid.SetDepth((int)this.buildingManager.GetWallHeight());
+            }
+            else
+            {
+                Vector3 scale = ((ASimulationObject)this.panelOwner).transform.localScale;
+                ((ASimulationObject)this.panelOwner).transform.localScale = new Vector3(scale.x, scale.y * float.Parse(this.uiController.GetYScaleValue()), scale.z);
+            }
+        }
+    }
+
+    /**
+     * A skálázó menü által hívott metódus, ami az z komponensű skálázást végzi el, ha az objektum egyszerű (ASimulationObject),
+     * illetve az épület esetén az erre hivatott BuildingManagernek adja át a feladatot.
+     */
+    public void SetObjectZScale()
+    {
+        if (this.panelOwner != null && !this.isStarted)
+        {
+            if (this.panelOwner is Floor)
+            {
+                this.buildingManager.ScaleBuildingZ(float.Parse(this.uiController.GetZScaleValue()));
+                this.grid.SetHorizontalLength((int)this.buildingManager.GetFloorZLength());
+            } else
+            {
+                Vector3 scale = ((ASimulationObject)this.panelOwner).transform.localScale;
+                ((ASimulationObject)this.panelOwner).transform.localScale = new Vector3(scale.x, scale.y, scale.y * float.Parse(this.uiController.GetZScaleValue()));
             }
         }
     }
@@ -315,57 +419,13 @@ public class SimulationManager : MonoBehaviour
     {
         if(this.panelOwner != null && !this.isStarted) 
         {
-            this.uiController.ToggleResizePanel(true);
-        }
-    }
-
-    public void SetObjectXScale()
-    {
-        if(this.panelOwner != null && !this.isStarted)
-        {
-            if(this.panelOwner is Floor)
+            bool isOpen = this.uiController.IsResizePanelOpen();
+            this.uiController.ToggleResizePanel(!isOpen);
+            if (!isOpen)
             {
-                this.buildingManager.ScaleBuildingX(float.Parse(this.uiController.GetXScaleValue()));
-                this.grid.SetVerticalLength((int)this.buildingManager.GetFloorXLength());
-            }
-            else
-            {
-                Vector3 scale = ((ASimulationObject)this.panelOwner).transform.localScale;
-                ((ASimulationObject)this.panelOwner).transform.localScale = new Vector3(scale.x * float.Parse(this.uiController.GetXScaleValue()), scale.y, scale.z); 
+                this.uiController.UpdateResizePanelValues(this.buildingManager.GetXScale(), this.buildingManager.GetYScale(), this.buildingManager.GetZScale());
             }
         }
     }
 
-    public void SetObjectYScale()
-    {
-        if (this.panelOwner != null && !this.isStarted)
-        {
-            if (this.panelOwner is Floor)
-            {
-                this.buildingManager.ScaleBuildingY(float.Parse(this.uiController.GetYScaleValue()));
-                this.grid.SetDepth((int)this.buildingManager.GetWallHeight());
-            }
-            else
-            {
-                Vector3 scale = ((ASimulationObject)this.panelOwner).transform.localScale;
-                ((ASimulationObject)this.panelOwner).transform.localScale = new Vector3(scale.x, scale.y * float.Parse(this.uiController.GetYScaleValue()), scale.z);
-            }
-        }
-    }
-
-    public void SetObjectZScale()
-    {
-        if (this.panelOwner != null && !this.isStarted)
-        {
-            if (this.panelOwner is Floor)
-            {
-                this.buildingManager.ScaleBuildingZ(float.Parse(this.uiController.GetZScaleValue()));
-                this.grid.SetHorizontalLength((int)this.buildingManager.GetFloorZLength());
-            } else
-            {
-                Vector3 scale = ((ASimulationObject)this.panelOwner).transform.localScale;
-                ((ASimulationObject)this.panelOwner).transform.localScale = new Vector3(scale.x, scale.y, scale.y * float.Parse(this.uiController.GetZScaleValue()));
-            }
-        }
-    }
 }

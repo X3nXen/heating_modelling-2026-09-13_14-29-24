@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -6,6 +6,10 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
+/**
+ * UIController osztály
+ * A UI nevezetű objektumon élő komponens, ami felelős az összes dinamikus felhasználói felület módosításért
+ */
 public class UIController : MonoBehaviour
 {
     private Sprite[] startButtonSprites;
@@ -37,6 +41,15 @@ public class UIController : MonoBehaviour
     private TMP_InputField y_scale;
     private TMP_InputField z_scale;
 
+    /**
+     * A SimulationManager osztály által hívott metódus, ami inicializálja az összes dinamikus komponenst 
+     * param - heaters: az összes felálláskor beolvasott hőfejlesztő prefab
+     * param - buildings: az összes felálláskor beolvasott épület prefab
+     * param - fenestration: az összes felálláskor beolvasott nyílászáró prefab
+     * param - drawing: az összes felálláskor beolvasott rajzoló eszköz 
+     * param - onBuildingClick: az épület menün klikkeléskor meghívott metódus
+     * param - onToolClick: az eszközök menün klikkeléskor meghívott metódus
+     */
     public void Init(
         List<ASimulationObject> heaters,
         List<ASimulationObject> buildings,
@@ -102,6 +115,51 @@ public class UIController : MonoBehaviour
         this.globalInformationOutsideTempInput = globalInformationPanel.transform.Find("INFORMATION.OUTSIDE_TEMPERATURE").Find("Value").GetComponent<TMP_InputField>();
     }
 
+    /**
+     * A globális információs panel értékeinek frissítésére szolgáló metódus
+     * param - averageTemperature, insideTemperature, outsideTemperature: szöveggé konvertált hőmérsékleti érték (float)
+     */
+    public void UpdateGlobalInformation(string averageTemperature, string insideTemperature, string outsideTemperature)
+    {
+        this.globalInformationAverageDisplay.text = averageTemperature + "°C";
+        if(this.globalInformationInsideTempInput.text == "" || this.globalInformationInsideTempInput == null)
+        {
+            this.globalInformationInsideTempInput.text = insideTemperature;
+        }
+        if (this.globalInformationOutsideTempInput.text == "" || this.globalInformationOutsideTempInput == null)
+        {
+            this.globalInformationOutsideTempInput.text = outsideTemperature;
+        }
+    }
+
+    public float GetGlobalInformationInsideTemperature()
+    {
+        return float.Parse(this.globalInformationInsideTempInput.text);
+    }
+
+    public float GetGlobalInformationOutsideTemperature()
+    {
+        return float.Parse(this.globalInformationOutsideTempInput.text);
+    }
+
+    public void CycleSpeedButtonSprite()
+    {
+        speedButtonIndex = (speedButtonIndex+1) % speedButtonSprites.Length;
+        speedButton.sprite = speedButtonSprites[speedButtonIndex];
+    }
+
+    public void ToggleStartButtonSprite()
+    {
+        isStarted = !isStarted;
+        startButton.sprite = startButtonSprites[isStarted ? 0 : 1];
+    }
+
+    public void UpdateTimeDisplay(float time)
+    {
+        var ts = TimeSpan.FromSeconds(time);
+        timeDisplay.text = string.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
+    }
+
     public void OpenInformationPanel(List<InformationFlag> informationFlags, Dictionary<InformationFlag, string> editableDefaultValues)
     {
         this.informationPanelController.ToggleVisibility(informationFlags, editableDefaultValues);
@@ -146,48 +204,6 @@ public class UIController : MonoBehaviour
     {
         this.informationPanelController.UpdateValue(informationFlag, value);
     }
-
-    public void UpdateGlobalInformation(string averageTemperature, string insideTemperature, string outsideTemperature)
-    {
-        this.globalInformationAverageDisplay.text = averageTemperature + "�C";
-        if(this.globalInformationInsideTempInput.text == "" || this.globalInformationInsideTempInput == null)
-        {
-            this.globalInformationInsideTempInput.text = insideTemperature;
-        }
-        if (this.globalInformationOutsideTempInput.text == "" || this.globalInformationOutsideTempInput == null)
-        {
-            this.globalInformationOutsideTempInput.text = outsideTemperature;
-        }
-    }
-
-    public float GetGlobalInformationInsideTemperature()
-    {
-        return float.Parse(this.globalInformationInsideTempInput.text);
-    }
-
-    public float GetGlobalInformationOutsideTemperature()
-    {
-        return float.Parse(this.globalInformationOutsideTempInput.text);
-    }
-
-    public void CycleSpeedButtonSprite()
-    {
-        speedButtonIndex = (speedButtonIndex+1) % speedButtonSprites.Length;
-        speedButton.sprite = speedButtonSprites[speedButtonIndex];
-    }
-
-    public void ToggleStartButtonSprite()
-    {
-        isStarted = !isStarted;
-        startButton.sprite = startButtonSprites[isStarted ? 0 : 1];
-    }
-
-    public void UpdateTimeDisplay(float time)
-    {
-        var ts = TimeSpan.FromSeconds(time);
-        timeDisplay.text = string.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
-    }
-
     public void ToggleViewDisplay(bool isGridView)
     {
         viewButton.sprite = viewButtonSprites[isGridView ? 1 : 0];
@@ -234,6 +250,18 @@ public class UIController : MonoBehaviour
     public void ToggleResizePanel(bool open)
     {
         this.resizePanel.SetActive(open);
+    }
+
+    public bool IsResizePanelOpen()
+    {
+        return this.resizePanel.activeSelf;
+    }
+
+    public void UpdateResizePanelValues(float xScale, float yScale, float zScale)
+    {
+        this.x_scale.SetTextWithoutNotify(xScale.ToString());
+        this.y_scale.SetTextWithoutNotify(yScale.ToString());
+        this.z_scale.SetTextWithoutNotify(zScale.ToString());
     }
 
     public string GetXScaleValue()

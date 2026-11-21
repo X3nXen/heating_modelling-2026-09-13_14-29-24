@@ -2909,7 +2909,7 @@ MonoBehaviour:
   m_EventMask:
     serializedVersion: 2
     m_Bits: 328
-  m_MaxRayIntersections: 0
+  m_MaxRayIntersections: 1
 --- !u!1 &339282270
 GameObject:
   m_ObjectHideFlags: 0
@@ -4418,12 +4418,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15c4b87ff75914546aa0c32209da1eea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Grid
-  verticalLength: 30
-  scaledVerticalLength: 30
-  horizontalLength: 30
-  scaledHorizontalLength: 30
-  depth: 10
-  scaledDepth: 10
 --- !u!4 &507887497
 Transform:
   m_ObjectHideFlags: 0
@@ -10239,7 +10233,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 1.9698674e+10, y: 0.5}
+  m_AnchoredPosition: {x: 2.040722e+10, y: 0.5}
   m_SizeDelta: {x: 600, y: 100}
   m_Pivot: {x: 300, y: 0.5}
 --- !u!114 &1169084574
@@ -14111,7 +14105,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -15073481}
+  m_AnchoredPosition: {x: 0, y: -15568576}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1746612404
