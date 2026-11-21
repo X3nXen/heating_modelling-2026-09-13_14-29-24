@@ -9,13 +9,13 @@ public class Boiler : ASimulationObject, IRadiatingObject, IDragAndDropObject
 
     public override void Init(Action<List<InformationFlag>, IInformationPanelOpener, Dictionary<InformationFlag, string>> infoPanelOpen)
     {
-        this.displayName = "Kazán";
+        this.displayName = "Kandalló";
         this.displayImage = ResourceLoader.Get("Images/Boiler_display_icon") as Sprite;
 
         this.prefab = ResourceLoader.Get("Prefabs/Heaters/Boiler_prefab") as GameObject;
         this.layerMask = LayerMask.GetMask("House_layer");
 
-        this.radiationHeat = 35;
+        this.radiationHeat = 60;
         this.editableDefaultValues = new Dictionary<InformationFlag, string>();
         this.editableDefaultValues.Add(InformationFlag.OBJECT_TEMPERATURE, this.radiationHeat.ToString());
         this.directional = false;
