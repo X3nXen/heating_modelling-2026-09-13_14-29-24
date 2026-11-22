@@ -7,7 +7,7 @@ public class Building_1: ASimulationObject
     public override void Init(Action<List<InformationFlag>, IInformationPanelOpener, Dictionary<InformationFlag, string>> _)
     {
         this.displayName = "Kocka ház";
-        this.displayImage = ResourceLoader.Get("Images/Boiler_display_icon") as Sprite;
+        this.displayImage = ResourceLoader.Get("Images/boxhouse") as Sprite;
         this.canMove = false;
 
         this.prefab = ResourceLoader.Get("Prefabs/Buildings/Box_house") as GameObject;

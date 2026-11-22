@@ -16,7 +16,7 @@ public class Wall: ASimulationObject, IDragAndDropObject
         this.diffusivity = EnumHelper.GetWallMaterialDiffusivity(material);
         this.editableDefaultValues = new Dictionary<InformationFlag, string>();
         this.displayName = "Fal";
-        this.displayImage = ResourceLoader.Get("Images/Boiler_display_icon") as Sprite;
+        this.displayImage = ResourceLoader.Get("Images/wall") as Sprite;
 
         this.prefab = ResourceLoader.Get("Prefabs/Drawobjects/Wall") as GameObject;
         this.layerMask = LayerMask.GetMask("House_layer");

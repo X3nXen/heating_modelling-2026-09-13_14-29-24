@@ -9,7 +9,7 @@ public class Window : ASimulationObject, IDragAndDropObject
     public override void Init(Action<List<InformationFlag>, IInformationPanelOpener, Dictionary<InformationFlag, string>> informationPanelOpener)
     {
         this.displayName = "Ablak";
-        this.displayImage = ResourceLoader.Get("Images/Boiler_display_icon") as Sprite;
+        this.displayImage = ResourceLoader.Get("Images/window") as Sprite;
 
         this.prefab = ResourceLoader.Get("Prefabs/Fenestration/Window_prefab") as GameObject;
         this.layerMask = LayerMask.GetMask("Wall_layer");

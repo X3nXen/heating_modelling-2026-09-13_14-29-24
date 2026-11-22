@@ -9,7 +9,7 @@ public class Fireplace : ASimulationObject, IRadiatingObject, IDragAndDropObject
     public override void Init(Action<List<InformationFlag>, IInformationPanelOpener, Dictionary<InformationFlag, string>> infoPanelOpen)
     {
         this.displayName = "Kályha";
-        this.displayImage = ResourceLoader.Get("Images/Boiler_display_icon") as Sprite;
+        this.displayImage = ResourceLoader.Get("Images/fireplace") as Sprite;
 
         this.prefab = ResourceLoader.Get("Prefabs/Heaters/Fireplace_prefab") as GameObject;
         this.layerMask = LayerMask.GetMask("House_layer");

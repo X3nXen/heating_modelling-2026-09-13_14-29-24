@@ -9,7 +9,7 @@ public class ACUnit: ASimulationObject, IRadiatingObject, IDragAndDropObject
     public override void Init(Action<List<InformationFlag>, IInformationPanelOpener, Dictionary<InformationFlag, string>> infoPanelOpen)
     {
         this.displayName = "Klíma";
-        this.displayImage = ResourceLoader.Get("Images/Boiler_display_icon") as Sprite;
+        this.displayImage = ResourceLoader.Get("Images/acunit") as Sprite;
 
         this.prefab = ResourceLoader.Get("Prefabs/Heaters/ACUnit_prefab") as GameObject;
         this.layerMask = LayerMask.GetMask("Wall_layer");

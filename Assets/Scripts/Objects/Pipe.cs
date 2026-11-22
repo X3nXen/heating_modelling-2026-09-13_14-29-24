@@ -23,7 +23,7 @@ public class Pipe: ASimulationObject, IRadiatingObject, IDragAndDropObject
         this.diffusivity = EnumHelper.GetPipeMaterialDiffusivity(material);
         this.editableDefaultValues = new Dictionary<InformationFlag, string>();
         this.displayName = "Cső";
-        this.displayImage = ResourceLoader.Get("Images/Boiler_display_icon") as Sprite;
+        this.displayImage = ResourceLoader.Get("Images/pipe_icon") as Sprite;
         this.radiationHeat = 35;
 
         this.prefab = ResourceLoader.Get("Prefabs/Drawobjects/Pipe") as GameObject;

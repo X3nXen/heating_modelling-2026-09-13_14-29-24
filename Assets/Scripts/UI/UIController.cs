@@ -95,7 +95,7 @@ public class UIController : MonoBehaviour
 
         MenuUIElement buildingsScrollableElement = buildingsScrollableMenu.AddComponent<MenuUIElement>();
         GameObject buildingParent = buildingsScrollableMenu.transform.Find("View").Find("Content").gameObject;
-        buildingsScrollableElement.Setup(new GameObject[] { heatersScrollableMenu, fenestrationMenu, drawingMenu }, buildings, buildingParent, onBuildingClick ,true);
+        buildingsScrollableElement.Setup(new GameObject[] { heatersScrollableMenu, fenestrationMenu, drawingMenu }, buildings, buildingParent, onBuildingClick ,true, TurnMenusOff);
 
         MenuUIElement fenestrationElement = fenestrationMenu.AddComponent<MenuUIElement>();
         GameObject fenestrationParent = fenestrationMenu.transform.Find("Content").gameObject;

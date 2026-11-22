@@ -10,7 +10,7 @@ public class Boiler : ASimulationObject, IRadiatingObject, IDragAndDropObject
     public override void Init(Action<List<InformationFlag>, IInformationPanelOpener, Dictionary<InformationFlag, string>> infoPanelOpen)
     {
         this.displayName = "Kandalló";
-        this.displayImage = ResourceLoader.Get("Images/Boiler_display_icon") as Sprite;
+        this.displayImage = ResourceLoader.Get("Images/boiler") as Sprite;
 
         this.prefab = ResourceLoader.Get("Prefabs/Heaters/Boiler_prefab") as GameObject;
         this.layerMask = LayerMask.GetMask("House_layer");
