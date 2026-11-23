@@ -20,6 +20,8 @@ public class ACUnit: ASimulationObject, IRadiatingObject, IDragAndDropObject
         this.editableDefaultValues.Add(InformationFlag.OBJECT_TEMPERATURE, this.radiationHeat.ToString());
         this.heightOffset = 0;
         this.widthOffset = -this.prefab.transform.localScale.z / 2;
+        this.originalScale = this.prefab.transform.localScale;
+        this.currentScale = new Vector3(1, 1, 1);
         InitInfoPanel(new List<InformationFlag>() { InformationFlag.TEMPERATURE, InformationFlag.OBJECT_TEMPERATURE, InformationFlag.DELETE_ACTION, InformationFlag.RESIZE_ACTION }, infoPanelOpen);
     }
 
@@ -58,6 +60,8 @@ public class ACUnit: ASimulationObject, IRadiatingObject, IDragAndDropObject
         this.editableDefaultValues = new Dictionary<InformationFlag, string>(simulationObject.editableDefaultValues);
         this.widthOffset = ((ACUnit)simulationObject).GetWidthOffset();
         this.directional = simulationObject.directional;
+        this.originalScale = simulationObject.GetOriginalScale();
+        this.currentScale = simulationObject.GetCurrentScale();
     }
 
     public void SetRadiationHeat(float radiationHeat)

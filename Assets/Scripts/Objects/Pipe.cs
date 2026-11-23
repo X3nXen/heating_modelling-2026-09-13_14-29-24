@@ -31,6 +31,9 @@ public class Pipe: ASimulationObject, IRadiatingObject, IDragAndDropObject
         this.directional = true;
         this.heightOffset = 0f;
         this.widthOffset = 1f;
+
+        this.originalScale = this.prefab.transform.localScale;
+        this.currentScale = new Vector3(1, 1, 1);
         this.editableDefaultValues.Add(InformationFlag.PIPE_MATERIAL, ((int)this.material).ToString());
         this.editableDefaultValues.Add(InformationFlag.OBJECT_TEMPERATURE, this.radiationHeat.ToString());
         InitInfoPanel(new List<InformationFlag>() { InformationFlag.DIFFUSIVITY, InformationFlag.TEMPERATURE, InformationFlag.OBJECT_TEMPERATURE, InformationFlag.PIPE_MATERIAL, InformationFlag.DELETE_ACTION, InformationFlag.RESIZE_ACTION }, informationPanelOpener);
@@ -68,6 +71,8 @@ public class Pipe: ASimulationObject, IRadiatingObject, IDragAndDropObject
         this.widthOffset = ((Pipe)simulationObject).GetWidthOffset();
         this.directional = ((Pipe)simulationObject).GetDirectional();
         this.material = ((Pipe)simulationObject).GetPipeMaterial();
+        this.originalScale = simulationObject.GetOriginalScale();
+        this.currentScale = simulationObject.GetCurrentScale();
     }
     public override void UpdateItemPosition(PointerEventData eventData)
     {

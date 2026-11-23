@@ -21,6 +21,9 @@ public class Door: ASimulationObject, IDragAndDropObject
         this.directional = true;
         this.heightOffset = 0f;
         this.widthOffset = 0.5f;
+
+        this.originalScale = this.prefab.transform.localScale;
+        this.currentScale = new Vector3(1, 1, 1);
         InitInfoPanel(new List<InformationFlag>() { InformationFlag.DIFFUSIVITY, InformationFlag.DOOR_MATERIAL, InformationFlag.DELETE_ACTION, InformationFlag.RESIZE_ACTION }, informationPanelOpener);
     }
 
@@ -50,5 +53,7 @@ public class Door: ASimulationObject, IDragAndDropObject
         this.prefab = simulationObject.prefab;
         this.layerMask = ((Door)simulationObject).layerMask;
         this.editableDefaultValues = new Dictionary<InformationFlag, string>(simulationObject.editableDefaultValues);
+        this.originalScale = simulationObject.GetOriginalScale();
+        this.currentScale = simulationObject.GetCurrentScale();
     }
 }

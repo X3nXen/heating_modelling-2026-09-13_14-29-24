@@ -20,6 +20,9 @@ public class Radiator : ASimulationObject, IRadiatingObject, IDragAndDropObject
         this.directional = false;
         this.heightOffset = this.prefab.transform.localScale.y / 2;
         this.widthOffset = 0f;
+
+        this.originalScale = this.prefab.transform.localScale;
+        this.currentScale = new Vector3(1, 1, 1);
         InitInfoPanel(new List<InformationFlag>() { InformationFlag.TEMPERATURE, InformationFlag.OBJECT_TEMPERATURE, InformationFlag.DELETE_ACTION, InformationFlag.RESIZE_ACTION }, infoPanelOpen);
     }
 
@@ -57,6 +60,8 @@ public class Radiator : ASimulationObject, IRadiatingObject, IDragAndDropObject
         this.layerMask = ((Radiator)simulationObject).layerMask;
         this.editableDefaultValues = new Dictionary<InformationFlag, string>(simulationObject.editableDefaultValues);
         this.heightOffset = ((Radiator)simulationObject).GetHeightOffset();
+        this.originalScale = simulationObject.GetOriginalScale();
+        this.currentScale = simulationObject.GetCurrentScale();
     }
 
     public void SetRadiationHeat(float radiationHeat)

@@ -242,6 +242,8 @@ public class SimulationManager : MonoBehaviour
             return;
         this.uiController.ToggleResizePanel(false);
         this.buildingManager.SetBuildingObject(building, OpenInformationPanel);
+        this.wallClickDrawingObjects = this.buildingManager.GetWallClickDrawingObjects();
+        this.floorClickDrawingObject = this.buildingManager.GetFloorClickDrawingObject();
     }
 
     /**
@@ -286,8 +288,7 @@ public class SimulationManager : MonoBehaviour
             }
             else
             {
-                Vector3 scale = ((ASimulationObject)this.panelOwner).transform.localScale;
-                ((ASimulationObject)this.panelOwner).transform.localScale = new Vector3(scale.x * float.Parse(this.uiController.GetXScaleValue()), scale.y, scale.z); 
+                ((ASimulationObject)this.panelOwner).HandleXScale(float.Parse(this.uiController.GetXScaleValue()));
             }
         }
     }
@@ -307,8 +308,8 @@ public class SimulationManager : MonoBehaviour
             }
             else
             {
-                Vector3 scale = ((ASimulationObject)this.panelOwner).transform.localScale;
-                ((ASimulationObject)this.panelOwner).transform.localScale = new Vector3(scale.x, scale.y * float.Parse(this.uiController.GetYScaleValue()), scale.z);
+                
+                ((ASimulationObject)this.panelOwner).HandleYScale(float.Parse(this.uiController.GetYScaleValue()));
             }
         }
     }
@@ -327,8 +328,7 @@ public class SimulationManager : MonoBehaviour
                 this.grid.SetHorizontalLength((int)this.buildingManager.GetFloorZLength());
             } else
             {
-                Vector3 scale = ((ASimulationObject)this.panelOwner).transform.localScale;
-                ((ASimulationObject)this.panelOwner).transform.localScale = new Vector3(scale.x, scale.y, scale.y * float.Parse(this.uiController.GetZScaleValue()));
+                ((ASimulationObject)this.panelOwner).HandleZScale(float.Parse(this.uiController.GetZScaleValue()));
             }
         }
     }
@@ -423,7 +423,15 @@ public class SimulationManager : MonoBehaviour
             this.uiController.ToggleResizePanel(!isOpen);
             if (!isOpen)
             {
-                this.uiController.UpdateResizePanelValues(this.buildingManager.GetXScale(), this.buildingManager.GetYScale(), this.buildingManager.GetZScale());
+                if(this.panelOwner is Floor)
+                {
+                    this.uiController.UpdateResizePanelValues(this.buildingManager.GetXScale(), this.buildingManager.GetYScale(), this.buildingManager.GetZScale());
+                }
+                else
+                {
+                    Vector3 currentScale = ((ASimulationObject)this.panelOwner).GetCurrentScale();
+                    this.uiController.UpdateResizePanelValues(currentScale.x, currentScale.y, currentScale.z);
+                }
             }
         }
     }

@@ -23,6 +23,9 @@ public class Wall: ASimulationObject, IDragAndDropObject
         this.directional = false;
         this.heightOffset = this.prefab.transform.localScale.y / 2 - 1;
         this.widthOffset = 0.5f;
+
+        this.originalScale = this.prefab.transform.localScale;
+        this.currentScale = new Vector3(1, 1, 1);
         this.editableDefaultValues.Add(InformationFlag.WALL_MATERIAL, ((int)this.material).ToString());
         this.editableDefaultValues.Add(InformationFlag.WALL_INSULATED, this.isInsulated.ToString());
         List<InformationFlag> informationFlags = new List<InformationFlag>();
@@ -91,5 +94,8 @@ public class Wall: ASimulationObject, IDragAndDropObject
         this.heightOffset = simulationObject.heightOffset;
         this.widthOffset = simulationObject.widthOffset;
         this.directional = simulationObject.directional;
+
+        this.originalScale = simulationObject.GetOriginalScale();
+        this.currentScale = simulationObject.GetCurrentScale();
     }
 }

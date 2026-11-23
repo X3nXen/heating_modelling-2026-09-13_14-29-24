@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3232029414082860531}
   - component: {fileID: 6614685254414630161}
   - component: {fileID: 2669957850046102427}
+  - component: {fileID: 3087861758432241578}
   m_Layer: 8
   m_Name: Radiator_prefab
   m_TagString: Untagged
@@ -153,3 +154,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f54a175c0a3922f489d3cbbea1975633, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Radiator
+--- !u!64 &3087861758432241578
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6391003033599246737}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}

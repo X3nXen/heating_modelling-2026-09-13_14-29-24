@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4563375174511764117}
   - component: {fileID: 8892753483652462481}
   - component: {fileID: -8467871062591005260}
+  - component: {fileID: 1174756189118199929}
   m_Layer: 8
   m_Name: Boiler_prefab
   m_TagString: RadiatingObject
@@ -153,3 +154,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d2f3fad06624424993539d251178ffe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Boiler
+--- !u!64 &1174756189118199929
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6439603838816461787}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}

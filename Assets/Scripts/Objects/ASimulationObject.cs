@@ -25,6 +25,8 @@ public abstract class ASimulationObject : MonoBehaviour, IInformationPanelOpener
     protected Vector3 itemHeightOffset;
 
     protected bool canMove = true;
+    protected Vector3 originalScale;
+    protected Vector3 currentScale = new Vector3(1, 1, 1);
 
     public Dictionary<InformationFlag, string> editableDefaultValues;
 
@@ -57,6 +59,8 @@ public abstract class ASimulationObject : MonoBehaviour, IInformationPanelOpener
         this.editableDefaultValues = simulationObject.editableDefaultValues;
         this.diffusivity = simulationObject.diffusivity;
         this.canMove = simulationObject.canMove;
+        this.originalScale = simulationObject.originalScale;
+        this.currentScale = simulationObject.currentScale;
     }
 
     public virtual void OnTriggerEnter(Collider other)
@@ -124,6 +128,27 @@ public abstract class ASimulationObject : MonoBehaviour, IInformationPanelOpener
         }
     }
 
+    public void HandleXScale(float x)
+    {
+        Debug.Log(x);
+        this.currentScale = new Vector3(x, this.currentScale.y, this.currentScale.z);
+        this.transform.localScale = new Vector3(this.originalScale.x * x, this.originalScale.y * this.currentScale.y, this.originalScale.z * this.currentScale.z);
+        Debug.Log(this.currentScale);
+        Debug.Log(this.transform.localScale);
+    }
+
+    public void HandleYScale(float y)
+    {
+        this.currentScale = new Vector3(this.currentScale.x, y, this.currentScale.z);
+        this.transform.localScale = new Vector3(this.originalScale.x * this.currentScale.x, this.originalScale.y * y, this.originalScale.z * this.currentScale.z);
+    }
+
+    public void HandleZScale(float z)
+    {
+        this.currentScale = new Vector3(this.currentScale.x, this.currentScale.y, z);
+        this.transform.localScale = new Vector3(this.originalScale.x * this.currentScale.x, this.originalScale.y * this.currentScale.y, this.originalScale.z * z);
+    }
+
     public LayerMask GetLayerMask()
     {
         return this.layerMask;
@@ -156,5 +181,14 @@ public abstract class ASimulationObject : MonoBehaviour, IInformationPanelOpener
     public GameObject GetPrefab()
     {
         return prefab;
+    }
+    public Vector3 GetOriginalScale()
+    {
+        return this.originalScale;
+    }
+
+    public Vector3 GetCurrentScale()
+    {
+        return this.currentScale;
     }
 }
