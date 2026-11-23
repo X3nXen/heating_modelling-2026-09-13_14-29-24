@@ -58,7 +58,7 @@ public class Fireplace : ASimulationObject, IRadiatingObject, IDragAndDropObject
         this.prefab = simulationObject.prefab;
         this.radiationHeat = ((Fireplace)simulationObject).radiationHeat;
         this.layerMask = ((Fireplace)simulationObject).layerMask;
-        this.editableDefaultValues = new Dictionary<InformationFlag, string>(simulationObject.editableDefaultValues);
+        this.editableDefaultValues = new Dictionary<InformationFlag, string>(simulationObject.GetEditableValues());
         this.heightOffset = ((Fireplace)simulationObject).GetHeightOffset();
         this.originalScale = simulationObject.GetOriginalScale();
         this.currentScale = simulationObject.GetCurrentScale();

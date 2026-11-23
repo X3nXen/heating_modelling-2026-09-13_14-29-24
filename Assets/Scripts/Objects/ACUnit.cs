@@ -57,7 +57,7 @@ public class ACUnit: ASimulationObject, IRadiatingObject, IDragAndDropObject
         this.prefab = simulationObject.prefab;
         this.radiationHeat = ((ACUnit)simulationObject).radiationHeat;
         this.layerMask = ((ACUnit)simulationObject).layerMask;
-        this.editableDefaultValues = new Dictionary<InformationFlag, string>(simulationObject.editableDefaultValues);
+        this.editableDefaultValues = new Dictionary<InformationFlag, string>(simulationObject.GetEditableValues());
         this.widthOffset = ((ACUnit)simulationObject).GetWidthOffset();
         this.directional = simulationObject.directional;
         this.originalScale = simulationObject.GetOriginalScale();

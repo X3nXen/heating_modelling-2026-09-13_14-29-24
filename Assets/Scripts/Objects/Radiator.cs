@@ -58,7 +58,7 @@ public class Radiator : ASimulationObject, IRadiatingObject, IDragAndDropObject
         this.prefab = simulationObject.prefab;
         this.radiationHeat = ((Radiator)simulationObject).radiationHeat;
         this.layerMask = ((Radiator)simulationObject).layerMask;
-        this.editableDefaultValues = new Dictionary<InformationFlag, string>(simulationObject.editableDefaultValues);
+        this.editableDefaultValues = new Dictionary<InformationFlag, string>(simulationObject.GetEditableValues());
         this.heightOffset = ((Radiator)simulationObject).GetHeightOffset();
         this.originalScale = simulationObject.GetOriginalScale();
         this.currentScale = simulationObject.GetCurrentScale();

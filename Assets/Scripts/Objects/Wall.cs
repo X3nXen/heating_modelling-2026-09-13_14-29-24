@@ -88,7 +88,7 @@ public class Wall: ASimulationObject, IDragAndDropObject
         this.displayImage = simulationObject.displayImage;
         this.displayName = simulationObject.displayName;
         this.prefab = simulationObject.prefab;
-        this.editableDefaultValues = simulationObject.editableDefaultValues;
+        this.editableDefaultValues = simulationObject.GetEditableValues();
         this.diffusivity = simulationObject.GetDiffusivity();
         this.layerMask = simulationObject.layerMask;
         this.heightOffset = simulationObject.heightOffset;

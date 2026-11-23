@@ -58,7 +58,7 @@ public class Boiler : ASimulationObject, IRadiatingObject, IDragAndDropObject
         this.prefab = simulationObject.prefab;
         this.radiationHeat = ((Boiler)simulationObject).radiationHeat;
         this.layerMask = ((Boiler)simulationObject).layerMask;
-        this.editableDefaultValues = new Dictionary<InformationFlag, string>(simulationObject.editableDefaultValues);
+        this.editableDefaultValues = new Dictionary<InformationFlag, string>(simulationObject.GetEditableValues());
         this.heightOffset = ((Boiler)simulationObject).GetHeightOffset();
         this.originalScale = simulationObject.GetOriginalScale();
         this.currentScale = simulationObject.GetCurrentScale();

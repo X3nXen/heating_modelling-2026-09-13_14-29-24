@@ -52,7 +52,7 @@ public class Window : ASimulationObject, IDragAndDropObject
         this.displayName = simulationObject.displayName;
         this.prefab = simulationObject.prefab;
         this.layerMask = ((Window)simulationObject).layerMask;
-        this.editableDefaultValues = new Dictionary<InformationFlag, string>(simulationObject.editableDefaultValues);
+        this.editableDefaultValues = new Dictionary<InformationFlag, string>(simulationObject.GetEditableValues());
         this.originalScale = simulationObject.GetOriginalScale();
         this.currentScale = simulationObject.GetCurrentScale();
     }

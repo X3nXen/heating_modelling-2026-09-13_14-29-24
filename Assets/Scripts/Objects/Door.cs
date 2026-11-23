@@ -52,7 +52,7 @@ public class Door: ASimulationObject, IDragAndDropObject
         this.displayName = simulationObject.displayName;
         this.prefab = simulationObject.prefab;
         this.layerMask = ((Door)simulationObject).layerMask;
-        this.editableDefaultValues = new Dictionary<InformationFlag, string>(simulationObject.editableDefaultValues);
+        this.editableDefaultValues = new Dictionary<InformationFlag, string>(simulationObject.GetEditableValues());
         this.originalScale = simulationObject.GetOriginalScale();
         this.currentScale = simulationObject.GetCurrentScale();
     }

@@ -64,7 +64,7 @@ public class Pipe: ASimulationObject, IRadiatingObject, IDragAndDropObject
         this.displayImage = simulationObject.displayImage;
         this.displayName = simulationObject.displayName;
         this.prefab = simulationObject.prefab;
-        this.editableDefaultValues = simulationObject.editableDefaultValues;
+        this.editableDefaultValues = simulationObject.GetEditableValues();
         this.diffusivity = simulationObject.GetDiffusivity();
         this.radiationHeat = ((Pipe)simulationObject).radiationHeat;
         this.heightOffset = ((Pipe)simulationObject).GetHeightOffset();

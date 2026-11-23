@@ -28,7 +28,7 @@ public abstract class ASimulationObject : MonoBehaviour, IInformationPanelOpener
     protected Vector3 originalScale;
     protected Vector3 currentScale = new Vector3(1, 1, 1);
 
-    public Dictionary<InformationFlag, string> editableDefaultValues;
+    protected Dictionary<InformationFlag, string> editableDefaultValues;
 
 
     public abstract void Init(Action<List<InformationFlag>, IInformationPanelOpener, Dictionary<InformationFlag, string>> infoPanelOpen);
@@ -190,5 +190,10 @@ public abstract class ASimulationObject : MonoBehaviour, IInformationPanelOpener
     public Vector3 GetCurrentScale()
     {
         return this.currentScale;
+    }
+    
+    public Dictionary<InformationFlag, string> GetEditableValues()
+    {
+        return this.editableDefaultValues;
     }
 }
