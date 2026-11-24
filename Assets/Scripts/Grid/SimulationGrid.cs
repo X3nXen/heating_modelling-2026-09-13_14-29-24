@@ -5,18 +5,16 @@ using System;
 
 public class SimulationGrid : MonoBehaviour
 {
-    [SerializeField]
-    private int verticalLength = 20;
+    private int verticalLength = 31;
+    private int scaledVerticalLength = 31;
     private int verticalPointCount;
-    [SerializeField]
-    private int horizontalLength = 20;
+    private int horizontalLength = 31;
+    private int scaledHorizontalLength = 31;
     private int horizontalPointCount;
-    [SerializeField]
     private int depth = 10;
+    private int scaledDepth = 10;
     private int depthPointCount;
-    [SerializeField]
     private float sectionSize = 1f;
-    [SerializeField]
     private GameObject pointRepresentation;
     private GridPoint[,,] gridPoints;
     private List<GameObject> pointObjects = new List<GameObject>();
@@ -54,31 +52,31 @@ public class SimulationGrid : MonoBehaviour
         if (sectionSize <= 0)
             return;
 
-        this.verticalPointCount = (int)(verticalLength / sectionSize);
-        this.horizontalPointCount = (int) (depth / sectionSize);
-        this.depthPointCount = (int)(horizontalLength / sectionSize);
+        this.verticalPointCount = (int)(scaledVerticalLength / sectionSize);
+        this.horizontalPointCount = (int) (scaledDepth / sectionSize);
+        this.depthPointCount = (int)(scaledHorizontalLength / sectionSize);
+        pointObjects = new List<GameObject>();
         List<GridPoint> gridPointsNeighbours;
 
         gridPoints = new GridPoint[verticalPointCount, horizontalPointCount, depthPointCount];
         for(int verticalIndex = 0; verticalIndex < verticalPointCount; verticalIndex++)
         {
+            float xCoord = verticalIndex * sectionSize;
             for(int horizontalIndex = 0; horizontalIndex < horizontalPointCount; horizontalIndex++)
             {
+                float yCoord = horizontalIndex * sectionSize;
                 for(int depthIndex = 0;  depthIndex < depthPointCount; depthIndex++)
                 {
-                    float xCoord = verticalIndex * sectionSize;
-                    float yCoord = horizontalIndex * sectionSize;
                     float zCoord = depthIndex * sectionSize;
                     Vector3 pointPosition = new Vector3(xCoord, yCoord, zCoord);
 
-                    GameObject newGridPoint = GridPoint.CreateGridpointGameobject(pointRepresentation, pointPosition, this);
-                    pointObjects.Add(newGridPoint);
-                    GridPoint gridPointComponent = newGridPoint.GetComponent<GridPoint>();
-                    gridPointComponent.SetCurrentHeat(outsideHeat);
-                    gridPointComponent.SetOutsideHeat(outsideHeat);
-                    gridPointComponent.SetInsideHeat(insideHeat);
-                    gridPointComponent.Init(panelOpener);
-                    gridPoints[verticalIndex, horizontalIndex, depthIndex] = gridPointComponent;
+                    GridPoint newGridPoint = GridPoint.CreateGridpointGameobject(pointRepresentation, pointPosition, this);
+                    pointObjects.Add(newGridPoint.gameObject);
+                    newGridPoint.SetCurrentHeat(outsideHeat);
+                    newGridPoint.SetOutsideHeat(outsideHeat);
+                    newGridPoint.SetInsideHeat(insideHeat);
+                    newGridPoint.Init(panelOpener);
+                    gridPoints[verticalIndex, horizontalIndex, depthIndex] = newGridPoint;
                 }
             }
         }
@@ -91,7 +89,7 @@ public class SimulationGrid : MonoBehaviour
             {
                 for (int depthIndex = 0; depthIndex < depthPointCount; depthIndex++)
                 {
-                    gridPointsNeighbours = new List<GridPoint>();
+                    gridPointsNeighbours = new List<GridPoint>(6);
                     if ((verticalIndex - 1) >= 0)
                     {
                         gridPointsNeighbours.Add(gridPoints[verticalIndex - 1, horizontalIndex, depthIndex]);
@@ -129,17 +127,27 @@ public class SimulationGrid : MonoBehaviour
 
     public void CleanUp()
     {
-        foreach(GameObject pointObject in this.pointObjects)
+        if (pointObjects != null)
         {
-            Destroy(pointObject);
+            foreach (GameObject pointObject in pointObjects)
+            {
+                if (pointObject != null)
+                {
+                    Destroy(pointObject);
+                }
+            }
+            pointObjects.Clear();
+            pointObjects = null;
         }
-        foreach(GridPoint gridpoint in this.gridPoints)
-        {
-            Destroy(gridpoint);
-        }
-        this.gridPoints = null;
-        this.sumForAverage = 0;
-        this.insidePointCount = 0;
+
+        gridPoints = null;
+
+        sumForAverage = 0f;
+        shownAverageTemp = 0f;
+        insidePointCount = 0;
+        verticalPointCount = 0;
+        horizontalPointCount = 0;
+        depthPointCount = 0;
     }
 
     public float GetAverageInsideTemperature()
@@ -153,5 +161,25 @@ public class SimulationGrid : MonoBehaviour
         {
             gridpoint.SwitchLook(isGridView);
         }
+    }
+
+    public void SetVerticalLength(int length)
+    {
+        this.scaledVerticalLength = this.verticalLength + (length - 20);
+    }
+
+    public void SetHorizontalLength(int length)
+    {
+        this.scaledHorizontalLength = this.horizontalLength + (length - 20);
+    }
+
+    public void SetDepth(int height)
+    {
+        this.scaledDepth = this.depth + (height - 7);
+    }
+
+    public void SetPointRepresentation(GameObject pointRepresentation)
+    {
+        this.pointRepresentation = pointRepresentation;
     }
 }

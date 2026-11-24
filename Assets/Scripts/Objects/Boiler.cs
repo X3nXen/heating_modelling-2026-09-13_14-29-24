@@ -9,18 +9,21 @@ public class Boiler : ASimulationObject, IRadiatingObject, IDragAndDropObject
 
     public override void Init(Action<List<InformationFlag>, IInformationPanelOpener, Dictionary<InformationFlag, string>> infoPanelOpen)
     {
-        this.displayName = "Kazán";
-        this.displayImage = ResourceLoader.Get("Images/Boiler_display_icon") as Sprite;
+        this.displayName = "Kandalló";
+        this.displayImage = ResourceLoader.Get("Images/boiler") as Sprite;
 
         this.prefab = ResourceLoader.Get("Prefabs/Heaters/Boiler_prefab") as GameObject;
         this.layerMask = LayerMask.GetMask("House_layer");
 
-        this.radiationHeat = 35;
+        this.radiationHeat = 60;
         this.editableDefaultValues = new Dictionary<InformationFlag, string>();
         this.editableDefaultValues.Add(InformationFlag.OBJECT_TEMPERATURE, this.radiationHeat.ToString());
         this.directional = false;
         this.heightOffset = this.prefab.transform.localScale.y / 2;
         this.widthOffset = 0f;
+
+        this.originalScale = this.prefab.transform.localScale;
+        this.currentScale = new Vector3(1, 1, 1);
         InitInfoPanel(new List<InformationFlag>() { InformationFlag.TEMPERATURE, InformationFlag.OBJECT_TEMPERATURE, InformationFlag.DELETE_ACTION, InformationFlag.RESIZE_ACTION }, infoPanelOpen);
     }
 
@@ -56,8 +59,10 @@ public class Boiler : ASimulationObject, IRadiatingObject, IDragAndDropObject
         this.prefab = simulationObject.prefab;
         this.radiationHeat = ((Boiler)simulationObject).radiationHeat;
         this.layerMask = ((Boiler)simulationObject).layerMask;
-        this.editableDefaultValues = new Dictionary<InformationFlag, string>(simulationObject.editableDefaultValues);
+        this.editableDefaultValues = new Dictionary<InformationFlag, string>(simulationObject.GetEditableValues());
         this.heightOffset = ((Boiler)simulationObject).GetHeightOffset();
+        this.originalScale = simulationObject.GetOriginalScale();
+        this.currentScale = simulationObject.GetCurrentScale();
     }
 
     public void SetRadiationHeat(float radiationHeat)

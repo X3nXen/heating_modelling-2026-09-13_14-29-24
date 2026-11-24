@@ -4,23 +4,26 @@ using UnityEngine;
 
 public class Door: ASimulationObject, IDragAndDropObject
 {
-    private DoorMaterials material;
+    private DoorMaterial material;
 
     public override void Init(Action<List<InformationFlag>, IInformationPanelOpener, Dictionary<InformationFlag, string>> informationPanelOpener)
     {
         this.displayName = "Ajtó";
-        this.displayImage = ResourceLoader.Get("Images/Boiler_display_icon") as Sprite;
+        this.displayImage = ResourceLoader.Get("Images/door") as Sprite;
 
         this.prefab = ResourceLoader.Get("Prefabs/Fenestration/Door_prefab") as GameObject;
         this.layerMask = LayerMask.GetMask("Wall_layer");
 
-        this.material = DoorMaterials.WOOD;
+        this.material = DoorMaterial.WOOD;
         this.diffusivity = EnumHelper.GetDoorMaterialDiffusivity(material);
         this.editableDefaultValues = new Dictionary<InformationFlag, string>();
         this.editableDefaultValues.Add(InformationFlag.DOOR_MATERIAL, ((int)this.material).ToString());
         this.directional = true;
         this.heightOffset = 0f;
         this.widthOffset = 0.5f;
+
+        this.originalScale = this.prefab.transform.localScale;
+        this.currentScale = new Vector3(1, 1, 1);
         InitInfoPanel(new List<InformationFlag>() { InformationFlag.DIFFUSIVITY, InformationFlag.DOOR_MATERIAL, InformationFlag.DELETE_ACTION, InformationFlag.RESIZE_ACTION }, informationPanelOpener);
     }
 
@@ -30,7 +33,7 @@ public class Door: ASimulationObject, IDragAndDropObject
         panelInfoUpdater(InformationFlag.DIFFUSIVITY, this.diffusivity.ToString());
     }
 
-    public void SetMaterial(DoorMaterials material)
+    public void SetMaterial(DoorMaterial material)
     {
         this.material = material;
         this.diffusivity = EnumHelper.GetDoorMaterialDiffusivity(material);
@@ -49,6 +52,13 @@ public class Door: ASimulationObject, IDragAndDropObject
         this.displayName = simulationObject.displayName;
         this.prefab = simulationObject.prefab;
         this.layerMask = ((Door)simulationObject).layerMask;
-        this.editableDefaultValues = new Dictionary<InformationFlag, string>(simulationObject.editableDefaultValues);
+        this.editableDefaultValues = new Dictionary<InformationFlag, string>(simulationObject.GetEditableValues());
+        this.originalScale = simulationObject.GetOriginalScale();
+        this.currentScale = simulationObject.GetCurrentScale();
+    }
+
+    public DoorMaterial GetDoorMaterial()
+    {
+        return this.material;
     }
 }

@@ -1,19 +1,27 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+/**
+ * SimulationManager osztály
+ * A szimuláció kontrollerje, innen ered minden interakció és minden változás
+ */
 public class SimulationManager : MonoBehaviour
 {
     private float timeStep = 1;
     private float nextUpdate = 1;
     private bool isStarted = false;
     private float simulationTime = 0f;
+    private float insideHeat = 21;
+    private float outsideHeat = 15;
 
-    private BuildingManager buildingManager;
     [SerializeField]
     private SimulationGrid grid;
     [SerializeField]
     private GameObject ui;
+    private List<ASimulationObject> placedSimulationObjects;
+
+    private BuildingManager buildingManager;
     private UIController uiController;
     private CameraMovement cameraController;
 
@@ -24,24 +32,39 @@ public class SimulationManager : MonoBehaviour
 
     private IInformationPanelOpener panelOwner;
 
-    private float insideHeat = 21;
-    private float outsideHeat = 15;
-
     private bool isGridView = true;
+    
     private ClickDrawingObject floorClickDrawingObject;
+    
     private List<ClickDrawingObject> wallClickDrawingObjects;
     ClickDrawingObject currentDrawingWall;
+    private GameObject preloadedBuilding;
+    private Vector3 preloadedBuildingScale;
+    
     void Awake()
     {
+        this.placedSimulationObjects = new List<ASimulationObject>();
+        this.wallClickDrawingObjects = new List<ClickDrawingObject>();
+
+        LoadFromFile loader = this.gameObject.AddComponent<LoadFromFile>();
+        loader.Init(this);
+        bool loaded = loader.OnStart();
+
+        SaveOnExit exitComponent = this.gameObject.AddComponent<SaveOnExit>();
+        exitComponent.Init(this);
+
         this.uiController = ui.GetComponent<UIController>();
         this.cameraController = Camera.main.gameObject.GetComponent<CameraMovement>();
+
+        GameObject gridRepresentation = ResourceLoader.Get("Prefabs/GridPoint") as GameObject;
         var heaterPrefabs = ResourceLoader.GetAll("Prefabs/Heaters");
-        heaters = new List<ASimulationObject>();
         var buildingPrefabs = ResourceLoader.GetAll("Prefabs/Buildings");
-        buildings = new List<ASimulationObject>();
         var fenestrationPrefabs = ResourceLoader.GetAll("Prefabs/Fenestration");
-        fenestration = new List<ASimulationObject>();
         var drawingPrefabs = ResourceLoader.GetAll("Prefabs/Drawobjects");
+
+        buildings = new List<ASimulationObject>();
+        heaters = new List<ASimulationObject>();
+        fenestration = new List<ASimulationObject>();
         drawingObjects = new List<ASimulationObject>();
         foreach (var go in heaterPrefabs)
         {
@@ -79,19 +102,37 @@ public class SimulationManager : MonoBehaviour
                 drawingObjects.Add(temp);
             }
         }
-        this.uiController.Init(heaters, buildings, fenestration, drawingObjects, new Action<ASimulationObject>((ASimulationObject buildingObject) => { this.SetNewBuilding(buildingObject.GetPrefab()); }), SetUsedTool);
+
+        this.uiController.Init(heaters, buildings, fenestration, drawingObjects, SetNewBuilding, SetUsedTool, AddToSimulationObjects);
         this.uiController.UpdateGlobalInformation(this.insideHeat.ToString(), this.insideHeat.ToString(), this.outsideHeat.ToString());
+
         this.buildingManager = this.gameObject.AddComponent<BuildingManager>();
-        this.buildingManager.SetBuildingObject(buildingPrefabs[0] as GameObject, OpenInformationPanel);
+        this.buildingManager.SetBuildingObject(loaded ? this.preloadedBuilding : buildingPrefabs[0] as GameObject, OpenInformationPanel);
+        if (loaded)
+        {
+            this.buildingManager.ScaleBuildingX(preloadedBuildingScale.x);
+            this.grid.SetVerticalLength((int)this.buildingManager.GetFloorXLength());
+            this.buildingManager.ScaleBuildingY(preloadedBuildingScale.y);
+            this.grid.SetDepth((int)this.buildingManager.GetWallHeight());
+            this.buildingManager.ScaleBuildingZ(preloadedBuildingScale.z);
+            this.grid.SetHorizontalLength((int)this.buildingManager.GetFloorZLength());
+        }
         this.floorClickDrawingObject = this.buildingManager.GetFloorClickDrawingObject();
-        this.wallClickDrawingObjects = this.buildingManager.GetWallClickDrawingObjects();
+        List<ClickDrawingObject> wallClickDrawingObjects = this.buildingManager.GetWallClickDrawingObjects();
+        foreach(ClickDrawingObject wallClickDrawingObject in wallClickDrawingObjects)
+        {
+            this.wallClickDrawingObjects.Add(wallClickDrawingObject);
+        }
+        
         this.cameraController.SetFreeMovement(false);
+        this.grid.SetPointRepresentation(gridRepresentation);
     }
 
     void Update()
     {
         buildingManager.UpdateWallOpacity();
         UpdateInformationPanel();
+        
         foreach(ClickDrawingObject clickDrawingObject in this.wallClickDrawingObjects)
         {
             if (clickDrawingObject.GetIsDragging())
@@ -114,7 +155,7 @@ public class SimulationManager : MonoBehaviour
         {
             this.floorClickDrawingObject.UpdateSecondPosition();
         }
-        
+
         if (!isStarted)
             return;
 
@@ -129,6 +170,11 @@ public class SimulationManager : MonoBehaviour
         }
     }
 
+    /**
+     * A szimuláció elindító gombja által használt metódus.
+     * Ha nincs elindítva még a szimuláció, akkor elindítja a szükséges felállási folyamatokat,
+     * ha pedig már el van indítva a szimuláció, akkor leállítja a  szükséges tisztító folyamatokkal.
+     */
     public void ToggleSimulation()
     {
         if (isStarted)
@@ -136,17 +182,24 @@ public class SimulationManager : MonoBehaviour
             isStarted = false;
             this.uiController.BlockOnSimulationStart(isStarted);
             this.uiController.ToggleStartButtonSprite();
+            this.BlockDraggingObjects(true);
             grid.CleanUp();
             return;
         }
         isStarted = true;
         grid.StartSim(OpenInformationPanel, insideHeat, outsideHeat);
         simulationTime = 0;
+        this.BlockDrawingObjects();
+        this.BlockDraggingObjects(false);
         this.uiController.ToggleStartButtonSprite();
         this.uiController.UpdateTimeDisplay(0f);
         this.uiController.BlockOnSimulationStart(isStarted);
     }
 
+    /**
+     * A szimuláció sebesség állító gombja által hívott metódus. 3 érték között ciklikusan változtatja a
+     * frissítésenként eltelő másodperceket, és a grafikus felületet értesíti a változásról.
+     */
     public void CycleSimulationSpeed()
     {
         switch (timeStep)
@@ -166,6 +219,10 @@ public class SimulationManager : MonoBehaviour
         this.uiController.CycleSpeedButtonSprite();
     }
 
+    /**
+     * A nézet állítás gombja által hívott metódus. Ha rács nézeten van, vált a hőmérséklet színezett nézetre,
+     * ha pedig azon, akkor vált a rácsra.
+     */
     public void ToggleView()
     {
         this.isGridView = !this.isGridView;
@@ -173,6 +230,13 @@ public class SimulationManager : MonoBehaviour
         this.grid.SetView(isGridView);
     }
 
+    /**
+     * A központi, minden objektum által használt metódus ami megnyitja az információs panelt, és beállítja itt
+     * azt, hogy ki a "birtokosa" az információs panelnek
+     * param - informationFlag: egy listányi InformationFlag, amik megmondják mely információknak kell aktívnak lenni a panelen
+     * param - newOwner: a hívó objektum maga
+     * param - editableDefaultValues: a módosító inputok InformationFlagjét és értékét tartalmazó map/dictionary
+     */
     public void OpenInformationPanel(List<InformationFlag> informationFlag, IInformationPanelOpener newOwner, Dictionary<InformationFlag, string> editableDefaultValues)
     {
         if(this.panelOwner != null && this.panelOwner != newOwner)
@@ -184,11 +248,17 @@ public class SimulationManager : MonoBehaviour
         this.uiController.ToggleResizePanel(false);
     }
 
+    /**
+     * Az információs panel bezáró gombja által hívott metódus
+     */
     public void CloseInformationPanel()
     {
         this.uiController.CloseInformationPanel();
     }
 
+    /**
+     * Minden egyes frissítésnél meghívott metódus, ami frissíti az információs panelen az összes értéket az aktuálisra.
+     */
     public void UpdateInformationPanel()
     {
         if(this.panelOwner != null)
@@ -197,13 +267,24 @@ public class SimulationManager : MonoBehaviour
         }
     }
 
-    public void SetNewBuilding(GameObject building)
+    /**
+     * Az épület menüben kattintott épület által hívott metódus, ami beállítja a használt épületet és bezárja a skálázó menüt
+     * param - building: maga a kattintott épület
+     */
+    public void SetNewBuilding(ASimulationObject building)
     {
         if (this.isStarted)
             return;
-        this.buildingManager.SetBuildingObject(building, OpenInformationPanel);
+        this.uiController.ToggleResizePanel(false);
+        this.buildingManager.SetBuildingObject(building.gameObject, OpenInformationPanel);
+        this.wallClickDrawingObjects = this.buildingManager.GetWallClickDrawingObjects();
+        this.floorClickDrawingObject = this.buildingManager.GetFloorClickDrawingObject();
     }
 
+    /**
+     * A rajzoló eszközök által hívott metódus, ami inicializálja a rajzoló komponenst.
+     * param - simulationObject: a rajzolni kívánt, ASimulationObject-ből leszármazó objektum
+     */
     public void SetUsedTool(ASimulationObject simulationObject)
     {
         if (!isStarted)
@@ -213,6 +294,7 @@ public class SimulationManager : MonoBehaviour
                 floorClickDrawingObject.SetObjectToCopy(simulationObject);
                 floorClickDrawingObject.SetObjectToDraw(simulationObject);
                 floorClickDrawingObject.SetOnWallAdd((ClickDrawingObject clickDrawingObject) => { this.wallClickDrawingObjects.Add(clickDrawingObject); });
+                floorClickDrawingObject.SetAddObject(AddToSimulationObjects);
                 floorClickDrawingObject.SetIsDrawing(true);
             } 
             else
@@ -221,10 +303,105 @@ public class SimulationManager : MonoBehaviour
                 {
                     clickDrawingObject.SetObjectToCopy(simulationObject);
                     clickDrawingObject.SetObjectToDraw(simulationObject);
+                    clickDrawingObject.SetAddObject(AddToSimulationObjects);
                     clickDrawingObject.SetIsDrawing(true);
                 }
             }
         }
+    }
+    
+    /**
+     * A skálázó menü által hívott metódus, ami az x komponensű skálázást végzi el, ha az objektum egyszerű (ASimulationObject),
+     * illetve az épület esetén az erre hivatott BuildingManagernek adja át a feladatot.
+     */
+    public void SetObjectXScale()
+    {
+        if(this.panelOwner != null && !this.isStarted)
+        {
+            if(this.panelOwner is Floor)
+            {
+                this.buildingManager.ScaleBuildingX(float.Parse(this.uiController.GetXScaleValue()));
+                this.grid.SetVerticalLength((int)this.buildingManager.GetFloorXLength());
+            }
+            else
+            {
+                ((ASimulationObject)this.panelOwner).HandleXScale(float.Parse(this.uiController.GetXScaleValue()));
+            }
+        }
+    }
+
+    /**
+     * A skálázó menü által hívott metódus, ami az y komponensű skálázást végzi el, ha az objektum egyszerű (ASimulationObject),
+     * illetve az épület esetén az erre hivatott BuildingManagernek adja át a feladatot.
+     */
+    public void SetObjectYScale()
+    {
+        if (this.panelOwner != null && !this.isStarted)
+        {
+            if (this.panelOwner is Floor)
+            {
+                this.buildingManager.ScaleBuildingY(float.Parse(this.uiController.GetYScaleValue()));
+                this.grid.SetDepth((int)this.buildingManager.GetWallHeight());
+            }
+            else
+            {
+                
+                ((ASimulationObject)this.panelOwner).HandleYScale(float.Parse(this.uiController.GetYScaleValue()));
+            }
+        }
+    }
+
+    /**
+     * A skálázó menü által hívott metódus, ami az z komponensű skálázást végzi el, ha az objektum egyszerű (ASimulationObject),
+     * illetve az épület esetén az erre hivatott BuildingManagernek adja át a feladatot.
+     */
+    public void SetObjectZScale()
+    {
+        if (this.panelOwner != null && !this.isStarted)
+        {
+            if (this.panelOwner is Floor)
+            {
+                this.buildingManager.ScaleBuildingZ(float.Parse(this.uiController.GetZScaleValue()));
+                this.grid.SetHorizontalLength((int)this.buildingManager.GetFloorZLength());
+            } else
+            {
+                ((ASimulationObject)this.panelOwner).HandleZScale(float.Parse(this.uiController.GetZScaleValue()));
+            }
+        }
+    }
+
+    public void BlockDrawingObjects()
+    {
+        floorClickDrawingObject.SetObjectToCopy(null);
+        floorClickDrawingObject.SetObjectToDraw(null);
+        floorClickDrawingObject.SetOnWallAdd(null);
+        floorClickDrawingObject.SetIsDrawing(false);
+        floorClickDrawingObject.DestroySpawn();
+        foreach (ClickDrawingObject clickDrawingObject in wallClickDrawingObjects)
+        {
+            clickDrawingObject.SetObjectToCopy(null);
+            clickDrawingObject.SetObjectToDraw(null);
+            clickDrawingObject.SetIsDrawing(false);
+            clickDrawingObject.DestroySpawn();
+        }
+    }
+
+    public void BlockDraggingObjects(bool canMove)
+    {
+        foreach(ASimulationObject aSimulationObject in placedSimulationObjects)
+        {
+            aSimulationObject.SetCanMove(canMove);
+        }
+    }
+
+    public void LoadInsideHeat(float insideHeat)
+    {
+        this.insideHeat = insideHeat;
+    }
+
+    public void LoadOutsideHeat(float outsideHeat)
+    {
+        this.outsideHeat = outsideHeat;
     }
 
     public void SetInsideHeat(float insideHeat)
@@ -252,7 +429,7 @@ public class SimulationManager : MonoBehaviour
     {
         if(panelOwner != null)
         {
-            DoorMaterials doorMaterial = (DoorMaterials)this.uiController.GetInformationPanelDoorMaterialValue();
+            DoorMaterial doorMaterial = (DoorMaterial)this.uiController.GetInformationPanelDoorMaterialValue();
             (this.panelOwner as Door).SetMaterial(doorMaterial);
         }
     }
@@ -261,7 +438,7 @@ public class SimulationManager : MonoBehaviour
     {
         if(panelOwner != null)
         {
-            WindowMaterials windowMaterial = (WindowMaterials)this.uiController.GetInformationPanelWindowMaterialValue();
+            WindowMaterial windowMaterial = (WindowMaterial)this.uiController.GetInformationPanelWindowMaterialValue();
             (this.panelOwner as Window).SetMaterial(windowMaterial);
         }
     }
@@ -280,7 +457,14 @@ public class SimulationManager : MonoBehaviour
 
         if(panelOwner != null)
         {
-            bool result = (this.panelOwner as Wall).SetInsulated();
+            if(this.panelOwner is Wall)
+            {
+                (this.panelOwner as Wall).SetInsulated();
+            }
+            else
+            {
+                (this.panelOwner as Pipe).SetInsulated();
+            }
         }
     }
 
@@ -313,54 +497,61 @@ public class SimulationManager : MonoBehaviour
     {
         if(this.panelOwner != null && !this.isStarted) 
         {
-            this.uiController.ToggleResizePanel(true);
-        }
-    }
-
-    public void SetObjectXScale()
-    {
-        if(this.panelOwner != null && !this.isStarted)
-        {
-            if(this.panelOwner is Floor)
+            bool isOpen = this.uiController.IsResizePanelOpen();
+            this.uiController.ToggleResizePanel(!isOpen);
+            if (!isOpen)
             {
-                this.buildingManager.ScaleBuildingX(float.Parse(this.uiController.GetXScaleValue()));
-            }
-            else
-            {
-                Vector3 scale = ((ASimulationObject)this.panelOwner).transform.localScale;
-                ((ASimulationObject)this.panelOwner).transform.localScale = new Vector3(scale.x * float.Parse(this.uiController.GetXScaleValue()), scale.y, scale.z); 
+                if(this.panelOwner is Floor)
+                {
+                    this.uiController.UpdateResizePanelValues(this.buildingManager.GetXScale(), this.buildingManager.GetYScale(), this.buildingManager.GetZScale());
+                }
+                else
+                {
+                    Vector3 currentScale = ((ASimulationObject)this.panelOwner).GetCurrentScale();
+                    this.uiController.UpdateResizePanelValues(currentScale.x, currentScale.y, currentScale.z);
+                }
             }
         }
     }
 
-    public void SetObjectYScale()
+    public BuildingManager GetBuildingManager()
     {
-        if (this.panelOwner != null && !this.isStarted)
-        {
-            if (this.panelOwner is Floor)
-            {
-                this.buildingManager.ScaleBuildingY(float.Parse(this.uiController.GetYScaleValue()));
-            }
-            else
-            {
-                Vector3 scale = ((ASimulationObject)this.panelOwner).transform.localScale;
-                ((ASimulationObject)this.panelOwner).transform.localScale = new Vector3(scale.x, scale.y * float.Parse(this.uiController.GetYScaleValue()), scale.z);
-            }
-        }
+        return this.buildingManager;
     }
 
-    public void SetObjectZScale()
+    public float GetInsideHeat()
     {
-        if (this.panelOwner != null && !this.isStarted)
-        {
-            if (this.panelOwner is Floor)
-            {
-                this.buildingManager.ScaleBuildingZ(float.Parse(this.uiController.GetZScaleValue()));
-            } else
-            {
-                Vector3 scale = ((ASimulationObject)this.panelOwner).transform.localScale;
-                ((ASimulationObject)this.panelOwner).transform.localScale = new Vector3(scale.x, scale.y, scale.y * float.Parse(this.uiController.GetZScaleValue()));
-            }
-        }
+        return this.insideHeat;
+    }
+
+    public float GetOutsideHeat()
+    {
+        return this.outsideHeat;
+    }
+
+    public void SetPreloadedBuilding(GameObject gameObject, float[] preloadedScale)
+    {
+        this.preloadedBuilding = gameObject;
+        this.preloadedBuildingScale = new Vector3(preloadedScale[0], preloadedScale[1], preloadedScale[2]);
+    }
+
+    public void SetWallClickDrawingObjects(List<ClickDrawingObject> drawingObjects)
+    {
+        this.wallClickDrawingObjects = new List<ClickDrawingObject>(drawingObjects);
+    }
+
+    public void SetPreloadedScale(float[] scale)
+    {
+        this.preloadedBuildingScale = new Vector3(scale[0], scale[1], scale[2]);
+    }
+
+    public void SetPlacedSimulationObjects(List<ASimulationObject> simulationObjects)
+    {
+        this.placedSimulationObjects = new List<ASimulationObject>(simulationObjects);
+    }
+
+    public void AddToSimulationObjects(ASimulationObject simulationObject)
+    {
+        this.placedSimulationObjects.Add(simulationObject);
     }
 }

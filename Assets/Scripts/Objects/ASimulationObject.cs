@@ -1,8 +1,12 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+/**
+ * ASimulationObject osztály
+ * Minden a szimulációban használt objektum őse. Absztrakciós szint, a kódismétlés elkerülésére.
+ */
 public abstract class ASimulationObject : MonoBehaviour, IInformationPanelOpener, IPlaceableObject, IBeginDragHandler, IEndDragHandler, IDragHandler, IDragAndDropObject
 {
     public List<InformationFlag> informationFlags { get; set; }
@@ -14,29 +18,18 @@ public abstract class ASimulationObject : MonoBehaviour, IInformationPanelOpener
     public bool directional { get; set; }
     public float heightOffset { get; set; }
     public float widthOffset { get; set; }
+    protected LayerMask originalLayer;
 
     protected float diffusivity;
     protected Vector3 itemWidthOffset;
     protected Vector3 itemHeightOffset;
 
     protected bool canMove = true;
+    protected Vector3 originalScale;
+    protected Vector3 currentScale = new Vector3(1, 1, 1);
 
-    public Dictionary<InformationFlag, string> editableDefaultValues;
+    protected Dictionary<InformationFlag, string> editableDefaultValues;
 
-    public Sprite GetDisplayImage()
-    {
-        return displayImage;
-    }
-
-    public string GetDisplayName()
-    {
-        return displayName;
-    }
-
-    public GameObject GetPrefab()
-    {
-        return prefab;
-    }
 
     public abstract void Init(Action<List<InformationFlag>, IInformationPanelOpener, Dictionary<InformationFlag, string>> infoPanelOpen);
 
@@ -66,6 +59,8 @@ public abstract class ASimulationObject : MonoBehaviour, IInformationPanelOpener
         this.editableDefaultValues = simulationObject.editableDefaultValues;
         this.diffusivity = simulationObject.diffusivity;
         this.canMove = simulationObject.canMove;
+        this.originalScale = simulationObject.originalScale;
+        this.currentScale = simulationObject.currentScale;
     }
 
     public virtual void OnTriggerEnter(Collider other)
@@ -93,6 +88,8 @@ public abstract class ASimulationObject : MonoBehaviour, IInformationPanelOpener
     {
         if (canMove)
         {
+            this.originalLayer = this.gameObject.layer;
+            this.gameObject.layer = LayerMask.NameToLayer("Default");
             this.itemHeightOffset = new Vector3(0, this.heightOffset, 0);
             this.itemWidthOffset = new Vector3(this.widthOffset, 0, this.widthOffset);
 
@@ -110,26 +107,46 @@ public abstract class ASimulationObject : MonoBehaviour, IInformationPanelOpener
 
 
     public void OnEndDrag(PointerEventData eventData)
-    {
-
+    { 
+        this.gameObject.layer = this.originalLayer;
     }
-    public void UpdateItemPosition(PointerEventData eventData)
+    public virtual void UpdateItemPosition(PointerEventData eventData)
     {
         Ray ray = Camera.main.ScreenPointToRay(eventData.position);
-        if (Physics.Raycast(ray, out RaycastHit hit, 100f, this.layerMask))
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f, this.layerMask, QueryTriggerInteraction.Collide))
         {
-            if (this.directional)
+            if (hit.normal != Vector3.zero)
             {
-                if (hit.normal != Vector3.zero)
+                if (this.directional)
                 {
-                    this.transform.rotation = Quaternion.LookRotation(-hit.normal);
+                    this.transform.rotation = Quaternion.LookRotation(-hit.normal, Vector3.up);
                 }
             }
 
             Vector3 rotatedWidthOffset = this.transform.rotation * itemWidthOffset;
-
             this.transform.position = hit.point + itemHeightOffset + rotatedWidthOffset;
         }
+    }
+
+    public void HandleXScale(float x)
+    {
+        Debug.Log(x);
+        this.currentScale = new Vector3(x, this.currentScale.y, this.currentScale.z);
+        this.transform.localScale = new Vector3(this.originalScale.x * x, this.originalScale.y * this.currentScale.y, this.originalScale.z * this.currentScale.z);
+        Debug.Log(this.currentScale);
+        Debug.Log(this.transform.localScale);
+    }
+
+    public void HandleYScale(float y)
+    {
+        this.currentScale = new Vector3(this.currentScale.x, y, this.currentScale.z);
+        this.transform.localScale = new Vector3(this.originalScale.x * this.currentScale.x, this.originalScale.y * y, this.originalScale.z * this.currentScale.z);
+    }
+
+    public void HandleZScale(float z)
+    {
+        this.currentScale = new Vector3(this.currentScale.x, this.currentScale.y, z);
+        this.transform.localScale = new Vector3(this.originalScale.x * this.currentScale.x, this.originalScale.y * this.currentScale.y, this.originalScale.z * z);
     }
 
     public LayerMask GetLayerMask()
@@ -150,5 +167,38 @@ public abstract class ASimulationObject : MonoBehaviour, IInformationPanelOpener
     public float GetWidthOffset()
     {
         return this.widthOffset;
+    }
+    public Sprite GetDisplayImage()
+    {
+        return displayImage;
+    }
+
+    public string GetDisplayName()
+    {
+        return displayName;
+    }
+
+    public GameObject GetPrefab()
+    {
+        return prefab;
+    }
+    public Vector3 GetOriginalScale()
+    {
+        return this.originalScale;
+    }
+
+    public Vector3 GetCurrentScale()
+    {
+        return this.currentScale;
+    }
+    
+    public Dictionary<InformationFlag, string> GetEditableValues()
+    {
+        return this.editableDefaultValues;
+    }
+    
+    public void SetCanMove(bool canMove)
+    {
+        this.canMove = canMove;
     }
 }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public enum DoorMaterials
+public enum DoorMaterial
 {
     WOOD,
     PLASTIC,

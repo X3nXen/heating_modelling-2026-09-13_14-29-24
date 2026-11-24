@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -6,6 +6,10 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
+/**
+ * UIController osztály
+ * A UI nevezetű objektumon élő komponens, ami felelős az összes dinamikus felhasználói felület módosításért
+ */
 public class UIController : MonoBehaviour
 {
     private Sprite[] startButtonSprites;
@@ -37,13 +41,23 @@ public class UIController : MonoBehaviour
     private TMP_InputField y_scale;
     private TMP_InputField z_scale;
 
+    /**
+     * A SimulationManager osztály által hívott metódus, ami inicializálja az összes dinamikus komponenst 
+     * param - heaters: az összes felálláskor beolvasott hőfejlesztő prefab
+     * param - buildings: az összes felálláskor beolvasott épület prefab
+     * param - fenestration: az összes felálláskor beolvasott nyílászáró prefab
+     * param - drawing: az összes felálláskor beolvasott rajzoló eszköz 
+     * param - onBuildingClick: az épület menün klikkeléskor meghívott metódus
+     * param - onToolClick: az eszközök menün klikkeléskor meghívott metódus
+     */
     public void Init(
         List<ASimulationObject> heaters,
         List<ASimulationObject> buildings,
         List<ASimulationObject> fenestration,
         List<ASimulationObject> drawing,
         Action<ASimulationObject> onBuildingClick,
-        Action<ASimulationObject> onToolClick)
+        Action<ASimulationObject> onToolClick,
+        Action<ASimulationObject> addToObjects)
     {
         this.startButton = this.transform.Find("Start stop").Find("Start icon").Find("Icon").gameObject.GetComponent<Image>();
         this.speedButton = this.transform.Find("Speed control").Find("Fastforward icon").Find("Icon").gameObject.GetComponent<Image>();
@@ -78,19 +92,19 @@ public class UIController : MonoBehaviour
 
         MenuUIElement heatersScrollableElement = heatersScrollableMenu.AddComponent<MenuUIElement>();
         GameObject heaterParent = heatersScrollableMenu.transform.Find("View").Find("Content").gameObject;
-        heatersScrollableElement.Setup(new GameObject[] { buildingsScrollableMenu, fenestrationMenu, drawingMenu }, heaters, heaterParent, null, false, TurnMenusOff);
+        heatersScrollableElement.Setup(new GameObject[] { buildingsScrollableMenu, fenestrationMenu, drawingMenu }, heaters, heaterParent, null, false, TurnMenusOff, addToObjects);
 
         MenuUIElement buildingsScrollableElement = buildingsScrollableMenu.AddComponent<MenuUIElement>();
         GameObject buildingParent = buildingsScrollableMenu.transform.Find("View").Find("Content").gameObject;
-        buildingsScrollableElement.Setup(new GameObject[] { heatersScrollableMenu, fenestrationMenu, drawingMenu }, buildings, buildingParent, onBuildingClick ,true);
+        buildingsScrollableElement.Setup(new GameObject[] { heatersScrollableMenu, fenestrationMenu, drawingMenu }, buildings, buildingParent, onBuildingClick ,true, TurnMenusOff);
 
         MenuUIElement fenestrationElement = fenestrationMenu.AddComponent<MenuUIElement>();
         GameObject fenestrationParent = fenestrationMenu.transform.Find("Content").gameObject;
-        fenestrationElement.Setup(new GameObject[] { heatersScrollableMenu, buildingsScrollableMenu, drawingMenu }, fenestration, fenestrationParent, null, false, TurnMenusOff);
+        fenestrationElement.Setup(new GameObject[] { heatersScrollableMenu, buildingsScrollableMenu, drawingMenu }, fenestration, fenestrationParent, null, false, TurnMenusOff, addToObjects);
 
         MenuUIElement drawingElement = drawingMenu.AddComponent<MenuUIElement>();
         GameObject drawingParent = drawingElement.transform.Find("Content").gameObject;
-        drawingElement.Setup(new GameObject[] {heatersScrollableMenu, buildingsScrollableMenu, fenestrationMenu}, drawing, drawingParent, new Action<ASimulationObject>((ASimulationObject so) => { onToolClick(so); }), true, TurnMenusOff);
+        drawingElement.Setup(new GameObject[] {heatersScrollableMenu, buildingsScrollableMenu, fenestrationMenu}, drawing, drawingParent, onToolClick, true, TurnMenusOff, addToObjects);
 
         GameObject informationPanel = this.transform.Find("Information Panel").gameObject;
         this.informationPanelController = informationPanel.AddComponent<InformationPanelController>();
@@ -100,6 +114,51 @@ public class UIController : MonoBehaviour
         this.globalInformationAverageDisplay = globalInformationPanel.transform.Find("INFORMATION.AVG_TEMPERATURE").Find("Value").gameObject.GetComponent<TextMeshProUGUI>();
         this.globalInformationInsideTempInput = globalInformationPanel.transform.Find("INFORMATION.INSIDE_TEMPERATURE").Find("Value").GetComponent<TMP_InputField>();
         this.globalInformationOutsideTempInput = globalInformationPanel.transform.Find("INFORMATION.OUTSIDE_TEMPERATURE").Find("Value").GetComponent<TMP_InputField>();
+    }
+
+    /**
+     * A globális információs panel értékeinek frissítésére szolgáló metódus
+     * param - averageTemperature, insideTemperature, outsideTemperature: szöveggé konvertált hőmérsékleti érték (float)
+     */
+    public void UpdateGlobalInformation(string averageTemperature, string insideTemperature, string outsideTemperature)
+    {
+        this.globalInformationAverageDisplay.text = averageTemperature + "°C";
+        if(this.globalInformationInsideTempInput.text == "" || this.globalInformationInsideTempInput == null)
+        {
+            this.globalInformationInsideTempInput.text = insideTemperature;
+        }
+        if (this.globalInformationOutsideTempInput.text == "" || this.globalInformationOutsideTempInput == null)
+        {
+            this.globalInformationOutsideTempInput.text = outsideTemperature;
+        }
+    }
+
+    public float GetGlobalInformationInsideTemperature()
+    {
+        return float.Parse(this.globalInformationInsideTempInput.text);
+    }
+
+    public float GetGlobalInformationOutsideTemperature()
+    {
+        return float.Parse(this.globalInformationOutsideTempInput.text);
+    }
+
+    public void CycleSpeedButtonSprite()
+    {
+        speedButtonIndex = (speedButtonIndex+1) % speedButtonSprites.Length;
+        speedButton.sprite = speedButtonSprites[speedButtonIndex];
+    }
+
+    public void ToggleStartButtonSprite()
+    {
+        isStarted = !isStarted;
+        startButton.sprite = startButtonSprites[isStarted ? 0 : 1];
+    }
+
+    public void UpdateTimeDisplay(float time)
+    {
+        var ts = TimeSpan.FromSeconds(time);
+        timeDisplay.text = string.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
     }
 
     public void OpenInformationPanel(List<InformationFlag> informationFlags, Dictionary<InformationFlag, string> editableDefaultValues)
@@ -146,48 +205,6 @@ public class UIController : MonoBehaviour
     {
         this.informationPanelController.UpdateValue(informationFlag, value);
     }
-
-    public void UpdateGlobalInformation(string averageTemperature, string insideTemperature, string outsideTemperature)
-    {
-        this.globalInformationAverageDisplay.text = averageTemperature + "�C";
-        if(this.globalInformationInsideTempInput.text == "" || this.globalInformationInsideTempInput == null)
-        {
-            this.globalInformationInsideTempInput.text = insideTemperature;
-        }
-        if (this.globalInformationOutsideTempInput.text == "" || this.globalInformationOutsideTempInput == null)
-        {
-            this.globalInformationOutsideTempInput.text = outsideTemperature;
-        }
-    }
-
-    public float GetGlobalInformationInsideTemperature()
-    {
-        return float.Parse(this.globalInformationInsideTempInput.text);
-    }
-
-    public float GetGlobalInformationOutsideTemperature()
-    {
-        return float.Parse(this.globalInformationOutsideTempInput.text);
-    }
-
-    public void CycleSpeedButtonSprite()
-    {
-        speedButtonIndex = (speedButtonIndex+1) % speedButtonSprites.Length;
-        speedButton.sprite = speedButtonSprites[speedButtonIndex];
-    }
-
-    public void ToggleStartButtonSprite()
-    {
-        isStarted = !isStarted;
-        startButton.sprite = startButtonSprites[isStarted ? 0 : 1];
-    }
-
-    public void UpdateTimeDisplay(float time)
-    {
-        var ts = TimeSpan.FromSeconds(time);
-        timeDisplay.text = string.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
-    }
-
     public void ToggleViewDisplay(bool isGridView)
     {
         viewButton.sprite = viewButtonSprites[isGridView ? 1 : 0];
@@ -211,6 +228,7 @@ public class UIController : MonoBehaviour
     public void BlockOnSimulationStart(bool isStarted)
     {
         heatersScrollableMenu.GetComponent<MenuUIElement>().BlockDragObjects(isStarted);
+        fenestrationMenu.GetComponent<MenuUIElement>().BlockDragObjects(isStarted);
         this.globalInformationInsideTempInput.interactable = !isStarted;
         this.globalInformationOutsideTempInput.interactable = !isStarted;
         this.informationPanelController.BlockOnSimulationStart(isStarted);
@@ -234,6 +252,18 @@ public class UIController : MonoBehaviour
     public void ToggleResizePanel(bool open)
     {
         this.resizePanel.SetActive(open);
+    }
+
+    public bool IsResizePanelOpen()
+    {
+        return this.resizePanel.activeSelf;
+    }
+
+    public void UpdateResizePanelValues(float xScale, float yScale, float zScale)
+    {
+        this.x_scale.SetTextWithoutNotify(xScale.ToString());
+        this.y_scale.SetTextWithoutNotify(yScale.ToString());
+        this.z_scale.SetTextWithoutNotify(zScale.ToString());
     }
 
     public string GetXScaleValue()

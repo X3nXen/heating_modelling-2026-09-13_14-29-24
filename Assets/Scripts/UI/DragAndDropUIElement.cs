@@ -14,6 +14,7 @@ public class DragAndDropUIElement: UIObject, IBeginDragHandler, IEndDragHandler,
     protected GameObject prefab;
     protected ASimulationObject componentToCopy;
     protected bool isStarted;
+    protected Action<ASimulationObject> addToObjects;
 
     public override void InitUIObject(Action menuCloser)
     {
@@ -32,6 +33,7 @@ public class DragAndDropUIElement: UIObject, IBeginDragHandler, IEndDragHandler,
             this.itemWidthOffset = new Vector3(((IDragAndDropObject)this.componentToCopy).GetWidthOffset(), 0, ((IDragAndDropObject)this.componentToCopy).GetWidthOffset());
             this.dragItem = Instantiate(this.prefab, Vector3.zero, Quaternion.identity);
             this.dragItem.SetActive(true);
+            addToObjects(this.dragItem.GetComponent<ASimulationObject>());
 
             UpdateItemPosition(eventData);
         }
@@ -99,5 +101,10 @@ public class DragAndDropUIElement: UIObject, IBeginDragHandler, IEndDragHandler,
     public void SetCanDrag(bool canDrag)
     {
         this.isStarted = canDrag;
+    }
+
+    public void SetAddObject(Action<ASimulationObject> addObject)
+    {
+        this.addToObjects = addObject;
     }
 }
