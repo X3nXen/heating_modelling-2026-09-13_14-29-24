@@ -1,0 +1,141 @@
+{
+    "objects": [
+        {
+            "objectType": "boxhouse",
+            "position": [
+                15.0,
+                1.5,
+                15.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "prefabPath": "Prefabs/Buildings/Box_house",
+            "wallMaterial": 0,
+            "isInsulated": false,
+            "canDelete": false,
+            "windowMaterial": 0,
+            "radiationHeat": 0.0,
+            "doorMaterial": 0,
+            "pipeMaterial": 0,
+            "buildingScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "insideHeat": 0.0,
+            "outsideHeat": 0.0
+        },
+        {
+            "objectType": "pipe",
+            "position": [
+                23.260000228881837,
+                3.91117787361145,
+                9.807591438293457
+            ],
+            "rotation": [
+                0.0,
+                0.9777194261550903,
+                -0.2099159210920334
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                5.34796667098999
+            ],
+            "prefabPath": "Prefabs/Drawobjects/Pipe",
+            "wallMaterial": 0,
+            "isInsulated": false,
+            "canDelete": false,
+            "windowMaterial": 0,
+            "radiationHeat": 35.0,
+            "doorMaterial": 0,
+            "pipeMaterial": 0,
+            "buildingScale": [],
+            "insideHeat": 0.0,
+            "outsideHeat": 0.0
+        },
+        {
+            "objectType": "pipe",
+            "position": [
+                23.260000228881837,
+                5.965912818908691,
+                15.628830909729004
+            ],
+            "rotation": [
+                0.0,
+                0.9992679953575134,
+                0.038255803287029269
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                14.028019905090332
+            ],
+            "prefabPath": "Prefabs/Drawobjects/Pipe",
+            "wallMaterial": 0,
+            "isInsulated": false,
+            "canDelete": false,
+            "windowMaterial": 0,
+            "radiationHeat": 35.0,
+            "doorMaterial": 0,
+            "pipeMaterial": 0,
+            "buildingScale": [],
+            "insideHeat": 0.0,
+            "outsideHeat": 0.0
+        },
+        {
+            "objectType": "pipe",
+            "position": [
+                23.260000228881837,
+                5.280595779418945,
+                9.608330726623536
+            ],
+            "rotation": [
+                0.0,
+                0.9998741745948792,
+                0.015863468870520593
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                7.179430961608887
+            ],
+            "prefabPath": "Prefabs/Drawobjects/Pipe",
+            "wallMaterial": 0,
+            "isInsulated": false,
+            "canDelete": false,
+            "windowMaterial": 0,
+            "radiationHeat": 35.0,
+            "doorMaterial": 0,
+            "pipeMaterial": 0,
+            "buildingScale": [],
+            "insideHeat": 0.0,
+            "outsideHeat": 0.0
+        },
+        {
+            "objectType": "global",
+            "position": [],
+            "rotation": [],
+            "scale": [],
+            "prefabPath": "",
+            "wallMaterial": 0,
+            "isInsulated": false,
+            "canDelete": false,
+            "windowMaterial": 0,
+            "radiationHeat": 0.0,
+            "doorMaterial": 0,
+            "pipeMaterial": 0,
+            "buildingScale": [],
+            "insideHeat": 21.0,
+            "outsideHeat": 15.0
+        }
+    ]
+}

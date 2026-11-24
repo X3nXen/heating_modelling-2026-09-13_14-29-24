@@ -42,30 +42,6 @@ public class Wall: ASimulationObject, IDragAndDropObject
         panelInfoUpdater(InformationFlag.DIFFUSIVITY, this.diffusivity.ToString());
     }
 
-    public void SetMaterial(WallMaterial material)
-    {
-        this.material = material;
-        this.diffusivity = EnumHelper.GetWallMaterialDiffusivity(material, this.isInsulated);
-        if(this.editableDefaultValues != null)
-        {
-            this.editableDefaultValues[InformationFlag.WALL_MATERIAL] = ((int)this.material).ToString();
-        }
-    }
-
-    public bool SetInsulated()
-    {
-        this.isInsulated = !isInsulated;
-        this.editableDefaultValues[InformationFlag.WALL_INSULATED] = this.isInsulated.ToString();
-        this.diffusivity = EnumHelper.GetWallMaterialDiffusivity(this.material, this.isInsulated);
-        return this.isInsulated;
-    }
-
-    public void SetInsulated(bool isInsulated)
-    {
-        this.isInsulated = isInsulated;
-        this.editableDefaultValues[InformationFlag.WALL_INSULATED] = this.isInsulated.ToString();
-        this.diffusivity = EnumHelper.GetWallMaterialDiffusivity(this.material, this.isInsulated);
-    }
 
     public override void OnPointerDown(PointerEventData eventData)
     {
@@ -123,5 +99,29 @@ public class Wall: ASimulationObject, IDragAndDropObject
     public bool GetCanDelete()
     {
         return this.canDelete;
+    }
+    public void SetMaterial(WallMaterial material)
+    {
+        this.material = material;
+        this.diffusivity = EnumHelper.GetWallMaterialDiffusivity(material, this.isInsulated);
+        if(this.editableDefaultValues != null)
+        {
+            this.editableDefaultValues[InformationFlag.WALL_MATERIAL] = ((int)this.material).ToString();
+        }
+    }
+
+    public bool SetInsulated()
+    {
+        this.isInsulated = !isInsulated;
+        this.editableDefaultValues[InformationFlag.WALL_INSULATED] = this.isInsulated.ToString();
+        this.diffusivity = EnumHelper.GetWallMaterialDiffusivity(this.material, this.isInsulated);
+        return this.isInsulated;
+    }
+
+    public void SetInsulated(bool isInsulated)
+    {
+        this.isInsulated = isInsulated;
+        this.editableDefaultValues[InformationFlag.WALL_INSULATED] = this.isInsulated.ToString();
+        this.diffusivity = EnumHelper.GetWallMaterialDiffusivity(this.material, this.isInsulated);
     }
 }

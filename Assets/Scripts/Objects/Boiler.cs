@@ -21,6 +21,7 @@ public class Boiler : ASimulationObject, IRadiatingObject, IDragAndDropObject
         this.directional = false;
         this.heightOffset = this.prefab.transform.localScale.y / 2;
         this.widthOffset = 0f;
+
         this.originalScale = this.prefab.transform.localScale;
         this.currentScale = new Vector3(1, 1, 1);
         InitInfoPanel(new List<InformationFlag>() { InformationFlag.TEMPERATURE, InformationFlag.OBJECT_TEMPERATURE, InformationFlag.DELETE_ACTION, InformationFlag.RESIZE_ACTION }, infoPanelOpen);

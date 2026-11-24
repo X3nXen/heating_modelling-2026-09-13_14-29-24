@@ -19,6 +19,7 @@ public class SimulationManager : MonoBehaviour
     private SimulationGrid grid;
     [SerializeField]
     private GameObject ui;
+    private List<ASimulationObject> placedSimulationObjects;
 
     private BuildingManager buildingManager;
     private UIController uiController;
@@ -42,22 +43,28 @@ public class SimulationManager : MonoBehaviour
     
     void Awake()
     {
+        this.placedSimulationObjects = new List<ASimulationObject>();
+        this.wallClickDrawingObjects = new List<ClickDrawingObject>();
+
         LoadFromFile loader = this.gameObject.AddComponent<LoadFromFile>();
         loader.Init(this);
         bool loaded = loader.OnStart();
 
         SaveOnExit exitComponent = this.gameObject.AddComponent<SaveOnExit>();
         exitComponent.Init(this);
+
         this.uiController = ui.GetComponent<UIController>();
         this.cameraController = Camera.main.gameObject.GetComponent<CameraMovement>();
+
         GameObject gridRepresentation = ResourceLoader.Get("Prefabs/GridPoint") as GameObject;
         var heaterPrefabs = ResourceLoader.GetAll("Prefabs/Heaters");
-        heaters = new List<ASimulationObject>();
         var buildingPrefabs = ResourceLoader.GetAll("Prefabs/Buildings");
-        buildings = new List<ASimulationObject>();
         var fenestrationPrefabs = ResourceLoader.GetAll("Prefabs/Fenestration");
-        fenestration = new List<ASimulationObject>();
         var drawingPrefabs = ResourceLoader.GetAll("Prefabs/Drawobjects");
+
+        buildings = new List<ASimulationObject>();
+        heaters = new List<ASimulationObject>();
+        fenestration = new List<ASimulationObject>();
         drawingObjects = new List<ASimulationObject>();
         foreach (var go in heaterPrefabs)
         {
@@ -95,15 +102,20 @@ public class SimulationManager : MonoBehaviour
                 drawingObjects.Add(temp);
             }
         }
-        this.uiController.Init(heaters, buildings, fenestration, drawingObjects, new Action<ASimulationObject>((ASimulationObject buildingObject) => { this.SetNewBuilding(buildingObject.GetPrefab()); }), SetUsedTool);
+
+        this.uiController.Init(heaters, buildings, fenestration, drawingObjects, SetNewBuilding, SetUsedTool, AddToSimulationObjects);
         this.uiController.UpdateGlobalInformation(this.insideHeat.ToString(), this.insideHeat.ToString(), this.outsideHeat.ToString());
+
         this.buildingManager = this.gameObject.AddComponent<BuildingManager>();
         this.buildingManager.SetBuildingObject(loaded ? this.preloadedBuilding : buildingPrefabs[0] as GameObject, OpenInformationPanel);
         if (loaded)
         {
             this.buildingManager.ScaleBuildingX(preloadedBuildingScale.x);
+            this.grid.SetVerticalLength((int)this.buildingManager.GetFloorXLength());
             this.buildingManager.ScaleBuildingY(preloadedBuildingScale.y);
+            this.grid.SetDepth((int)this.buildingManager.GetWallHeight());
             this.buildingManager.ScaleBuildingZ(preloadedBuildingScale.z);
+            this.grid.SetHorizontalLength((int)this.buildingManager.GetFloorZLength());
         }
         this.floorClickDrawingObject = this.buildingManager.GetFloorClickDrawingObject();
         List<ClickDrawingObject> wallClickDrawingObjects = this.buildingManager.GetWallClickDrawingObjects();
@@ -170,12 +182,15 @@ public class SimulationManager : MonoBehaviour
             isStarted = false;
             this.uiController.BlockOnSimulationStart(isStarted);
             this.uiController.ToggleStartButtonSprite();
+            this.BlockDraggingObjects(true);
             grid.CleanUp();
             return;
         }
         isStarted = true;
         grid.StartSim(OpenInformationPanel, insideHeat, outsideHeat);
         simulationTime = 0;
+        this.BlockDrawingObjects();
+        this.BlockDraggingObjects(false);
         this.uiController.ToggleStartButtonSprite();
         this.uiController.UpdateTimeDisplay(0f);
         this.uiController.BlockOnSimulationStart(isStarted);
@@ -256,12 +271,12 @@ public class SimulationManager : MonoBehaviour
      * Az épület menüben kattintott épület által hívott metódus, ami beállítja a használt épületet és bezárja a skálázó menüt
      * param - building: maga a kattintott épület
      */
-    public void SetNewBuilding(GameObject building)
+    public void SetNewBuilding(ASimulationObject building)
     {
         if (this.isStarted)
             return;
         this.uiController.ToggleResizePanel(false);
-        this.buildingManager.SetBuildingObject(building, OpenInformationPanel);
+        this.buildingManager.SetBuildingObject(building.gameObject, OpenInformationPanel);
         this.wallClickDrawingObjects = this.buildingManager.GetWallClickDrawingObjects();
         this.floorClickDrawingObject = this.buildingManager.GetFloorClickDrawingObject();
     }
@@ -279,6 +294,7 @@ public class SimulationManager : MonoBehaviour
                 floorClickDrawingObject.SetObjectToCopy(simulationObject);
                 floorClickDrawingObject.SetObjectToDraw(simulationObject);
                 floorClickDrawingObject.SetOnWallAdd((ClickDrawingObject clickDrawingObject) => { this.wallClickDrawingObjects.Add(clickDrawingObject); });
+                floorClickDrawingObject.SetAddObject(AddToSimulationObjects);
                 floorClickDrawingObject.SetIsDrawing(true);
             } 
             else
@@ -287,6 +303,7 @@ public class SimulationManager : MonoBehaviour
                 {
                     clickDrawingObject.SetObjectToCopy(simulationObject);
                     clickDrawingObject.SetObjectToDraw(simulationObject);
+                    clickDrawingObject.SetAddObject(AddToSimulationObjects);
                     clickDrawingObject.SetIsDrawing(true);
                 }
             }
@@ -350,6 +367,30 @@ public class SimulationManager : MonoBehaviour
             {
                 ((ASimulationObject)this.panelOwner).HandleZScale(float.Parse(this.uiController.GetZScaleValue()));
             }
+        }
+    }
+
+    public void BlockDrawingObjects()
+    {
+        floorClickDrawingObject.SetObjectToCopy(null);
+        floorClickDrawingObject.SetObjectToDraw(null);
+        floorClickDrawingObject.SetOnWallAdd(null);
+        floorClickDrawingObject.SetIsDrawing(false);
+        floorClickDrawingObject.DestroySpawn();
+        foreach (ClickDrawingObject clickDrawingObject in wallClickDrawingObjects)
+        {
+            clickDrawingObject.SetObjectToCopy(null);
+            clickDrawingObject.SetObjectToDraw(null);
+            clickDrawingObject.SetIsDrawing(false);
+            clickDrawingObject.DestroySpawn();
+        }
+    }
+
+    public void BlockDraggingObjects(bool canMove)
+    {
+        foreach(ASimulationObject aSimulationObject in placedSimulationObjects)
+        {
+            aSimulationObject.SetCanMove(canMove);
         }
     }
 
@@ -497,5 +538,20 @@ public class SimulationManager : MonoBehaviour
     public void SetWallClickDrawingObjects(List<ClickDrawingObject> drawingObjects)
     {
         this.wallClickDrawingObjects = new List<ClickDrawingObject>(drawingObjects);
+    }
+
+    public void SetPreloadedScale(float[] scale)
+    {
+        this.preloadedBuildingScale = new Vector3(scale[0], scale[1], scale[2]);
+    }
+
+    public void SetPlacedSimulationObjects(List<ASimulationObject> simulationObjects)
+    {
+        this.placedSimulationObjects = new List<ASimulationObject>(simulationObjects);
+    }
+
+    public void AddToSimulationObjects(ASimulationObject simulationObject)
+    {
+        this.placedSimulationObjects.Add(simulationObject);
     }
 }

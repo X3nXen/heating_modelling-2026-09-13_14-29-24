@@ -1,0 +1,112 @@
+{
+    "objects": [
+        {
+            "objectType": "door",
+            "position": [
+                9.594413757324219,
+                2.512108325958252,
+                24.760000228881837
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.7000000476837159,
+                2.700000047683716,
+                1.5
+            ],
+            "prefabPath": "Prefabs/Fenestration/Door_prefab",
+            "wallMaterial": 0,
+            "isInsulated": false,
+            "canDelete": false,
+            "windowMaterial": 0,
+            "radiationHeat": 0.0,
+            "doorMaterial": 0,
+            "pipeMaterial": 0,
+            "buildingScale": [],
+            "insideHeat": 0.0,
+            "outsideHeat": 0.0
+        },
+        {
+            "objectType": "boxhouse",
+            "position": [
+                15.0,
+                1.5,
+                15.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "prefabPath": "Prefabs/Buildings/Box_house",
+            "wallMaterial": 0,
+            "isInsulated": false,
+            "canDelete": false,
+            "windowMaterial": 0,
+            "radiationHeat": 0.0,
+            "doorMaterial": 0,
+            "pipeMaterial": 0,
+            "buildingScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "insideHeat": 0.0,
+            "outsideHeat": 0.0
+        },
+        {
+            "objectType": "fireplace",
+            "position": [
+                21.574935913085939,
+                -1.235651438946661e-7,
+                15.672536849975586
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                4.0,
+                5.0,
+                2.0
+            ],
+            "prefabPath": "Prefabs/Heaters/Fireplace_prefab",
+            "wallMaterial": 0,
+            "isInsulated": false,
+            "canDelete": false,
+            "windowMaterial": 0,
+            "radiationHeat": 60.0,
+            "doorMaterial": 0,
+            "pipeMaterial": 0,
+            "buildingScale": [],
+            "insideHeat": 0.0,
+            "outsideHeat": 0.0
+        },
+        {
+            "objectType": "global",
+            "position": [],
+            "rotation": [],
+            "scale": [],
+            "prefabPath": "",
+            "wallMaterial": 0,
+            "isInsulated": false,
+            "canDelete": false,
+            "windowMaterial": 0,
+            "radiationHeat": 0.0,
+            "doorMaterial": 0,
+            "pipeMaterial": 0,
+            "buildingScale": [],
+            "insideHeat": 21.0,
+            "outsideHeat": 15.0
+        }
+    ]
+}

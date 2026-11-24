@@ -196,4 +196,9 @@ public abstract class ASimulationObject : MonoBehaviour, IInformationPanelOpener
     {
         return this.editableDefaultValues;
     }
+    
+    public void SetCanMove(bool canMove)
+    {
+        this.canMove = canMove;
+    }
 }

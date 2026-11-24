@@ -20,6 +20,7 @@ public class ClickDrawingObject : MonoBehaviour, IPointerDownHandler
     private bool shouldSetWallLayerBack = false;
     private Action<ClickDrawingObject> onWallAdd;
     private Vector3 startSurfaceNormal;
+    private Action<ASimulationObject> addObject;
 
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -96,13 +97,14 @@ public class ClickDrawingObject : MonoBehaviour, IPointerDownHandler
                 }
 
                 isDragging = false;
+                placedObject.GetComponent<ASimulationObject>().SetEqualTo(objectToCopy);
+                addObject(placedObject.GetComponent<ASimulationObject>());
                 if (objectToCopy is Wall)
                 {
-                    this.placedObject.GetComponent<Wall>().SetCanDelete(true);
-                    ClickDrawingObject clickDrawingObject = this.placedObject.AddComponent<ClickDrawingObject>();
+                    placedObject.GetComponent<Wall>().SetCanDelete(true);
+                    ClickDrawingObject clickDrawingObject = placedObject.AddComponent<ClickDrawingObject>();
                     onWallAdd(clickDrawingObject);
                 }
-                this.placedObject.GetComponent<ASimulationObject>().SetEqualTo(objectToCopy);
                 this.placedObject = null;
                 this.firstPos = Vector3.zero;
                 this.secondPos = Vector3.zero;
@@ -156,6 +158,10 @@ public class ClickDrawingObject : MonoBehaviour, IPointerDownHandler
     public void SetIsDrawing(bool isDrawing)
     {
         this.isDrawing = isDrawing;
+        if (!isDrawing)
+        {
+            this.isDragging = false;
+        }
     }
 
     public void SetObjectToDraw(ASimulationObject aSimulationObject)
@@ -181,5 +187,18 @@ public class ClickDrawingObject : MonoBehaviour, IPointerDownHandler
     public void SetOnWallAdd(Action<ClickDrawingObject> onWallAdd)
     {
         this.onWallAdd = onWallAdd;
+    }
+
+    public void DestroySpawn()
+    {
+        if(this.placedObject != null)
+        {
+            Destroy(this.placedObject); 
+        }
+    }
+
+    public void SetAddObject(Action<ASimulationObject> onAddObject)
+    {
+        this.addObject = onAddObject;
     }
 }

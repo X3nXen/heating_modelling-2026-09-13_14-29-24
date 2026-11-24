@@ -56,7 +56,8 @@ public class UIController : MonoBehaviour
         List<ASimulationObject> fenestration,
         List<ASimulationObject> drawing,
         Action<ASimulationObject> onBuildingClick,
-        Action<ASimulationObject> onToolClick)
+        Action<ASimulationObject> onToolClick,
+        Action<ASimulationObject> addToObjects)
     {
         this.startButton = this.transform.Find("Start stop").Find("Start icon").Find("Icon").gameObject.GetComponent<Image>();
         this.speedButton = this.transform.Find("Speed control").Find("Fastforward icon").Find("Icon").gameObject.GetComponent<Image>();
@@ -91,7 +92,7 @@ public class UIController : MonoBehaviour
 
         MenuUIElement heatersScrollableElement = heatersScrollableMenu.AddComponent<MenuUIElement>();
         GameObject heaterParent = heatersScrollableMenu.transform.Find("View").Find("Content").gameObject;
-        heatersScrollableElement.Setup(new GameObject[] { buildingsScrollableMenu, fenestrationMenu, drawingMenu }, heaters, heaterParent, null, false, TurnMenusOff);
+        heatersScrollableElement.Setup(new GameObject[] { buildingsScrollableMenu, fenestrationMenu, drawingMenu }, heaters, heaterParent, null, false, TurnMenusOff, addToObjects);
 
         MenuUIElement buildingsScrollableElement = buildingsScrollableMenu.AddComponent<MenuUIElement>();
         GameObject buildingParent = buildingsScrollableMenu.transform.Find("View").Find("Content").gameObject;
@@ -99,11 +100,11 @@ public class UIController : MonoBehaviour
 
         MenuUIElement fenestrationElement = fenestrationMenu.AddComponent<MenuUIElement>();
         GameObject fenestrationParent = fenestrationMenu.transform.Find("Content").gameObject;
-        fenestrationElement.Setup(new GameObject[] { heatersScrollableMenu, buildingsScrollableMenu, drawingMenu }, fenestration, fenestrationParent, null, false, TurnMenusOff);
+        fenestrationElement.Setup(new GameObject[] { heatersScrollableMenu, buildingsScrollableMenu, drawingMenu }, fenestration, fenestrationParent, null, false, TurnMenusOff, addToObjects);
 
         MenuUIElement drawingElement = drawingMenu.AddComponent<MenuUIElement>();
         GameObject drawingParent = drawingElement.transform.Find("Content").gameObject;
-        drawingElement.Setup(new GameObject[] {heatersScrollableMenu, buildingsScrollableMenu, fenestrationMenu}, drawing, drawingParent, new Action<ASimulationObject>((ASimulationObject so) => { onToolClick(so); }), true, TurnMenusOff);
+        drawingElement.Setup(new GameObject[] {heatersScrollableMenu, buildingsScrollableMenu, fenestrationMenu}, drawing, drawingParent, onToolClick, true, TurnMenusOff, addToObjects);
 
         GameObject informationPanel = this.transform.Find("Information Panel").gameObject;
         this.informationPanelController = informationPanel.AddComponent<InformationPanelController>();
@@ -227,6 +228,7 @@ public class UIController : MonoBehaviour
     public void BlockOnSimulationStart(bool isStarted)
     {
         heatersScrollableMenu.GetComponent<MenuUIElement>().BlockDragObjects(isStarted);
+        fenestrationMenu.GetComponent<MenuUIElement>().BlockDragObjects(isStarted);
         this.globalInformationInsideTempInput.interactable = !isStarted;
         this.globalInformationOutsideTempInput.interactable = !isStarted;
         this.informationPanelController.BlockOnSimulationStart(isStarted);
