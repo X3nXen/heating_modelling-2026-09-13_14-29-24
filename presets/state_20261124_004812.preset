@@ -1,0 +1,79 @@
+{
+    "objects": [
+        {
+            "objectType": "wall",
+            "position": [
+                11.99946117401123,
+                4.0,
+                19.821178436279298
+            ],
+            "rotation": [
+                0.0,
+                -0.6390293836593628,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                7.0,
+                13.4422025680542
+            ],
+            "prefabPath": "Prefabs/Drawobjects/Wall",
+            "wallMaterial": 0,
+            "isInsulated": false,
+            "canDelete": true,
+            "windowMaterial": 0,
+            "radiationHeat": 0.0,
+            "doorMaterial": 0,
+            "pipeMaterial": 0,
+            "buildingScale": [],
+            "insideHeat": 0.0,
+            "outsideHeat": 0.0
+        },
+        {
+            "objectType": "lhouse",
+            "position": [
+                15.0,
+                1.5,
+                15.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "prefabPath": "Prefabs/Buildings/L_house",
+            "wallMaterial": 0,
+            "isInsulated": false,
+            "canDelete": false,
+            "windowMaterial": 0,
+            "radiationHeat": 0.0,
+            "doorMaterial": 0,
+            "pipeMaterial": 0,
+            "buildingScale": [],
+            "insideHeat": 0.0,
+            "outsideHeat": 0.0
+        },
+        {
+            "objectType": "global",
+            "position": [],
+            "rotation": [],
+            "scale": [],
+            "prefabPath": "",
+            "wallMaterial": 0,
+            "isInsulated": false,
+            "canDelete": false,
+            "windowMaterial": 0,
+            "radiationHeat": 0.0,
+            "doorMaterial": 0,
+            "pipeMaterial": 0,
+            "buildingScale": [],
+            "insideHeat": 21.0,
+            "outsideHeat": 15.0
+        }
+    ]
+}

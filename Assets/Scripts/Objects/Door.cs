@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Door: ASimulationObject, IDragAndDropObject
 {
-    private DoorMaterials material;
+    private DoorMaterial material;
 
     public override void Init(Action<List<InformationFlag>, IInformationPanelOpener, Dictionary<InformationFlag, string>> informationPanelOpener)
     {
@@ -14,7 +14,7 @@ public class Door: ASimulationObject, IDragAndDropObject
         this.prefab = ResourceLoader.Get("Prefabs/Fenestration/Door_prefab") as GameObject;
         this.layerMask = LayerMask.GetMask("Wall_layer");
 
-        this.material = DoorMaterials.WOOD;
+        this.material = DoorMaterial.WOOD;
         this.diffusivity = EnumHelper.GetDoorMaterialDiffusivity(material);
         this.editableDefaultValues = new Dictionary<InformationFlag, string>();
         this.editableDefaultValues.Add(InformationFlag.DOOR_MATERIAL, ((int)this.material).ToString());
@@ -33,7 +33,7 @@ public class Door: ASimulationObject, IDragAndDropObject
         panelInfoUpdater(InformationFlag.DIFFUSIVITY, this.diffusivity.ToString());
     }
 
-    public void SetMaterial(DoorMaterials material)
+    public void SetMaterial(DoorMaterial material)
     {
         this.material = material;
         this.diffusivity = EnumHelper.GetDoorMaterialDiffusivity(material);
@@ -55,5 +55,10 @@ public class Door: ASimulationObject, IDragAndDropObject
         this.editableDefaultValues = new Dictionary<InformationFlag, string>(simulationObject.GetEditableValues());
         this.originalScale = simulationObject.GetOriginalScale();
         this.currentScale = simulationObject.GetCurrentScale();
+    }
+
+    public DoorMaterial GetDoorMaterial()
+    {
+        return this.material;
     }
 }

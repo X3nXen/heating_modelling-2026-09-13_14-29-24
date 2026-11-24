@@ -37,9 +37,17 @@ public class SimulationManager : MonoBehaviour
     
     private List<ClickDrawingObject> wallClickDrawingObjects;
     ClickDrawingObject currentDrawingWall;
+    private GameObject preloadedBuilding;
+    private Vector3 preloadedBuildingScale;
     
     void Awake()
     {
+        LoadFromFile loader = this.gameObject.AddComponent<LoadFromFile>();
+        loader.Init(this);
+        bool loaded = loader.OnStart();
+
+        SaveOnExit exitComponent = this.gameObject.AddComponent<SaveOnExit>();
+        exitComponent.Init(this);
         this.uiController = ui.GetComponent<UIController>();
         this.cameraController = Camera.main.gameObject.GetComponent<CameraMovement>();
         GameObject gridRepresentation = ResourceLoader.Get("Prefabs/GridPoint") as GameObject;
@@ -90,9 +98,20 @@ public class SimulationManager : MonoBehaviour
         this.uiController.Init(heaters, buildings, fenestration, drawingObjects, new Action<ASimulationObject>((ASimulationObject buildingObject) => { this.SetNewBuilding(buildingObject.GetPrefab()); }), SetUsedTool);
         this.uiController.UpdateGlobalInformation(this.insideHeat.ToString(), this.insideHeat.ToString(), this.outsideHeat.ToString());
         this.buildingManager = this.gameObject.AddComponent<BuildingManager>();
-        this.buildingManager.SetBuildingObject(buildingPrefabs[0] as GameObject, OpenInformationPanel);
+        this.buildingManager.SetBuildingObject(loaded ? this.preloadedBuilding : buildingPrefabs[0] as GameObject, OpenInformationPanel);
+        if (loaded)
+        {
+            this.buildingManager.ScaleBuildingX(preloadedBuildingScale.x);
+            this.buildingManager.ScaleBuildingY(preloadedBuildingScale.y);
+            this.buildingManager.ScaleBuildingZ(preloadedBuildingScale.z);
+        }
         this.floorClickDrawingObject = this.buildingManager.GetFloorClickDrawingObject();
-        this.wallClickDrawingObjects = this.buildingManager.GetWallClickDrawingObjects();
+        List<ClickDrawingObject> wallClickDrawingObjects = this.buildingManager.GetWallClickDrawingObjects();
+        foreach(ClickDrawingObject wallClickDrawingObject in wallClickDrawingObjects)
+        {
+            this.wallClickDrawingObjects.Add(wallClickDrawingObject);
+        }
+        
         this.cameraController.SetFreeMovement(false);
         this.grid.SetPointRepresentation(gridRepresentation);
     }
@@ -101,6 +120,7 @@ public class SimulationManager : MonoBehaviour
     {
         buildingManager.UpdateWallOpacity();
         UpdateInformationPanel();
+        
         foreach(ClickDrawingObject clickDrawingObject in this.wallClickDrawingObjects)
         {
             if (clickDrawingObject.GetIsDragging())
@@ -123,7 +143,7 @@ public class SimulationManager : MonoBehaviour
         {
             this.floorClickDrawingObject.UpdateSecondPosition();
         }
-        
+
         if (!isStarted)
             return;
 
@@ -333,6 +353,16 @@ public class SimulationManager : MonoBehaviour
         }
     }
 
+    public void LoadInsideHeat(float insideHeat)
+    {
+        this.insideHeat = insideHeat;
+    }
+
+    public void LoadOutsideHeat(float outsideHeat)
+    {
+        this.outsideHeat = outsideHeat;
+    }
+
     public void SetInsideHeat(float insideHeat)
     {
         this.insideHeat = this.uiController.GetGlobalInformationInsideTemperature();
@@ -358,7 +388,7 @@ public class SimulationManager : MonoBehaviour
     {
         if(panelOwner != null)
         {
-            DoorMaterials doorMaterial = (DoorMaterials)this.uiController.GetInformationPanelDoorMaterialValue();
+            DoorMaterial doorMaterial = (DoorMaterial)this.uiController.GetInformationPanelDoorMaterialValue();
             (this.panelOwner as Door).SetMaterial(doorMaterial);
         }
     }
@@ -367,7 +397,7 @@ public class SimulationManager : MonoBehaviour
     {
         if(panelOwner != null)
         {
-            WindowMaterials windowMaterial = (WindowMaterials)this.uiController.GetInformationPanelWindowMaterialValue();
+            WindowMaterial windowMaterial = (WindowMaterial)this.uiController.GetInformationPanelWindowMaterialValue();
             (this.panelOwner as Window).SetMaterial(windowMaterial);
         }
     }
@@ -386,7 +416,14 @@ public class SimulationManager : MonoBehaviour
 
         if(panelOwner != null)
         {
-            bool result = (this.panelOwner as Wall).SetInsulated();
+            if(this.panelOwner is Wall)
+            {
+                (this.panelOwner as Wall).SetInsulated();
+            }
+            else
+            {
+                (this.panelOwner as Pipe).SetInsulated();
+            }
         }
     }
 
@@ -436,4 +473,29 @@ public class SimulationManager : MonoBehaviour
         }
     }
 
+    public BuildingManager GetBuildingManager()
+    {
+        return this.buildingManager;
+    }
+
+    public float GetInsideHeat()
+    {
+        return this.insideHeat;
+    }
+
+    public float GetOutsideHeat()
+    {
+        return this.outsideHeat;
+    }
+
+    public void SetPreloadedBuilding(GameObject gameObject, float[] preloadedScale)
+    {
+        this.preloadedBuilding = gameObject;
+        this.preloadedBuildingScale = new Vector3(preloadedScale[0], preloadedScale[1], preloadedScale[2]);
+    }
+
+    public void SetWallClickDrawingObjects(List<ClickDrawingObject> drawingObjects)
+    {
+        this.wallClickDrawingObjects = new List<ClickDrawingObject>(drawingObjects);
+    }
 }

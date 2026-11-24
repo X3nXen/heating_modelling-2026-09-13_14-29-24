@@ -56,14 +56,14 @@ public class InformationPanelController : MonoBehaviour
             wallMaterialOptions.Add(new TMP_Dropdown.OptionData(EnumHelper.GetWallMaterialName(item)));
         }
         List<TMP_Dropdown.OptionData> doorMaterialOptions = new List<TMP_Dropdown.OptionData>();
-        foreach (DoorMaterials item in Enum.GetValues(typeof(DoorMaterials)))
+        foreach (DoorMaterial item in Enum.GetValues(typeof(DoorMaterial)))
         {
             doorMaterialOptions.Add(new TMP_Dropdown.OptionData(EnumHelper.GetDoorMaterialName(item)));
         }
         List<TMP_Dropdown.OptionData> windowMaterialOptions = new List<TMP_Dropdown.OptionData>();
-        foreach (WindowMaterials item in Enum.GetValues(typeof(WindowMaterials)))
+        foreach (WindowMaterial item in Enum.GetValues(typeof(WindowMaterial)))
         {
-            doorMaterialOptions.Add(new TMP_Dropdown.OptionData(EnumHelper.GetWindowMaterialName(item)));
+            windowMaterialOptions.Add(new TMP_Dropdown.OptionData(EnumHelper.GetWindowMaterialName(item)));
         }
         List<TMP_Dropdown.OptionData> pipeMaterialOptions = new List<TMP_Dropdown.OptionData>();
         foreach (PipeMaterial item in Enum.GetValues(typeof(PipeMaterial)))

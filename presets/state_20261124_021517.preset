@@ -1,0 +1,170 @@
+{
+    "objects": [
+        {
+            "objectType": "door",
+            "position": [
+                9.720680236816407,
+                2.254068374633789,
+                5.239999771118164
+            ],
+            "rotation": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "scale": [
+                1.7000000476837159,
+                2.700000047683716,
+                1.5
+            ],
+            "prefabPath": "Prefabs/Fenestration/Door_prefab",
+            "wallMaterial": 0,
+            "isInsulated": false,
+            "canDelete": false,
+            "windowMaterial": 0,
+            "radiationHeat": 0.0,
+            "doorMaterial": 0,
+            "pipeMaterial": 0,
+            "buildingScale": [],
+            "insideHeat": 0.0,
+            "outsideHeat": 0.0
+        },
+        {
+            "objectType": "boxhouse",
+            "position": [
+                15.0,
+                1.5,
+                15.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "prefabPath": "Prefabs/Buildings/Box_house",
+            "wallMaterial": 0,
+            "isInsulated": false,
+            "canDelete": false,
+            "windowMaterial": 0,
+            "radiationHeat": 0.0,
+            "doorMaterial": 0,
+            "pipeMaterial": 0,
+            "buildingScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "insideHeat": 0.0,
+            "outsideHeat": 0.0
+        },
+        {
+            "objectType": "pipe",
+            "position": [
+                13.94218921661377,
+                5.875025749206543,
+                6.739999771118164
+            ],
+            "rotation": [
+                -0.002015366218984127,
+                -0.7071039080619812,
+                -0.002015366218984127
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                16.431882858276368
+            ],
+            "prefabPath": "Prefabs/Drawobjects/Pipe",
+            "wallMaterial": 0,
+            "isInsulated": false,
+            "canDelete": false,
+            "windowMaterial": 0,
+            "radiationHeat": 35.0,
+            "doorMaterial": 0,
+            "pipeMaterial": 0,
+            "buildingScale": [],
+            "insideHeat": 0.0,
+            "outsideHeat": 0.0
+        },
+        {
+            "objectType": "fireplace",
+            "position": [
+                15.083404541015625,
+                3.5,
+                22.073715209960939
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                4.0,
+                5.0,
+                2.0
+            ],
+            "prefabPath": "Prefabs/Heaters/Fireplace_prefab",
+            "wallMaterial": 0,
+            "isInsulated": false,
+            "canDelete": false,
+            "windowMaterial": 0,
+            "radiationHeat": 60.0,
+            "doorMaterial": 0,
+            "pipeMaterial": 0,
+            "buildingScale": [],
+            "insideHeat": 0.0,
+            "outsideHeat": 0.0
+        },
+        {
+            "objectType": "window",
+            "position": [
+                16.519268035888673,
+                3.777740478515625,
+                5.239999771118164
+            ],
+            "rotation": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "scale": [
+                1.5,
+                1.5,
+                1.5
+            ],
+            "prefabPath": "Prefabs/Fenestration/Window_prefab",
+            "wallMaterial": 0,
+            "isInsulated": false,
+            "canDelete": false,
+            "windowMaterial": 0,
+            "radiationHeat": 0.0,
+            "doorMaterial": 0,
+            "pipeMaterial": 0,
+            "buildingScale": [],
+            "insideHeat": 0.0,
+            "outsideHeat": 0.0
+        },
+        {
+            "objectType": "global",
+            "position": [],
+            "rotation": [],
+            "scale": [],
+            "prefabPath": "",
+            "wallMaterial": 0,
+            "isInsulated": false,
+            "canDelete": false,
+            "windowMaterial": 0,
+            "radiationHeat": 0.0,
+            "doorMaterial": 0,
+            "pipeMaterial": 0,
+            "buildingScale": [],
+            "insideHeat": 21.0,
+            "outsideHeat": 15.0
+        }
+    ]
+}

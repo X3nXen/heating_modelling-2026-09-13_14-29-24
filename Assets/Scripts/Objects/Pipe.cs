@@ -9,6 +9,7 @@ using UnityEngine.EventSystems;
 public class Pipe: ASimulationObject, IRadiatingObject, IDragAndDropObject
 {
     private PipeMaterial material;
+    private bool isInsulated;
     public float radiationHeat { get; set; }
     private Vector3 lastMainNormal = Vector3.zero;
     private float accumulatedYRotation = 0f;
@@ -20,7 +21,8 @@ public class Pipe: ASimulationObject, IRadiatingObject, IDragAndDropObject
     public override void Init(Action<List<InformationFlag>, IInformationPanelOpener, Dictionary<InformationFlag, string>> informationPanelOpener)
     {
         this.material = PipeMaterial.COPPER;
-        this.diffusivity = EnumHelper.GetPipeMaterialDiffusivity(material);
+        this.isInsulated = false;
+        this.diffusivity = EnumHelper.GetPipeMaterialDiffusivity(material, isInsulated);
         this.editableDefaultValues = new Dictionary<InformationFlag, string>();
         this.displayName = "Cső";
         this.displayImage = ResourceLoader.Get("Images/pipe_icon") as Sprite;
@@ -36,7 +38,8 @@ public class Pipe: ASimulationObject, IRadiatingObject, IDragAndDropObject
         this.currentScale = new Vector3(1, 1, 1);
         this.editableDefaultValues.Add(InformationFlag.PIPE_MATERIAL, ((int)this.material).ToString());
         this.editableDefaultValues.Add(InformationFlag.OBJECT_TEMPERATURE, this.radiationHeat.ToString());
-        InitInfoPanel(new List<InformationFlag>() { InformationFlag.DIFFUSIVITY, InformationFlag.TEMPERATURE, InformationFlag.OBJECT_TEMPERATURE, InformationFlag.PIPE_MATERIAL, InformationFlag.DELETE_ACTION, InformationFlag.RESIZE_ACTION }, informationPanelOpener);
+        this.editableDefaultValues.Add(InformationFlag.WALL_INSULATED, this.isInsulated.ToString());
+        InitInfoPanel(new List<InformationFlag>() { InformationFlag.DIFFUSIVITY, InformationFlag.TEMPERATURE, InformationFlag.OBJECT_TEMPERATURE, InformationFlag.PIPE_MATERIAL, InformationFlag.WALL_INSULATED, InformationFlag.DELETE_ACTION, InformationFlag.RESIZE_ACTION }, informationPanelOpener);
     }
 
     public override void UpdateInformation(Action<InformationFlag, string> panelInfoUpdater)
@@ -49,13 +52,27 @@ public class Pipe: ASimulationObject, IRadiatingObject, IDragAndDropObject
     public void SetMaterial(PipeMaterial material)
     {
         this.material = material;
-        this.diffusivity = EnumHelper.GetPipeMaterialDiffusivity(material);
+        this.diffusivity = EnumHelper.GetPipeMaterialDiffusivity(material, isInsulated);
         if (this.editableDefaultValues != null)
         {
             this.editableDefaultValues[InformationFlag.PIPE_MATERIAL] = ((int)this.material).ToString();
         }
     }
 
+    public bool SetInsulated()
+    {
+        this.isInsulated = !isInsulated;
+        this.editableDefaultValues[InformationFlag.WALL_INSULATED] = this.isInsulated.ToString();
+        this.diffusivity = EnumHelper.GetPipeMaterialDiffusivity(this.material, this.isInsulated);
+        return this.isInsulated;
+    }
+
+    public void SetInsulated(bool isInsulated)
+    {
+        this.isInsulated = isInsulated;
+        this.editableDefaultValues[InformationFlag.WALL_INSULATED] = this.isInsulated.ToString();
+        this.diffusivity = EnumHelper.GetPipeMaterialDiffusivity(this.material, this.isInsulated);
+    }
     public override void SetEqualTo(ASimulationObject simulationObject)
     {
         this.informationFlags = simulationObject.informationFlags;
@@ -122,4 +139,13 @@ public class Pipe: ASimulationObject, IRadiatingObject, IDragAndDropObject
         return this.material;
     }
 
+    public float GetRadiationHeat()
+    {
+        return this.radiationHeat;
+    }
+
+    public bool GetIsInsulated()
+    {
+        return this.isInsulated;
+    }
 }

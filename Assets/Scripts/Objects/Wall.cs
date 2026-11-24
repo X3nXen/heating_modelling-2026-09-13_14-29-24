@@ -13,7 +13,7 @@ public class Wall: ASimulationObject, IDragAndDropObject
     {
         this.isInsulated = false;
         this.material = WallMaterial.BRICK_COMMON;
-        this.diffusivity = EnumHelper.GetWallMaterialDiffusivity(material);
+        this.diffusivity = EnumHelper.GetWallMaterialDiffusivity(material, false);
         this.editableDefaultValues = new Dictionary<InformationFlag, string>();
         this.displayName = "Fal";
         this.displayImage = ResourceLoader.Get("Images/wall") as Sprite;
@@ -45,7 +45,7 @@ public class Wall: ASimulationObject, IDragAndDropObject
     public void SetMaterial(WallMaterial material)
     {
         this.material = material;
-        this.diffusivity = EnumHelper.GetWallMaterialDiffusivity(material);
+        this.diffusivity = EnumHelper.GetWallMaterialDiffusivity(material, this.isInsulated);
         if(this.editableDefaultValues != null)
         {
             this.editableDefaultValues[InformationFlag.WALL_MATERIAL] = ((int)this.material).ToString();
@@ -56,7 +56,15 @@ public class Wall: ASimulationObject, IDragAndDropObject
     {
         this.isInsulated = !isInsulated;
         this.editableDefaultValues[InformationFlag.WALL_INSULATED] = this.isInsulated.ToString();
+        this.diffusivity = EnumHelper.GetWallMaterialDiffusivity(this.material, this.isInsulated);
         return this.isInsulated;
+    }
+
+    public void SetInsulated(bool isInsulated)
+    {
+        this.isInsulated = isInsulated;
+        this.editableDefaultValues[InformationFlag.WALL_INSULATED] = this.isInsulated.ToString();
+        this.diffusivity = EnumHelper.GetWallMaterialDiffusivity(this.material, this.isInsulated);
     }
 
     public override void OnPointerDown(PointerEventData eventData)
@@ -73,6 +81,9 @@ public class Wall: ASimulationObject, IDragAndDropObject
     public void SetCanDelete(bool canDelete)
     {
         this.canDelete = canDelete;
+        this.informationFlags.Add(InformationFlag.DELETE_ACTION);
+        this.informationFlags.Add(InformationFlag.RESIZE_ACTION);
+        this.canMove = true;
     }
 
     public override void SetEqualTo(ASimulationObject simulationObject)
@@ -97,5 +108,20 @@ public class Wall: ASimulationObject, IDragAndDropObject
 
         this.originalScale = simulationObject.GetOriginalScale();
         this.currentScale = simulationObject.GetCurrentScale();
+    }
+
+    public WallMaterial GetWallMaterial()
+    {
+        return this.material;
+    }
+
+    public bool GetIsInsulated()
+    {
+        return this.isInsulated;
+    }
+
+    public bool GetCanDelete()
+    {
+        return this.canDelete;
     }
 }

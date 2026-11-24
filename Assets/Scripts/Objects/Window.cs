@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Window : ASimulationObject, IDragAndDropObject
 {
-    private WindowMaterials material;
+    private WindowMaterial material;
 
     public override void Init(Action<List<InformationFlag>, IInformationPanelOpener, Dictionary<InformationFlag, string>> informationPanelOpener)
     {
@@ -14,7 +14,7 @@ public class Window : ASimulationObject, IDragAndDropObject
         this.prefab = ResourceLoader.Get("Prefabs/Fenestration/Window_prefab") as GameObject;
         this.layerMask = LayerMask.GetMask("Wall_layer");
 
-        this.material = WindowMaterials.GLASS;
+        this.material = WindowMaterial.PLASTIC_DOUBLE;
         this.diffusivity = EnumHelper.GetWindowMaterialDiffusivity(material);
         this.editableDefaultValues = new Dictionary<InformationFlag, string>();
         this.editableDefaultValues.Add(InformationFlag.WINDOW_MATERIAL, ((int)this.material).ToString());
@@ -33,7 +33,7 @@ public class Window : ASimulationObject, IDragAndDropObject
         panelInfoUpdater(InformationFlag.DIFFUSIVITY, this.diffusivity.ToString());
     }
 
-    public void SetMaterial(WindowMaterials material)
+    public void SetMaterial(WindowMaterial material)
     {
         this.material = material;
         this.diffusivity = EnumHelper.GetWindowMaterialDiffusivity(material);
@@ -55,5 +55,10 @@ public class Window : ASimulationObject, IDragAndDropObject
         this.editableDefaultValues = new Dictionary<InformationFlag, string>(simulationObject.GetEditableValues());
         this.originalScale = simulationObject.GetOriginalScale();
         this.currentScale = simulationObject.GetCurrentScale();
+    }
+
+    public WindowMaterial GetWindowMaterial()
+    {
+        return this.material;
     }
 }

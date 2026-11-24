@@ -21,7 +21,7 @@ public class BuildingManager: MonoBehaviour
     private Dictionary<GameObject, Vector3> wallOriginalScales;
     private Dictionary<GameObject, Vector3> wallDirectionVectors;
 
-    private Vector3 placePosition = new Vector3(15f, 1.5f, 15f);
+    private Vector3 placePosition;
     private Transform cameraPos;
 
     private GameObject floorObject;
@@ -65,6 +65,7 @@ public class BuildingManager: MonoBehaviour
         yScale = 1f;
         zScale = 1f;
 
+        this.placePosition = new Vector3(15f, 1.5f, 15f);
         this.buildingObject = Instantiate(buildingObject, placePosition, Quaternion.identity);
         this.buildingObject.GetComponent<ASimulationObject>().Init(null);
         this.walls = new List<GameObject>();
