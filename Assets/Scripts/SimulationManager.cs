@@ -487,6 +487,7 @@ public class SimulationManager : MonoBehaviour
     {
         if(this.panelOwner != null && !this.isStarted) 
         {
+            this.placedSimulationObjects.Remove((ASimulationObject)this.panelOwner);
             Destroy(((ASimulationObject)panelOwner).gameObject);
             this.panelOwner = null;
             this.CloseInformationPanel();
