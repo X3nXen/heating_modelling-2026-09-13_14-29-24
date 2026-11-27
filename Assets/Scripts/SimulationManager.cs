@@ -252,6 +252,7 @@ public class SimulationManager : MonoBehaviour
     public void CloseInformationPanel()
     {
         this.uiController.CloseInformationPanel();
+        this.uiController.ToggleResizePanel(false);
     }
 
     /**
