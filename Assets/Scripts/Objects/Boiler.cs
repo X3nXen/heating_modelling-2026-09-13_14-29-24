@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Boiler : ASimulationObject, IRadiatingObject, IDragAndDropObject
+public class Boiler : ASimulationObject, IRadiatingObject
 {
     public float radiationHeat { get ; set; }
 

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GridPoint : ASimulationObject
+public class GridPoint: ASimulationObject
 {
     public static GridPoint CreateGridpointGameobject(GameObject prefab, Vector3 position, SimulationGrid parent)
     {
@@ -39,7 +39,7 @@ public class GridPoint : ASimulationObject
     private MeshRenderer meshRenderer;
     private MaterialPropertyBlock propBlock;
     private Gradient heatGradient;
-    private static readonly int ColorPropertyID = Shader.PropertyToID("_BaseColor");
+    private static readonly int colorPropertyID = Shader.PropertyToID("_BaseColor");
 
     public void CalculateNextHeat(float sectionSize, float timeStep)
     {
@@ -88,7 +88,7 @@ public class GridPoint : ASimulationObject
             Color targetColor = heatGradient.Evaluate(normalizedHeat);
 
             meshRenderer.GetPropertyBlock(propBlock);
-            propBlock.SetColor(ColorPropertyID, targetColor);
+            propBlock.SetColor(colorPropertyID, targetColor);
             meshRenderer.SetPropertyBlock(propBlock);
         }
         else
@@ -115,7 +115,7 @@ public class GridPoint : ASimulationObject
 
     public void SetDiffusivity(float diffusivity)
     {
-        if(diffusivity < this.diffusivity)
+        if (diffusivity < this.diffusivity)
         {
             this.diffusivity = diffusivity;
         }

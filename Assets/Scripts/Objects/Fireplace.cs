@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Fireplace : ASimulationObject, IRadiatingObject, IDragAndDropObject
+public class Fireplace : ASimulationObject, IRadiatingObject
 {
     public float radiationHeat { get; set; }
 

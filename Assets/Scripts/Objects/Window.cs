@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Window : ASimulationObject, IDragAndDropObject
+public class Window : ASimulationObject
 {
     private WindowMaterial material;
 

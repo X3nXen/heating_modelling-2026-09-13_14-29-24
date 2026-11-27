@@ -1,0 +1,112 @@
+{
+    "objects": [
+        {
+            "objectType": "boiler",
+            "position": [
+                8.60658073425293,
+                1.75,
+                23.390260696411134
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.5,
+                1.0
+            ],
+            "prefabPath": "Prefabs/Heaters/Boiler_prefab",
+            "wallMaterial": 0,
+            "isInsulated": false,
+            "canDelete": false,
+            "windowMaterial": 0,
+            "radiationHeat": 60.0,
+            "doorMaterial": 0,
+            "pipeMaterial": 0,
+            "buildingScale": [],
+            "insideHeat": 0.0,
+            "outsideHeat": 0.0
+        },
+        {
+            "objectType": "fireplace",
+            "position": [
+                16.199310302734376,
+                3.5,
+                23.297138214111329
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                4.0,
+                5.0,
+                2.0
+            ],
+            "prefabPath": "Prefabs/Heaters/Fireplace_prefab",
+            "wallMaterial": 0,
+            "isInsulated": false,
+            "canDelete": false,
+            "windowMaterial": 0,
+            "radiationHeat": 60.0,
+            "doorMaterial": 0,
+            "pipeMaterial": 0,
+            "buildingScale": [],
+            "insideHeat": 0.0,
+            "outsideHeat": 0.0
+        },
+        {
+            "objectType": "boxhouse",
+            "position": [
+                15.0,
+                1.5,
+                15.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "prefabPath": "Prefabs/Buildings/Box_house",
+            "wallMaterial": 0,
+            "isInsulated": false,
+            "canDelete": false,
+            "windowMaterial": 0,
+            "radiationHeat": 0.0,
+            "doorMaterial": 0,
+            "pipeMaterial": 0,
+            "buildingScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "insideHeat": 0.0,
+            "outsideHeat": 0.0
+        },
+        {
+            "objectType": "global",
+            "position": [],
+            "rotation": [],
+            "scale": [],
+            "prefabPath": "",
+            "wallMaterial": 0,
+            "isInsulated": false,
+            "canDelete": false,
+            "windowMaterial": 0,
+            "radiationHeat": 0.0,
+            "doorMaterial": 0,
+            "pipeMaterial": 0,
+            "buildingScale": [],
+            "insideHeat": 21.0,
+            "outsideHeat": 15.0
+        }
+    ]
+}

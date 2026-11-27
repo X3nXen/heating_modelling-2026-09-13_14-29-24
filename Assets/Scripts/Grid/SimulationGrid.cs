@@ -47,25 +47,25 @@ public class SimulationGrid : MonoBehaviour
         shownAverageTemp = this.sumForAverage / insidePointCount;
     }
 
-    public void Setup(Action<List<InformationFlag>, IInformationPanelOpener, Dictionary<InformationFlag, string>> panelOpener, float insideHeat, float outsideHeat)
+    public void StartSim(Action<List<InformationFlag>, IInformationPanelOpener, Dictionary<InformationFlag, string>> panelOpener, float insideHeat, float outsideHeat)
     {
         if (sectionSize <= 0)
             return;
 
         this.verticalPointCount = (int)(scaledVerticalLength / sectionSize);
-        this.horizontalPointCount = (int) (scaledDepth / sectionSize);
+        this.horizontalPointCount = (int)(scaledDepth / sectionSize);
         this.depthPointCount = (int)(scaledHorizontalLength / sectionSize);
         pointObjects = new List<GameObject>();
         List<GridPoint> gridPointsNeighbours;
 
         gridPoints = new GridPoint[verticalPointCount, horizontalPointCount, depthPointCount];
-        for(int verticalIndex = 0; verticalIndex < verticalPointCount; verticalIndex++)
+        for (int verticalIndex = 0; verticalIndex < verticalPointCount; verticalIndex++)
         {
             float xCoord = verticalIndex * sectionSize;
-            for(int horizontalIndex = 0; horizontalIndex < horizontalPointCount; horizontalIndex++)
+            for (int horizontalIndex = 0; horizontalIndex < horizontalPointCount; horizontalIndex++)
             {
                 float yCoord = horizontalIndex * sectionSize;
-                for(int depthIndex = 0;  depthIndex < depthPointCount; depthIndex++)
+                for (int depthIndex = 0; depthIndex < depthPointCount; depthIndex++)
                 {
                     float zCoord = depthIndex * sectionSize;
                     Vector3 pointPosition = new Vector3(xCoord, yCoord, zCoord);
@@ -83,9 +83,9 @@ public class SimulationGrid : MonoBehaviour
         this.sumForAverage = insideHeat;
         this.shownAverageTemp = this.sumForAverage;
         this.insidePointCount = 0;
-        for(int verticalIndex = 0; verticalIndex < verticalPointCount; verticalIndex++)
+        for (int verticalIndex = 0; verticalIndex < verticalPointCount; verticalIndex++)
         {
-            for(int horizontalIndex = 0; horizontalIndex < horizontalPointCount; horizontalIndex++)
+            for (int horizontalIndex = 0; horizontalIndex < horizontalPointCount; horizontalIndex++)
             {
                 for (int depthIndex = 0; depthIndex < depthPointCount; depthIndex++)
                 {
@@ -94,23 +94,23 @@ public class SimulationGrid : MonoBehaviour
                     {
                         gridPointsNeighbours.Add(gridPoints[verticalIndex - 1, horizontalIndex, depthIndex]);
                     }
-                    if((verticalIndex + 1) < verticalPointCount)
+                    if ((verticalIndex + 1) < verticalPointCount)
                     {
                         gridPointsNeighbours.Add(gridPoints[verticalIndex + 1, horizontalIndex, depthIndex]);
                     }
-                    if((horizontalIndex - 1) >= 0)
+                    if ((horizontalIndex - 1) >= 0)
                     {
                         gridPointsNeighbours.Add(gridPoints[verticalIndex, horizontalIndex - 1, depthIndex]);
                     }
-                    if((horizontalIndex + 1) < horizontalPointCount)
+                    if ((horizontalIndex + 1) < horizontalPointCount)
                     {
                         gridPointsNeighbours.Add(gridPoints[verticalIndex, horizontalIndex + 1, depthIndex]);
                     }
-                    if((depthIndex - 1) >= 0)
+                    if ((depthIndex - 1) >= 0)
                     {
                         gridPointsNeighbours.Add(gridPoints[verticalIndex, horizontalIndex, depthIndex - 1]);
                     }
-                    if((depthIndex + 1) < depthPointCount)
+                    if ((depthIndex + 1) < depthPointCount)
                     {
                         gridPointsNeighbours.Add(gridPoints[verticalIndex, horizontalIndex, depthIndex + 1]);
                     }
@@ -118,11 +118,6 @@ public class SimulationGrid : MonoBehaviour
                 }
             }
         }
-    }
-
-    public void StartSim(Action<List<InformationFlag>, IInformationPanelOpener, Dictionary<InformationFlag, string>> panelOpener, float insideHeat, float outsideHeat)
-    {
-        Setup(panelOpener, insideHeat, outsideHeat);
     }
 
     public void CleanUp()

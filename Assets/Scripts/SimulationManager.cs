@@ -15,10 +15,7 @@ public class SimulationManager : MonoBehaviour
     private float insideHeat = 21;
     private float outsideHeat = 15;
 
-    [SerializeField]
     private SimulationGrid grid;
-    [SerializeField]
-    private GameObject ui;
     private List<ASimulationObject> placedSimulationObjects;
 
     private BuildingManager buildingManager;
@@ -53,7 +50,8 @@ public class SimulationManager : MonoBehaviour
         SaveOnExit exitComponent = this.gameObject.AddComponent<SaveOnExit>();
         exitComponent.Init(this);
 
-        this.uiController = ui.GetComponent<UIController>();
+        this.uiController = GameObject.Find("UI").gameObject.GetComponent<UIController>();
+        this.grid = GameObject.Find("Grid object").gameObject.GetComponent<SimulationGrid>();
         this.cameraController = Camera.main.gameObject.GetComponent<CameraMovement>();
 
         GameObject gridRepresentation = ResourceLoader.Get("Prefabs/GridPoint") as GameObject;

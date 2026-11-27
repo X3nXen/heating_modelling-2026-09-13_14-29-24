@@ -1,0 +1,83 @@
+{
+    "objects": [
+        {
+            "objectType": "fireplace",
+            "position": [
+                16.31362533569336,
+                3.5,
+                22.510150909423829
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                4.0,
+                5.0,
+                2.0
+            ],
+            "prefabPath": "Prefabs/Heaters/Fireplace_prefab",
+            "wallMaterial": 0,
+            "isInsulated": false,
+            "canDelete": false,
+            "windowMaterial": 0,
+            "radiationHeat": 60.0,
+            "doorMaterial": 0,
+            "pipeMaterial": 0,
+            "buildingScale": [],
+            "insideHeat": 0.0,
+            "outsideHeat": 0.0
+        },
+        {
+            "objectType": "boxhouse",
+            "position": [
+                15.0,
+                1.5,
+                15.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "prefabPath": "Prefabs/Buildings/Box_house",
+            "wallMaterial": 0,
+            "isInsulated": false,
+            "canDelete": false,
+            "windowMaterial": 0,
+            "radiationHeat": 0.0,
+            "doorMaterial": 0,
+            "pipeMaterial": 0,
+            "buildingScale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "insideHeat": 0.0,
+            "outsideHeat": 0.0
+        },
+        {
+            "objectType": "global",
+            "position": [],
+            "rotation": [],
+            "scale": [],
+            "prefabPath": "",
+            "wallMaterial": 0,
+            "isInsulated": false,
+            "canDelete": false,
+            "windowMaterial": 0,
+            "radiationHeat": 0.0,
+            "doorMaterial": 0,
+            "pipeMaterial": 0,
+            "buildingScale": [],
+            "insideHeat": 21.0,
+            "outsideHeat": 15.0
+        }
+    ]
+}

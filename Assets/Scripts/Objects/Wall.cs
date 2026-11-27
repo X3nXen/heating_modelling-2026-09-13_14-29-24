@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Wall: ASimulationObject, IDragAndDropObject
+public class Wall: ASimulationObject
 {
     private WallMaterial material;
     private bool isInsulated;

@@ -1,0 +1,467 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="SimulationManager">
+    <Position X="13.5" Y="22.5" Width="3.25" />
+    <Members>
+      <Method Name="AddToSimulationObjects" Hidden="true" />
+      <Method Name="CloseInformationPanel" Hidden="true" />
+      <Method Name="GetBuildingManager" Hidden="true" />
+      <Method Name="GetInsideHeat" Hidden="true" />
+      <Method Name="GetOutsideHeat" Hidden="true" />
+      <Method Name="SetDoorMaterial" Hidden="true" />
+      <Method Name="SetInsideHeat" Hidden="true" />
+      <Method Name="SetInsulation" Hidden="true" />
+      <Method Name="SetNewBuilding" Hidden="true" />
+      <Method Name="SetObjectHeat" Hidden="true" />
+      <Method Name="SetObjectXScale" Hidden="true" />
+      <Method Name="SetObjectYScale" Hidden="true" />
+      <Method Name="SetObjectZScale" Hidden="true" />
+      <Method Name="SetOutsideHeat" Hidden="true" />
+      <Method Name="SetPipeMaterial" Hidden="true" />
+      <Method Name="SetPlacedSimulationObjects" Hidden="true" />
+      <Method Name="SetPreloadedBuilding" Hidden="true" />
+      <Method Name="SetPreloadedScale" Hidden="true" />
+      <Method Name="SetUsedTool" Hidden="true" />
+      <Method Name="SetWallClickDrawingObjects" Hidden="true" />
+      <Method Name="SetWallMaterial" Hidden="true" />
+      <Method Name="SetWindowMaterial" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>HgQoAcAmBEIkAAgSClpAAEhZCBAgABBgSIIKmAgAAEA=</HashCode>
+      <FileName>Assets\Scripts\SimulationManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="uiController" />
+      <Field Name="buildingManager" />
+      <Field Name="cameraController" />
+      <Field Name="grid" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="placedSimulationObjects" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="SaveOnExit">
+    <Position X="15.25" Y="32.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAgAAAAAAAAAAAAAAAAAAAAAAACCAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\SaveOnExit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SceneStateData">
+    <Position X="22.5" Y="32.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\SaveOnExit.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="objects" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="LoadFromFile">
+    <Position X="18.75" Y="32.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAgAAAAAEAAAAAAAAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\LoadFromFile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UIController">
+    <Position X="17.75" Y="22.5" Width="4" />
+    <Members>
+      <Method Name="GetGlobalInformationInsideTemperature" Hidden="true" />
+      <Method Name="GetGlobalInformationOutsideTemperature" Hidden="true" />
+      <Method Name="GetInformationPanelDoorMaterialValue" Hidden="true" />
+      <Method Name="GetInformationPanelPipeMaterialValue" Hidden="true" />
+      <Method Name="GetInformationPanelWallMaterialValue" Hidden="true" />
+      <Method Name="GetInformationPanelWindowMaterialValue" Hidden="true" />
+      <Method Name="GetObjectTemperatureInputValue" Hidden="true" />
+      <Method Name="GetXScaleValue" Hidden="true" />
+      <Method Name="GetYScaleValue" Hidden="true" />
+      <Method Name="GetZScaleValue" Hidden="true" />
+      <Method Name="IsResizePanelOpen" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>CwIAAAHAQMMQBAAQkwAIxEiMgiaUIAAJAQICIABgAiA=</HashCode>
+      <FileName>Assets\Scripts\UI\UIController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="informationPanelController" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="MenuUIElement">
+    <Position X="22" Y="23.25" Width="3" />
+    <Members>
+      <Method Name="SetCollapseElements" Hidden="true" />
+      <Method Name="SetExpandElements" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAABAgAAaAAAAGAAEAAAAAAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>Assets\Scripts\UI\MenuUIElement.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="uIObjects" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="InformationPanelController">
+    <Position X="23.75" Y="27" Width="4.25" />
+    <Members>
+      <Method Name="GetDoorMaterialInputValue" Hidden="true" />
+      <Method Name="GetObjectTemperatureInputValue" Hidden="true" />
+      <Method Name="GetPipeMaterialInputValue" Hidden="true" />
+      <Method Name="GetWallMaterialInputValue" Hidden="true" />
+      <Method Name="GetWindowMaterialInputValue" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AICAAAAAAAECSAAAAAAAAABAAAAVAAEAYAASAAEAAAg=</HashCode>
+      <FileName>Assets\Scripts\UI\InformationPanelController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DragAndDropUIElement">
+    <Position X="28.75" Y="26.75" Width="3" />
+    <Members>
+      <Method Name="SetAddObject" Hidden="true" />
+      <Method Name="SetCanDrag" Hidden="true" />
+      <Method Name="SetComponentToCopy" Hidden="true" />
+      <Method Name="SetLayerMask" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAgABEIEACEABAAABAEEIAAEABICEAAAAAAAAAACE=</HashCode>
+      <FileName>Assets\Scripts\UI\DragAndDropUIElement.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="componentToCopy" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UIObject">
+    <Position X="30" Y="23.25" Width="1.75" />
+    <Members>
+      <Method Name="SetDisplayImage" Hidden="true" />
+      <Method Name="SetDisplayName" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAARAQAAAAAAAAAACAAAAAIAAAAAAAAAAAAgA=</HashCode>
+      <FileName>Assets\Scripts\UI\UIObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ASimulationObject">
+    <Position X="10.25" Y="30.75" Width="3.5" />
+    <Members>
+      <Method Name="GetCurrentScale" Hidden="true" />
+      <Method Name="GetDiffusivity" Hidden="true" />
+      <Method Name="GetDirectional" Hidden="true" />
+      <Method Name="GetDisplayImage" Hidden="true" />
+      <Method Name="GetDisplayName" Hidden="true" />
+      <Method Name="GetEditableValues" Hidden="true" />
+      <Method Name="GetHeightOffset" Hidden="true" />
+      <Method Name="GetLayerMask" Hidden="true" />
+      <Method Name="GetOriginalScale" Hidden="true" />
+      <Method Name="GetPrefab" Hidden="true" />
+      <Method Name="GetWidthOffset" Hidden="true" />
+      <Method Name="SetCanMove" Hidden="true" />
+      <Method Name="SetEqualTo" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAEABhgBApIQBBDADC0AKgABAARCAgUAECGGAAQAk=</HashCode>
+      <FileName>Assets\Scripts\Objects\ASimulationObject.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.242" />
+  </Class>
+  <Class Name="Boiler">
+    <Position X="6" Y="39.5" Width="2.25" />
+    <Members>
+      <Method Name="SetEqualTo" Hidden="true" />
+      <Method Name="SetRadiationHeat" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAAAABAAAAAAAAAQAAAUAACAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Objects\Boiler.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Fireplace">
+    <Position X="13.5" Y="39.5" Width="2.25" />
+    <Members>
+      <Method Name="SetEqualTo" Hidden="true" />
+      <Method Name="SetRadiationHeat" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAAAABAAAAAAAAAQAAAUAACAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Objects\Fireplace.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Radiator">
+    <Position X="8.5" Y="39.5" Width="2.25" />
+    <Members>
+      <Method Name="SetEqualTo" Hidden="true" />
+      <Method Name="SetRadiationHeat" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAAAABAAAAAAAAAQAAAUAACAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Objects\Radiator.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ACUnit">
+    <Position X="11" Y="39.5" Width="2.25" />
+    <Members>
+      <Method Name="SetEqualTo" Hidden="true" />
+      <Method Name="SetRadiationHeat" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAAAABAAAAAAAAAQAAAUAACAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Objects\ACUnit.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Door">
+    <Position X="1.25" Y="39.5" Width="2" />
+    <Members>
+      <Method Name="GetDoorMaterial" Hidden="true" />
+      <Method Name="SetEqualTo" Hidden="true" />
+      <Method Name="SetMaterial" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAEkAACAABAAAA=</HashCode>
+      <FileName>Assets\Scripts\Objects\Door.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Window">
+    <Position X="3.5" Y="39.5" Width="2.25" />
+    <Members>
+      <Method Name="GetWindowMaterial" Hidden="true" />
+      <Method Name="SetEqualTo" Hidden="true" />
+      <Method Name="SetMaterial" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAAAAAAAAAAAAQAAEEAACAABAAAA=</HashCode>
+      <FileName>Assets\Scripts\Objects\Window.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BoxHouse">
+    <Position X="6.5" Y="35" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAACAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Objects\BoxHouse.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LHouse">
+    <Position X="6.5" Y="33.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAACAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Objects\LHouse.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pipe">
+    <Position X="16" Y="39.5" Width="2.25" />
+    <Members>
+      <Method Name="GetIsInsulated" Hidden="true" />
+      <Method Name="GetPipeMaterial" Hidden="true" />
+      <Method Name="GetRadiationHeat" Hidden="true" />
+      <Method Name="SetEqualTo" Hidden="true" />
+      <Method Name="SetInsulated" Hidden="true" />
+      <Method Name="SetMaterial" Hidden="true" />
+      <Method Name="SetRadiationHeat" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AggAAAAAAAAAAGBAIABAAAAAAAAAQAAEUACCAARAAAA=</HashCode>
+      <FileName>Assets\Scripts\Objects\Pipe.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Wall">
+    <Position X="18.5" Y="39.5" Width="2.25" />
+    <Members>
+      <Method Name="GetCanDelete" Hidden="true" />
+      <Method Name="GetIsInsulated" Hidden="true" />
+      <Method Name="GetWallMaterial" Hidden="true" />
+      <Method Name="SetCanDelete" Hidden="true" />
+      <Method Name="SetEqualTo" Hidden="true" />
+      <Method Name="SetInsulated" Hidden="true" />
+      <Method Name="SetMaterial" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAIACAAIAABAAAAEAAAQAEEEAACEABAAAA=</HashCode>
+      <FileName>Assets\Scripts\Objects\Wall.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BuildingManager">
+    <Position X="5.5" Y="26.25" Width="4" />
+    <Members>
+      <Method Name="GetFloorClickDrawingObject" Hidden="true" />
+      <Method Name="GetFloorObject" Hidden="true" />
+      <Method Name="GetFloorXLength" Hidden="true" />
+      <Method Name="GetFloorZLength" Hidden="true" />
+      <Method Name="GetWallClickDrawingObjects" Hidden="true" />
+      <Method Name="GetWallHeight" Hidden="true" />
+      <Method Name="GetXScale" Hidden="true" />
+      <Method Name="GetYScale" Hidden="true" />
+      <Method Name="GetZScale" Hidden="true" />
+      <Method Name="SetBuildingObject" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>aAAAQQgSTIggAgEEAAQAAACIgQAhgECAQaAAACkIAEE=</HashCode>
+      <FileName>Assets\Scripts\Objects\BuildingManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClickDrawingObject">
+    <Position X="23.75" Y="36.5" Width="3" />
+    <Members>
+      <Method Name="GetIsDragging" Hidden="true" />
+      <Method Name="GetIsDrawing" Hidden="true" />
+      <Method Name="SetAddObject" Hidden="true" />
+      <Method Name="SetIsDrawing" Hidden="true" />
+      <Method Name="SetObjectToCopy" Hidden="true" />
+      <Method Name="SetObjectToDraw" Hidden="true" />
+      <Method Name="SetOnWallAdd" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>gAAACAAMAAAIIACIABAEEAEgAAAgQAAACAIQCAAEASA=</HashCode>
+      <FileName>Assets\Scripts\Objects\ClickDrawingObject.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Floor">
+    <Position X="21" Y="39.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAEAACAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Objects\Floor.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ASimulationObjectPrefab">
+    <Position X="28.5" Y="32.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAABCEAAAAACBAAADAIAAKACBAAAEAAAgAAAAAACA=</HashCode>
+      <FileName>Assets\Scripts\Helpers\ASimulationObjectPrefab.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SimulationGrid">
+    <Position X="9.75" Y="20" Width="2.5" />
+    <Members>
+      <Method Name="GetAverageInsideTemperature" Hidden="true" />
+      <Method Name="SetDepth" Hidden="true" />
+      <Method Name="SetHorizontalLength" Hidden="true" />
+      <Method Name="SetPointRepresentation" Hidden="true" />
+      <Method Name="SetVerticalLength" Hidden="true" />
+      <Method Name="SetView" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>gAgAAAAAAAAgiAAAhCAAAEAAIAAAEQWUAAAAIECCgAI=</HashCode>
+      <FileName>Assets\Scripts\Grid\SimulationGrid.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="gridPoints" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="GridPoint">
+    <Position X="4.25" Y="20" Width="3" />
+    <Members>
+      <Method Name="GetCurrentHeat" Hidden="true" />
+      <Method Name="GetOutsideHeat" Hidden="true" />
+      <Method Name="IsInside" Hidden="true" />
+      <Method Name="SetBarelyVisibleMaterial" Hidden="true" />
+      <Method Name="SetCurrentHeat" Hidden="true" />
+      <Method Name="SetDiffusivity" Hidden="true" />
+      <Method Name="SetHeatmapMaterial" Hidden="true" />
+      <Method Name="SetInsideHeat" Hidden="true" />
+      <Method Name="SetIsLocked" Hidden="true" />
+      <Method Name="SetNeighbors" Hidden="true" />
+      <Method Name="SetOutsideHeat" Hidden="true" />
+      <Method Name="SetVisibleMaterial" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAEggEREBACAAQgAYAAACEAIIAgsQBAEcAQCCQAKAAg=</HashCode>
+      <FileName>Assets\Scripts\Grid\GridPoint.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CameraMovement">
+    <Position X="12.75" Y="16.25" Width="2.25" />
+    <Members>
+      <Method Name="IsFreeMovement" Hidden="true" />
+      <Method Name="SetFreeMovement" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AARABgEAEaAAAAAwUAAAACAABAAIEEIAAAAgAIBAQAg=</HashCode>
+      <FileName>Assets\Scripts\Helpers\CameraMovement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EnumHelper">
+    <Position X="6.5" Y="36.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAACAAABCAAAAAAAAAAAAAAAAAAAAAGAQAAAQ=</HashCode>
+      <FileName>Assets\Scripts\Helpers\EnumHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ResourceLoader">
+    <Position X="17.5" Y="19.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAgAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Helpers\ResourceLoader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="IInformationPanelOpener">
+    <Position X="11.25" Y="27" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAAAAAAQAAAAAAAAAAAEAAAEAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Objects\AInformationPanelOpener.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="IDragAndDropObject">
+    <Position X="17.75" Y="35.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAIAAAAACAgAAgAAAABAAAAAEAAEAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Objects\IDragAndDropObject.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="IPlaceableObject">
+    <Position X="14.5" Y="35.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgABAAAAABAAAAAAKAAAAAAAAAAAACACAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Objects\IPlaceableObject.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="IRadiatingObject">
+    <Position X="21" Y="35.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Objects\IRadiatingObject.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="PipeMaterial">
+    <Position X="1.75" Y="34.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAAAAAAABAAAAAAAAQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Objects\PipeMaterial.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="WallMaterial">
+    <Position X="4" Y="34.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAQAAAA=</HashCode>
+      <FileName>Assets\Scripts\Objects\WallMaterial.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="WindowMaterial">
+    <Position X="4" Y="37.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAABAAAAgAAAAAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Objects\WindowMaterial.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DoorMaterial">
+    <Position X="1.75" Y="37.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAEAAAAACAA=</HashCode>
+      <FileName>Assets\Scripts\Objects\DoorMaterial.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="InformationFlag">
+    <Position X="15.5" Y="19.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gDAAAAAAQAAACQAAAAAABAAAAIAAAAAAAAAAAAAAIAU=</HashCode>
+      <FileName>Assets\Scripts\Objects\InformationFlag.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

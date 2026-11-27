@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ACUnit: ASimulationObject, IRadiatingObject, IDragAndDropObject
+public class ACUnit: ASimulationObject, IRadiatingObject
 {
     public float radiationHeat { get; set; }
 

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Radiator : ASimulationObject, IRadiatingObject, IDragAndDropObject
+public class Radiator : ASimulationObject, IRadiatingObject
 {
     public float radiationHeat { get; set; }
 

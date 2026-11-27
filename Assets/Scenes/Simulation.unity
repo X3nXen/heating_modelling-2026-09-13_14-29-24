@@ -4398,7 +4398,6 @@ GameObject:
   m_Component:
   - component: {fileID: 507887497}
   - component: {fileID: 507887496}
-  - component: {fileID: 507887498}
   m_Layer: 0
   m_Name: Grid object
   m_TagString: Untagged
@@ -4433,18 +4432,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &507887498
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 507887495}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc7a1aac773054748a2b175565e09b3d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GridViewToggle
 --- !u!1 &523537890
 GameObject:
   m_ObjectHideFlags: 0
@@ -10233,7 +10220,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -14361984, y: 0}
+  m_AnchoredPosition: {x: -14421834, y: 0}
   m_SizeDelta: {x: 349, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1169084574
@@ -13980,8 +13967,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6e5bf33c86066e4c83ca1a17e0a8274, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SimulationManager
-  grid: {fileID: 507887496}
-  ui: {fileID: 627235813}
 --- !u!4 &1714856013
 Transform:
   m_ObjectHideFlags: 0
@@ -14105,7 +14090,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -14572875, y: 0}
+  m_AnchoredPosition: {x: -14632250, y: 0}
   m_SizeDelta: {x: 350, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1746612404

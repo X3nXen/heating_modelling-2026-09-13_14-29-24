@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
  * ASimulationObject osztály
  * Minden a szimulációban használt objektum őse. Absztrakciós szint, a kódismétlés elkerülésére.
  */
-public abstract class ASimulationObject : MonoBehaviour, IInformationPanelOpener, IPlaceableObject, IBeginDragHandler, IEndDragHandler, IDragHandler, IDragAndDropObject
+public abstract class ASimulationObject : MonoBehaviour, IInformationPanelOpener, IBeginDragHandler, IEndDragHandler, IDragHandler, IDragAndDropObject
 {
     public List<InformationFlag> informationFlags { get; set; }
     public Action<List<InformationFlag>, IInformationPanelOpener, Dictionary<InformationFlag, string>> panelOpener { get; set; }
@@ -130,11 +130,8 @@ public abstract class ASimulationObject : MonoBehaviour, IInformationPanelOpener
 
     public void HandleXScale(float x)
     {
-        Debug.Log(x);
         this.currentScale = new Vector3(x, this.currentScale.y, this.currentScale.z);
         this.transform.localScale = new Vector3(this.originalScale.x * x, this.originalScale.y * this.currentScale.y, this.originalScale.z * this.currentScale.z);
-        Debug.Log(this.currentScale);
-        Debug.Log(this.transform.localScale);
     }
 
     public void HandleYScale(float y)

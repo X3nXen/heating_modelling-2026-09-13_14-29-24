@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 /**
  * ASimulationObject-et kiterjesztő osztály, amely a csövek működését írja le
  */
-public class Pipe: ASimulationObject, IRadiatingObject, IDragAndDropObject
+public class Pipe: ASimulationObject, IRadiatingObject
 {
     private PipeMaterial material;
     private bool isInsulated;
