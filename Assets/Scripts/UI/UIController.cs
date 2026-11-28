@@ -68,9 +68,9 @@ public class UIController : MonoBehaviour
         startButtonSprites[1] = ResourceLoader.Get("Images/Play_icon") as Sprite;
 
         speedButtonSprites = new Sprite[3];
-        speedButtonSprites[0] = ResourceLoader.Get("Images/Bar-2") as Sprite;
-        speedButtonSprites[1] = ResourceLoader.Get("Images/Bar-3") as Sprite;
-        speedButtonSprites[2] = ResourceLoader.Get("Images/Bar-1") as Sprite;
+        speedButtonSprites[0] = ResourceLoader.Get("Images/Bar-1") as Sprite;
+        speedButtonSprites[1] = ResourceLoader.Get("Images/Bar-2") as Sprite;
+        speedButtonSprites[2] = ResourceLoader.Get("Images/Bar-3") as Sprite;
 
         viewButtonSprites = new Sprite[2];
         viewButtonSprites[0] = ResourceLoader.Get("Images/Grid_icon") as Sprite;
@@ -194,11 +194,6 @@ public class UIController : MonoBehaviour
     public int GetInformationPanelWindowMaterialValue()
     {
         return this.informationPanelController.GetWindowMaterialInputValue();
-    }
-
-    public int GetInformationPanelPipeMaterialValue()
-    {
-        return this.informationPanelController.GetPipeMaterialInputValue();
     }
 
     public void UpdateInformationPanelValue(InformationFlag informationFlag, string value)

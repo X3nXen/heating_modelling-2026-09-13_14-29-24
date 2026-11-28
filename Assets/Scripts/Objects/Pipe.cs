@@ -8,8 +8,6 @@ using UnityEngine.EventSystems;
  */
 public class Pipe: ASimulationObject, IRadiatingObject
 {
-    private PipeMaterial material;
-    private bool isInsulated;
     public float radiationHeat { get; set; }
     private Vector3 lastMainNormal = Vector3.zero;
     private float accumulatedYRotation = 0f;
@@ -20,9 +18,6 @@ public class Pipe: ASimulationObject, IRadiatingObject
      */
     public override void Init(Action<List<InformationFlag>, IInformationPanelOpener, Dictionary<InformationFlag, string>> informationPanelOpener)
     {
-        this.material = PipeMaterial.COPPER;
-        this.isInsulated = false;
-        this.diffusivity = EnumHelper.GetPipeMaterialDiffusivity(material, isInsulated);
         this.editableDefaultValues = new Dictionary<InformationFlag, string>();
         this.displayName = "Cső";
         this.displayImage = ResourceLoader.Get("Images/pipe_icon") as Sprite;
@@ -36,43 +31,16 @@ public class Pipe: ASimulationObject, IRadiatingObject
 
         this.originalScale = this.prefab.transform.localScale;
         this.currentScale = new Vector3(1, 1, 1);
-        this.editableDefaultValues.Add(InformationFlag.PIPE_MATERIAL, ((int)this.material).ToString());
         this.editableDefaultValues.Add(InformationFlag.OBJECT_TEMPERATURE, this.radiationHeat.ToString());
-        this.editableDefaultValues.Add(InformationFlag.WALL_INSULATED, this.isInsulated.ToString());
-        InitInfoPanel(new List<InformationFlag>() { InformationFlag.DIFFUSIVITY, InformationFlag.TEMPERATURE, InformationFlag.OBJECT_TEMPERATURE, InformationFlag.PIPE_MATERIAL, InformationFlag.WALL_INSULATED, InformationFlag.DELETE_ACTION, InformationFlag.RESIZE_ACTION }, informationPanelOpener);
+        InitInfoPanel(new List<InformationFlag>() { InformationFlag.TEMPERATURE, InformationFlag.OBJECT_TEMPERATURE, InformationFlag.DELETE_ACTION, InformationFlag.RESIZE_ACTION }, informationPanelOpener);
     }
 
     public override void UpdateInformation(Action<InformationFlag, string> panelInfoUpdater)
     {
         panelInfoUpdater(InformationFlag.OBJECT_NAME, "Cső");
-        panelInfoUpdater(InformationFlag.DIFFUSIVITY, this.diffusivity.ToString());
         panelInfoUpdater(InformationFlag.TEMPERATURE, this.radiationHeat.ToString());
     }
 
-    public void SetMaterial(PipeMaterial material)
-    {
-        this.material = material;
-        this.diffusivity = EnumHelper.GetPipeMaterialDiffusivity(material, isInsulated);
-        if (this.editableDefaultValues != null)
-        {
-            this.editableDefaultValues[InformationFlag.PIPE_MATERIAL] = ((int)this.material).ToString();
-        }
-    }
-
-    public bool SetInsulated()
-    {
-        this.isInsulated = !isInsulated;
-        this.editableDefaultValues[InformationFlag.WALL_INSULATED] = this.isInsulated.ToString();
-        this.diffusivity = EnumHelper.GetPipeMaterialDiffusivity(this.material, this.isInsulated);
-        return this.isInsulated;
-    }
-
-    public void SetInsulated(bool isInsulated)
-    {
-        this.isInsulated = isInsulated;
-        this.editableDefaultValues[InformationFlag.WALL_INSULATED] = this.isInsulated.ToString();
-        this.diffusivity = EnumHelper.GetPipeMaterialDiffusivity(this.material, this.isInsulated);
-    }
     public override void SetEqualTo(ASimulationObject simulationObject)
     {
         this.informationFlags = simulationObject.informationFlags;
@@ -82,12 +50,10 @@ public class Pipe: ASimulationObject, IRadiatingObject
         this.displayName = simulationObject.displayName;
         this.prefab = simulationObject.prefab;
         this.editableDefaultValues = simulationObject.GetEditableValues();
-        this.diffusivity = simulationObject.GetDiffusivity();
         this.radiationHeat = ((Pipe)simulationObject).radiationHeat;
         this.heightOffset = ((Pipe)simulationObject).GetHeightOffset();
         this.widthOffset = ((Pipe)simulationObject).GetWidthOffset();
         this.directional = ((Pipe)simulationObject).GetDirectional();
-        this.material = ((Pipe)simulationObject).GetPipeMaterial();
         this.originalScale = simulationObject.GetOriginalScale();
         this.currentScale = simulationObject.GetCurrentScale();
     }
@@ -118,7 +84,6 @@ public class Pipe: ASimulationObject, IRadiatingObject
             try
             {
                 GridPoint gridPoint = other.GetComponent<GridPoint>();
-                gridPoint.SetDiffusivity(diffusivity);
                 gridPoint.SetCurrentHeat(this.radiationHeat);
                 gridPoint.SetIsLocked(true);
             }
@@ -134,18 +99,9 @@ public class Pipe: ASimulationObject, IRadiatingObject
         this.radiationHeat = radiationHeat;
         this.editableDefaultValues[InformationFlag.OBJECT_TEMPERATURE] = this.radiationHeat.ToString();
     }
-    public PipeMaterial GetPipeMaterial()
-    {
-        return this.material;
-    }
-
     public float GetRadiationHeat()
     {
         return this.radiationHeat;
     }
 
-    public bool GetIsInsulated()
-    {
-        return this.isInsulated;
-    }
 }

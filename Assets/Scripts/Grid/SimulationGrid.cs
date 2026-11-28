@@ -21,6 +21,7 @@ public class SimulationGrid : MonoBehaviour
     private float sumForAverage = 0;
     private int insidePointCount = 0;
     private float shownAverageTemp;
+    private bool isGridView;
     
 
     public void RecalculatePoints(float timeStep)
@@ -34,7 +35,7 @@ public class SimulationGrid : MonoBehaviour
 
         foreach (GridPoint point in gridPoints)
         {
-            if (point.IsInside())
+            if (point.IsInside() && !point.GetIsLocked())
             {
                 this.sumForAverage += point.ApplyNextHeat();
                 this.insidePointCount++;
@@ -76,6 +77,7 @@ public class SimulationGrid : MonoBehaviour
                     newGridPoint.SetOutsideHeat(outsideHeat);
                     newGridPoint.SetInsideHeat(insideHeat);
                     newGridPoint.Init(panelOpener);
+                    newGridPoint.SwitchLook(this.isGridView);
                     gridPoints[verticalIndex, horizontalIndex, depthIndex] = newGridPoint;
                 }
             }
@@ -152,9 +154,13 @@ public class SimulationGrid : MonoBehaviour
 
     public void SetView(bool isGridView)
     {
-        foreach(GridPoint gridpoint in this.gridPoints)
+        this.isGridView = isGridView;
+        if(this.gridPoints != null)
         {
-            gridpoint.SwitchLook(isGridView);
+            foreach(GridPoint gridpoint in this.gridPoints)
+            {
+                gridpoint.SwitchLook(isGridView);
+            }
         }
     }
 

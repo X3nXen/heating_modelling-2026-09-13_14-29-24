@@ -95,34 +95,4 @@ public static class EnumHelper
                 return "Kétrétegű, műanyag keretes";
         }
     }
-
-    public static float GetPipeMaterialDiffusivity(PipeMaterial pipeMaterial, bool insulated)
-    {
-        switch (pipeMaterial)
-        {
-            case PipeMaterial.COPPER:
-                return insulated ? 0.00000028f : 0.00000116f;
-            case PipeMaterial.PLASTIC:
-                return insulated ? 0.00000008f : 0.00000019f;
-            case PipeMaterial.STEEL:
-                return insulated ? 0.00000045f : 0.00000656f;
-            default:
-                return insulated ? 0.00000028f : 0.00000116f;
-        }
-    }
-
-    public static string GetPipeMaterialName(PipeMaterial pipeMaterial) 
-    {
-        switch (pipeMaterial)
-        {
-            case PipeMaterial.COPPER:
-                return "Réz";
-            case PipeMaterial.PLASTIC:
-                return "Műanyag";
-            case PipeMaterial.STEEL:
-                return "Acél";
-            default:
-                return "Réz";
-        }
-    }
 }

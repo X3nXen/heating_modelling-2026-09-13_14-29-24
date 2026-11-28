@@ -10,7 +10,6 @@ public enum InformationFlag
     WALL_INSULATED,
     DOOR_MATERIAL,
     WINDOW_MATERIAL,
-    PIPE_MATERIAL,
     DELETE_ACTION,
     RESIZE_ACTION
 }

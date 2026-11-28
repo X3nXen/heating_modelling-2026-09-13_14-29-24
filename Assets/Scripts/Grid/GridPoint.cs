@@ -164,7 +164,7 @@ public class GridPoint: ASimulationObject
     public override void UpdateInformation(Action<InformationFlag, string> panelInfoUpdater)
     {
         panelInfoUpdater(InformationFlag.OBJECT_NAME, "Rácspont");
-        panelInfoUpdater(InformationFlag.TEMPERATURE, this.currentHeat.ToString());
+        panelInfoUpdater(InformationFlag.TEMPERATURE, Math.Round(this.currentHeat, 2).ToString());
         panelInfoUpdater(InformationFlag.DIFFUSIVITY, this.diffusivity.ToString());
     }
 
@@ -201,5 +201,10 @@ public class GridPoint: ASimulationObject
     public void SetVisibleMaterial(Material visibleMaterial)
     {
         this.visibleMaterial = visibleMaterial;
+    }
+
+    public bool GetIsLocked()
+    {
+        return this.isLocked;
     }
 }

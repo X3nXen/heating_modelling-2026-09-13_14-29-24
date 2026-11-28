@@ -9,7 +9,6 @@ using UnityEngine;
 public class SimulationManager : MonoBehaviour
 {
     private float timeStep = 1;
-    private float nextUpdate = 1;
     private bool isStarted = false;
     private float simulationTime = 0f;
     private float insideHeat = 21;
@@ -160,12 +159,8 @@ public class SimulationManager : MonoBehaviour
         simulationTime += Time.deltaTime * timeStep;
 
         this.uiController.UpdateTimeDisplay(simulationTime);
-        this.uiController.UpdateGlobalInformation(grid.GetAverageInsideTemperature().ToString(), this.insideHeat.ToString(), this.outsideHeat.ToString());
-        if (Time.time >= nextUpdate)
-        {
-            nextUpdate = (float)Math.Floor(Time.time) + 1;
-            grid.RecalculatePoints(timeStep);
-        }
+        this.uiController.UpdateGlobalInformation(Math.Round(grid.GetAverageInsideTemperature(), 2).ToString(), this.insideHeat.ToString(), this.outsideHeat.ToString());
+        grid.RecalculatePoints(timeStep);
     }
 
     /**
@@ -186,6 +181,7 @@ public class SimulationManager : MonoBehaviour
         }
         isStarted = true;
         grid.StartSim(OpenInformationPanel, insideHeat, outsideHeat);
+        grid.SetView(isGridView);
         simulationTime = 0;
         this.BlockDrawingObjects();
         this.BlockDraggingObjects(false);
@@ -442,15 +438,6 @@ public class SimulationManager : MonoBehaviour
         }
     }
 
-    public void SetPipeMaterial(int _)
-    {
-        if (panelOwner != null)
-        {
-            PipeMaterial pipeMaterial = (PipeMaterial)this.uiController.GetInformationPanelPipeMaterialValue();
-            (this.panelOwner as Pipe).SetMaterial(pipeMaterial);
-        }
-    }
-
     public void SetInsulation(bool _)
     {
 
@@ -459,10 +446,6 @@ public class SimulationManager : MonoBehaviour
             if(this.panelOwner is Wall)
             {
                 (this.panelOwner as Wall).SetInsulated();
-            }
-            else
-            {
-                (this.panelOwner as Pipe).SetInsulated();
             }
         }
     }

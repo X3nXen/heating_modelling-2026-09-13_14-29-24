@@ -52,14 +52,14 @@ public class LoadFromFile : MonoBehaviour
                     GameObject spawned = Instantiate(ResourceLoader.Get(data.prefabPath) as GameObject, position, Quaternion.Euler(rotation));
                     spawned.transform.localScale = scale;
                     ASimulationObject restored = spawned.GetComponent<ASimulationObject>();
+                    
                     switch (data.objectType)
                     {
                         case "pipe":
                             restored = (Pipe)restored;
                             ((Pipe)restored).Init(this.simulationManager.OpenInformationPanel);
-                            ((Pipe)restored).SetInsulated(data.isInsulated);
-                            ((Pipe)restored).SetMaterial((PipeMaterial)data.pipeMaterial);
                             ((Pipe)restored).SetRadiationHeat(data.radiationHeat);
+                            ((Pipe)restored).SetOriginalScale(scale);
                             break;
                         case "acunit":
                             restored = (ACUnit)restored;
@@ -99,8 +99,12 @@ public class LoadFromFile : MonoBehaviour
                             ((Wall)restored).SetInsulated(data.isInsulated);
                             ((Wall)restored).SetMaterial((WallMaterial)data.wallMaterial);
                             ((Wall)restored).SetCanDelete(data.canDelete);
+                            ((Wall)restored).SetOriginalScale(scale);
                             break;
                     }
+                    Vector3 baseScale = restored.GetOriginalScale();
+                    Vector3 restoredScale = new Vector3(scale.x / baseScale.x, scale.y / baseScale.y, scale.z / baseScale.z);
+                    restored.SetCurrentScale(restoredScale);
                     simulationObjects.Add(restored);
                 }
             }

@@ -34,16 +34,15 @@ public class SaveOnExit : MonoBehaviour
         {
             ASimulationObjectPrefab data = new ASimulationObjectPrefab();
             data.position = new float[] { obj.transform.position.x, obj.transform.position.y, obj.transform.position.z };
-            data.rotation = new float[] { obj.transform.rotation.x, obj.transform.rotation.y, obj.transform.rotation.z };
+            data.rotation = new float[] { obj.transform.rotation.eulerAngles.x, obj.transform.rotation.eulerAngles.y, obj.transform.rotation.eulerAngles.z };
             data.scale = new float[] { obj.transform.localScale.x, obj.transform.localScale.y, obj.transform.localScale.z };
+            BuildingManager buildingManager = this.simulationManager.GetBuildingManager();
             switch (obj)
             {
                 case Pipe pipe:
                     data.objectType = "pipe";
-                    data.pipeMaterial = (int) pipe.GetPipeMaterial();
                     data.prefabPath = "Prefabs/Drawobjects/Pipe";
                     data.radiationHeat = pipe.GetRadiationHeat();
-                    data.isInsulated = pipe.GetIsInsulated();
                     break;
                 case ACUnit unit:
                     data.objectType = "acunit";
@@ -85,12 +84,12 @@ public class SaveOnExit : MonoBehaviour
                 case BoxHouse building_1:
                     data.objectType = "boxhouse";
                     data.prefabPath = "Prefabs/Buildings/Box_house";
-                    BuildingManager buildingManager = this.simulationManager.GetBuildingManager();
                     data.buildingScale = new float[] { buildingManager.GetXScale(), buildingManager.GetYScale(), buildingManager.GetZScale() };
                     break;
                 case LHouse lhouse:
                     data.objectType = "lhouse";
                     data.prefabPath = "Prefabs/Buildings/L_house";
+                    data.buildingScale = new float[] { buildingManager.GetXScale(), buildingManager.GetYScale(), buildingManager.GetZScale() };
                     break;
             }
             stateData.objects.Add(data);

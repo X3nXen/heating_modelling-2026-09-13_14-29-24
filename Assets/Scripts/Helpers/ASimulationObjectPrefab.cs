@@ -19,8 +19,6 @@ public class ASimulationObjectPrefab
 
     public int doorMaterial;
 
-    public int pipeMaterial;
-
     public float[] buildingScale;
 
     public float insideHeat;

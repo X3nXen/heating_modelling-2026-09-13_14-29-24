@@ -107,8 +107,11 @@ public abstract class ASimulationObject : MonoBehaviour, IInformationPanelOpener
 
 
     public void OnEndDrag(PointerEventData eventData)
-    { 
-        this.gameObject.layer = this.originalLayer;
+    {
+        if (canMove)
+        {
+            this.gameObject.layer = this.originalLayer;
+        }
     }
     public virtual void UpdateItemPosition(PointerEventData eventData)
     {
@@ -197,5 +200,15 @@ public abstract class ASimulationObject : MonoBehaviour, IInformationPanelOpener
     public void SetCanMove(bool canMove)
     {
         this.canMove = canMove;
+    }
+
+    public void SetCurrentScale(Vector3 scale)
+    {
+        this.currentScale = scale;
+    }
+
+    public void SetOriginalScale(Vector3 scale)
+    {
+        this.originalScale = scale;
     }
 }

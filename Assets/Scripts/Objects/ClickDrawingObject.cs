@@ -99,6 +99,7 @@ public class ClickDrawingObject : MonoBehaviour, IPointerDownHandler
                 isDragging = false;
                 placedObject.GetComponent<ASimulationObject>().SetEqualTo(objectToCopy);
                 addObject(placedObject.GetComponent<ASimulationObject>());
+                placedObject.GetComponent<ASimulationObject>().SetOriginalScale(scale);
                 if (objectToCopy is Wall)
                 {
                     placedObject.GetComponent<Wall>().SetCanDelete(true);
